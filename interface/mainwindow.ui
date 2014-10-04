@@ -65,6 +65,18 @@
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -82,7 +94,10 @@
      <normaloff>:/pictures/images/new.png</normaloff>:/pictures/images/new.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;New</string>
+    <string>&amp;Nouveau</string>
+   </property>
+   <property name="toolTip">
+    <string>Nouveau</string>
    </property>
   </action>
   <action name="openAction">
@@ -91,7 +106,7 @@
      <normaloff>:/pictures/images/open.png</normaloff>:/pictures/images/open.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Open</string>
+    <string>&amp;Ouvrir</string>
    </property>
   </action>
   <action name="saveAction">
@@ -100,7 +115,10 @@
      <normaloff>:/pictures/images/save.png</normaloff>:/pictures/images/save.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Save</string>
+    <string>&amp;Sauvegarder</string>
+   </property>
+   <property name="toolTip">
+    <string>Sauvegarder</string>
    </property>
   </action>
   <action name="saveAsAction">

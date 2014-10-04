@@ -6,9 +6,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    connect(qApp, SIGNAL(lastWindowClosed()), ui->quitAction, SLOT(trigger()));
+    connect(ui->quitAction, SIGNAL(), qApp, SLOT(quit()));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_quitAction_triggered()
+{
+    qApp->quit();
 }
