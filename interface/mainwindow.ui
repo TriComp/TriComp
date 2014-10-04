@@ -115,15 +115,18 @@
      <normaloff>:/pictures/images/save.png</normaloff>:/pictures/images/save.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Sauvegarder</string>
+    <string>&amp;Enregistrer</string>
    </property>
    <property name="toolTip">
-    <string>Sauvegarder</string>
+    <string>Enregistrer</string>
    </property>
   </action>
   <action name="saveAsAction">
    <property name="text">
-    <string>Save as...</string>
+    <string>Enregistrer sous</string>
+   </property>
+   <property name="toolTip">
+    <string>Enregistrer sous</string>
    </property>
   </action>
   <action name="quitAction">
@@ -132,17 +135,26 @@
      <normaloff>:/pictures/images/quit.png</normaloff>:/pictures/images/quit.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Quit</string>
+    <string>&amp;Quitter</string>
+   </property>
+   <property name="toolTip">
+    <string>Quitter</string>
    </property>
   </action>
   <action name="undoAction">
    <property name="text">
-    <string>&amp;Undo</string>
+    <string>&amp;Annuler</string>
+   </property>
+   <property name="toolTip">
+    <string>Annuler</string>
    </property>
   </action>
   <action name="redoAction">
    <property name="text">
-    <string>&amp;Redo</string>
+    <string>&amp;Rétablir</string>
+   </property>
+   <property name="toolTip">
+    <string>Rétablir</string>
    </property>
   </action>
   <action name="aboutTricompAction">
