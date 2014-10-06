@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,4 +19,10 @@ MainWindow::~MainWindow()
 void MainWindow::on_quitAction_triggered()
 {
     qApp->quit();
+}
+
+void MainWindow::on_aboutTricompAction_triggered()
+{
+    QMessageBox::information(this,"A propos de TriComp",
+    "TriComp est un assistant pour tricoteur. \n Plus d'informations sur \n https://github.com/TriComp");
 }

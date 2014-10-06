@@ -17,6 +17,7 @@ public:
 
 private slots:
     void on_quitAction_triggered();
+    void on_aboutTricompAction_triggered();
 
 private:
     Ui::MainWindow *ui;
