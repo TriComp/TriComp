@@ -10,6 +10,10 @@ Détail des fichiers :
 
 L'aspect général de la fenêtre a été créé à l'aide de Qt Designer.
 
+-WE ARE LEGION-
+PPP Project
+-WE ARE LEGION-
+
 Compilation :
 -------------
 
