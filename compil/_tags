@@ -1,7 +1,7 @@
 true: bin_annot
 
 # OASIS_START
-# DO NOT EDIT (digest: 3e190951f6cee425d69455d9e4d234d1)
+# DO NOT EDIT (digest: 1f2357f9d9781eb453db91551e91b3c2)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -16,8 +16,4 @@ true: bin_annot
 "_darcs": -traverse
 "_darcs": not_hygienic
 # Executable tricomp
-<src/main.{native,byte}>: pkg_core
-<src/main.{native,byte}>: pkg_threads
-<src/*.ml{,i}>: pkg_core
-<src/*.ml{,i}>: pkg_threads
 # OASIS_STOP
