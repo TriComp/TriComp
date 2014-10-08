@@ -1,0 +1,62 @@
+# +-------------------------------------------------------------------+
+# | Package parameters                                                |
+# +-------------------------------------------------------------------+
+
+OASISFormat: 0.3
+OCamlVersion: >= 3.12
+Name: tricomp 
+Version: 0
+LicenseFile: LICENSE
+License: GPL-2
+Authors: Tricomp
+Maintainers: Tricomp
+Homepage: https://github.com/tricomp/tricomp
+BuildTools: ocamlbuild
+Plugins: DevFiles (0.3), META (0.3)
+# XDevFilesEnableMakefile: false
+# FilesAB: src/lib/uTop_version.ml.ab
+Synopsis: Synopsis
+Description:
+  Blablabla.
+
+# +-------------------------------------------------------------------+
+# | The toplevel                                                      |
+# +-------------------------------------------------------------------+
+
+Executable tricomp
+  Install: true
+  Path: src
+  CompiledObject: best
+  MainIs: main.ml
+  BuildDepends: 
+
+# +-------------------------------------------------------------------+
+# | Doc                                                               |
+# +-------------------------------------------------------------------+
+
+#Document "utop-api"
+#  Title: API reference for utop
+#  Type: ocamlbuild (0.3)
+#  Install: true
+#  InstallDir: $htmldir/api
+#  DataFiles: style.css
+#  BuildTools: ocamldoc
+#  XOCamlbuildPath: ./
+#  XOCamlbuildLibraries: utop
+
+# +-------------------------------------------------------------------+
+# | Manual pages                                                      |
+# +-------------------------------------------------------------------+
+
+# +-------------------------------------------------------------------+
+# | Configuration examples                                            |
+# +-------------------------------------------------------------------+
+
+# +-------------------------------------------------------------------+
+# | Misc                                                              |
+# +-------------------------------------------------------------------+
+
+SourceRepository head
+  Type: git
+  Location: https://github.com/tricomp/tricomp.git
+  Browser: https://github.com/tricomp/tricomp
