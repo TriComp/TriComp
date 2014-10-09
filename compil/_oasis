@@ -13,50 +13,39 @@ Maintainers: Tricomp
 Homepage: https://github.com/tricomp/tricomp
 BuildTools: ocamlbuild
 Plugins: DevFiles (0.3), META (0.3)
-# XDevFilesEnableMakefile: false
-# FilesAB: src/lib/uTop_version.ml.ab
 Synopsis: Synopsis
 Description:
   Blablabla.
 
-# +-------------------------------------------------------------------+
-# | The toplevel                                                      |
-# +-------------------------------------------------------------------+
+Library graph
+  Path: src/graph
+  Modules: Graph # Ajouter en dessous les modules qui se trouvent dans le dossier
+  CompiledObject: Best
+  Install: false
+
+Library frontend
+  Path: src/frontend
+  Modules: Frontend # Ajouter en dessous les modules qui se trouvent dans le dossier
+  CompiledObject: Best
+  BuildDepends: graph
+  Install: false
+
+Library backend
+  Path: src/backend
+  Modules: Backend # Ajouter en dessous les modules qui se trouvent dans le dossier
+  CompiledObject: Best
+  BuildDepends: graph	
+  Install: false
 
 Executable tricomp
   Install: true
   Path: src
   CompiledObject: best
   MainIs: main.ml
-  BuildDepends: 
-      core,
-      threads
-
-# +-------------------------------------------------------------------+
-# | Doc                                                               |
-# +-------------------------------------------------------------------+
-
-#Document "utop-api"
-#  Title: API reference for utop
-#  Type: ocamlbuild (0.3)
-#  Install: true
-#  InstallDir: $htmldir/api
-#  DataFiles: style.css
-#  BuildTools: ocamldoc
-#  XOCamlbuildPath: ./
-#  XOCamlbuildLibraries: utop
-
-# +-------------------------------------------------------------------+
-# | Manual pages                                                      |
-# +-------------------------------------------------------------------+
-
-# +-------------------------------------------------------------------+
-# | Configuration examples                                            |
-# +-------------------------------------------------------------------+
-
-# +-------------------------------------------------------------------+
-# | Misc                                                              |
-# +-------------------------------------------------------------------+
+  BuildDepends: core,
+                threads,
+                frontend,
+                backend
 
 SourceRepository head
   Type: git

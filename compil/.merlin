@@ -1,3 +1,11 @@
 S src
+S src/frontend
+S src/backend
+S src/graph
+
 B _build/src
+B _build/src/frontend
+B _build/src/backend
+B _build/src/graph
+
 PKG core threads

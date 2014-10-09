@@ -1,0 +1,12 @@
+# OASIS_START
+# DO NOT EDIT (digest: c8d67d661a03a3da07d651876b080de0)
+version = "0"
+description = "Synopsis"
+requires = "graph"
+archive(byte) = "frontend.cma"
+archive(byte, plugin) = "frontend.cma"
+archive(native) = "frontend.cmxa"
+archive(native, plugin) = "frontend.cmxs"
+exists_if = "frontend.cma"
+# OASIS_STOP
+
