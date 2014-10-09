@@ -29,6 +29,8 @@ Executable tricomp
   CompiledObject: best
   MainIs: main.ml
   BuildDepends: 
+      core,
+      threads
 
 # +-------------------------------------------------------------------+
 # | Doc                                                               |
