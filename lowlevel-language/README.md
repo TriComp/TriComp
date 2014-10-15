@@ -3,17 +3,16 @@
 
 ## Titre du tricot
 
- on présente d'abord potentiellement quelques informations préliminaires : matériel requis, 
-auteur du modèle.. 
+On présente d'abord potentiellement quelques informations préliminaires : matériel requis, 
+auteur du modèle...
 
 ## Présentation du patron du tricot
 
-liste des différentes partie à tricoter, dans l'ordre ou elles doivent être tricotées
-
-
-
+Liste des différentes parties à tricoter, dans l'ordre où elles doivent être tricotées.
 
 ## Ieme partie à tricoter
+
+Un exemple : 
 
 - aiguilles et laine à utiliser 
 
@@ -30,6 +29,6 @@ liste des différentes partie à tricoter, dans l'ordre ou elles doivent être t
 
 ## Keme méta-instruction
 
-- Prendre la partie I
+- Prendre la partie I ;
 
-- Coudre son bord gauche avec son bord droit
+- Coudre son bord gauche avec son bord droit.

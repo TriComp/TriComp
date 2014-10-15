@@ -7,8 +7,11 @@ TARGET = interface
 INCLUDEPATH += .
 
 # Input
-HEADERS += mainwindow.h
-FORMS += mainwindow.ui
-SOURCES += main.cpp mainwindow.cpp
+HEADERS += mainwindow.h \
+    subwindows.h
+FORMS += mainwindow.ui \
+    newKnit.ui
+SOURCES += main.cpp mainwindow.cpp \
+    subwindows.cpp
 RESOURCES += ressources.qrc
 QT += widgets
