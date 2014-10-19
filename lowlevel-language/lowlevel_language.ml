@@ -26,12 +26,12 @@ type modele = title * description * instructions;;
 
 
 (* fonction de traduction vers le texte final *)
-let trad = function
+let trad : stitch -> string = function
 	| Endroit -> "endroit"
 	| Envers -> "envers"
 	| Torse -> "torse"
 
-let trad : stitch list -> string = function
-	(a :: l) -> "un point " ^ (trad a) ^ " puis " ^ trad l
+let rec trad : stitch list -> string = function
+	(a :: l) -> "un point " ^ (trad a) ^ " puis " ^ ((trad : stitch list -> string) l)
 	| a :: nil  -> "un point " ^ trad a 
 	| nil -> ""
