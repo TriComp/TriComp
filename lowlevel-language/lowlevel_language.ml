@@ -30,9 +30,9 @@ let string_of_stitch = function
 	| Torse -> "torse"
 
 let rec string_of_stitchlist = function
-	| a:: []  -> "un point " ^ string_of_stitch a
+	| [] -> ""
+	| [a]  -> "un point " ^ string_of_stitch a
 	| a :: l -> "un point " ^ string_of_stitch a ^ " puis " ^ string_of_stitchlist l
-	| nil -> ""
 
 let string_of_row r =
 	let (l,i) = r in
@@ -42,7 +42,7 @@ let string_of_row r =
 let string_of_rowlist l =
 	let rec aux i = function 
 		a::q ->  "Rang " ^ string_of_int i ^ " : " ^ string_of_row a ^ aux (i+1) q
-		| nil -> "" in 
+		| [] -> "" in
 	aux 1 l
 
 let string_of_parallelogram p =
@@ -52,7 +52,7 @@ let string_of_parallelogram p =
 
 let rec string_of_piece = function
 	a::l -> string_of_parallelogram a ^ "\n" ^ string_of_piece l
-	| nil -> ""
+	| [] -> ""
 
 let string_of_modele m = 
 	let (title, description, piece) = m in
