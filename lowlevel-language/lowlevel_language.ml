@@ -24,14 +24,45 @@ donner les instructions à l'utilisateur *)
 type modele = title * description * instructions;;
 
 
-
-(* fonction de traduction vers le texte final *)
-let trad : stitch -> string = function
+let string_of_stitch = function
 	| Endroit -> "endroit"
 	| Envers -> "envers"
 	| Torse -> "torse"
 
-let rec trad : stitch list -> string = function
-	(a :: l) -> "un point " ^ (trad a) ^ " puis " ^ ((trad : stitch list -> string) l)
-	| a :: nil  -> "un point " ^ trad a 
+let rec string_of_stitchlist = function
+	| a :: l -> "un point " ^ string_of_stitch a ^ " puis " ^ string_of_stitchlist l
+	| a::_  -> "un point " ^ string_of_stitch a
 	| nil -> ""
+
+let string_of_row r =
+	let (l,i) = r in
+	"Tricotez " ^ string_of_stitchlist l
+	^ ", et répétez " ^ string_of_int i ^ " fois ce motif. \n"
+
+let string_of_rowlist l =
+	let rec aux i = function 
+		a::q ->  "Rang " ^ string_of_int i ^ " : " ^ string_of_row a ^ aux (i+1) q
+		| nil -> "" in 
+	aux 1 l
+
+let string_of_parallelogram p =
+	let (rl, i) = p in
+	string_of_rowlist rl ^ "Tricotez au total " ^ string_of_int i 
+	^ " fois ces " ^ string_of_int (List.length rl) ^ " rangs.\n"
+
+let rec string_of_piece = function
+	a::l -> string_of_parallelogram a ^ "\n" ^ string_of_piece l
+	| nil -> ""
+
+let string_of_modele m = 
+	let (title, description, piece) = m in
+	title ^ "\n" ^ description ^ "\n\n"
+	^ "Suivez les instructions suivantes pour obtenir votre tricot : \n\n"
+	^ string_of_piece piece;;
+
+(*exemple *)
+let p = [ ([Endroit; Envers], 12); ([Envers; Endroit; Envers],8)], 10
+let m = "ECHARPE", "écharpe polaire de Blaire", [p]
+let s = string_of_modele m in
+print_string s
+
