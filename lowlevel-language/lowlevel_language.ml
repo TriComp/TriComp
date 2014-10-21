@@ -67,5 +67,4 @@ let test () =
 	let s = string_of_modele m in
 		print_string s;;
 
-
-test ()
+if !Sys.interactive then () else test ();;
