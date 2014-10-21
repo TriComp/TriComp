@@ -1,6 +1,6 @@
 (* construction de la description de piece en language bas-niveau *)
 
-type stitch = Endroit | Envers | Torse
+type stitch = Endroit | Envers | Torse | Vide
 
 type row = stitch list * int
 (* description du motif et le nombre de fois qu'on le répète sur la ligne *)
@@ -28,6 +28,7 @@ let string_of_stitch = function
 	| Endroit -> "endroit"
 	| Envers -> "envers"
 	| Torse -> "torse"
+	| Vide -> "vide"
 
 let rec string_of_stitchlist = function
 	| [] -> ""
@@ -67,7 +68,7 @@ let string_of_modele m =
 
 (*exemple *)
 let test () =
-	let p = [ [([Endroit; Envers], 12)]; [([Envers; Endroit; Envers],8)]; [([Envers; Endroit],2);([Endroit; Envers],2)]], 10 in
+	let p = [ [([Vide],12)];[([Endroit; Envers], 12)]; [([Envers; Endroit; Envers],8)]; [([Envers; Endroit],2);([Endroit; Envers],2)]], 10 in
 	let m = "ECHARPE", "écharpe polaire de Blaire", [p] in
 	let s = string_of_modele m in
 		print_string s;;
