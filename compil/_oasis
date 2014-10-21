@@ -4,7 +4,7 @@
 
 OASISFormat: 0.3
 OCamlVersion: >= 4.01
-Name: tricomp 
+Name: tricomp
 Version: 0
 LicenseFile: LICENSE
 License: GPL-2
@@ -25,16 +25,17 @@ Library graph
 
 Library frontend
   Path: src/frontend
-  Modules: Frontend # Ajouter en dessous les modules qui se trouvent dans le dossier
+  Modules: Frontend, Descr, Descr_lexer, Descr_parser
   CompiledObject: Best
   BuildDepends: graph
+  BuildTools+: ocamllex, menhir
   Install: false
 
 Library backend
   Path: src/backend
   Modules: Backend # Ajouter en dessous les modules qui se trouvent dans le dossier
   CompiledObject: Best
-  BuildDepends: graph	
+  BuildDepends: graph
   Install: false
 
 Executable tricomp

@@ -2,11 +2,11 @@
 
 type name = string
 
-module StringMap : (Map.S with type key = name)
+module StringMap = Map.Make (struct type t = name let compare = compare end)
 
 (* Atoms*)
 
-type pattern = string (* Description of a minimal pattern, maybe we can start with Endroit | Envers |... (knit/purl stitches?) *)
+type pattern = string(* Description of a minimal pattern, maybe we can start with Endroit | Envers |... (knit/purl stitches?) *)
 
 type trapezoid = { height : int
                  ; shift : int
@@ -32,3 +32,5 @@ type garment = { elements : element StringMap.t
                ; name : string
                ; descr : string
                }
+
+(* Constructeurs *)
