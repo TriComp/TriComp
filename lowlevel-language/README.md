@@ -32,3 +32,17 @@ Un exemple :
 - Prendre la partie I ;
 
 - Coudre son bord gauche avec son bord droit.
+
+
+
+Exemple de sortie
+=================
+
+ECHARPE
+écharpe polaire de Blaire
+
+Suivez les instructions suivantes pour obtenir votre tricot :
+
+Rang 1 : Tricotez un point endroit puis un point envers, et répétez 12 fois ce motif.
+Rang 2 : Tricotez un point envers puis un point endroit puis un point envers, et répétez 8 fois ce motif.
+Tricotez au total 10 fois ces 2 rangs.
