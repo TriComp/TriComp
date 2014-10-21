@@ -34,10 +34,15 @@ let rec string_of_stitchlist = function
 	| [a]  -> "un point " ^ string_of_stitch a
 	| a :: l -> "un point " ^ string_of_stitch a ^ " puis " ^ string_of_stitchlist l
 
-let string_of_row r =
+let string_of_instructions r =
 	let (l,i) = r in
 	"Tricotez " ^ string_of_stitchlist l
 	^ ", et répétez " ^ string_of_int i ^ " fois ce motif. \n"
+
+let rec string_of_row = function
+	| [] -> ""
+	| [a] -> string_of_instructions a
+	| a::l -> string_of_instructions a ^ "         " ^ string_of_row l
 
 let string_of_rowlist l =
 	let rec aux i = function 
@@ -62,7 +67,7 @@ let string_of_modele m =
 
 (*exemple *)
 let test () =
-	let p = [ ([Endroit; Envers], 12); ([Envers; Endroit; Envers],8)], 10 in
+	let p = [ [([Endroit; Envers], 12)]; [([Envers; Endroit; Envers],8)]; [([Envers; Endroit],2);([Endroit; Envers],2)]], 10 in
 	let m = "ECHARPE", "écharpe polaire de Blaire", [p] in
 	let s = string_of_modele m in
 		print_string s;;
