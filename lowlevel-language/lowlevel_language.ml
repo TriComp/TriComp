@@ -30,8 +30,8 @@ let string_of_stitch = function
 	| Torse -> "torse"
 
 let rec string_of_stitchlist = function
+	| a:: []  -> "un point " ^ string_of_stitch a
 	| a :: l -> "un point " ^ string_of_stitch a ^ " puis " ^ string_of_stitchlist l
-	| a::_  -> "un point " ^ string_of_stitch a
 	| nil -> ""
 
 let string_of_row r =
@@ -58,11 +58,14 @@ let string_of_modele m =
 	let (title, description, piece) = m in
 	title ^ "\n" ^ description ^ "\n\n"
 	^ "Suivez les instructions suivantes pour obtenir votre tricot : \n\n"
-	^ string_of_piece piece;;
+	^ string_of_piece piece
 
 (*exemple *)
-let p = [ ([Endroit; Envers], 12); ([Envers; Endroit; Envers],8)], 10
-let m = "ECHARPE", "écharpe polaire de Blaire", [p]
-let s = string_of_modele m in
-print_string s
+let test () =
+	let p = [ ([Endroit; Envers], 12); ([Envers; Endroit; Envers],8)], 10 in
+	let m = "ECHARPE", "écharpe polaire de Blaire", [p] in
+	let s = string_of_modele m in
+		print_string s;;
 
+
+test ()
