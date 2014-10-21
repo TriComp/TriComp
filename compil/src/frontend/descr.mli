@@ -20,7 +20,7 @@ type join_slot = Left | Right
 (* Elements *)
 
 (* Note : how do we want to specify width/height? On each piece? On trapezoids? *)
-type element = Bottom of element
+type element = (* Bottom of element *)
              | Trapezoid of trapezoid * element
              | Split of element * int * element (* Left, gap width, right *)
              | Link of name * join_slot
@@ -32,3 +32,5 @@ type garment = { elements : element StringMap.t
                ; name : string
                ; descr : string
                }
+
+val print_garment : garment -> string

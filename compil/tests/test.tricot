@@ -1,7 +1,13 @@
 Name : test
 Description : "JGF"
 
+piece a := start || stop
+
+piece b := start || split 10 {stop}{stop}
+
+piece c := start || link right a
+
 piece my_piece := start
-               || split 10 { trapezoid ( height : 12 , shift : 5 , upper_width:2 , lower_width : 1 , pattern : youhou )
-                       || link left next
-                       }{ link right next }
+               || split 10 { trapezoid ( height : 12, shift : 5, upper_width : 2, lower_width : 1, pattern : youhou )
+                          || link left next
+                          }{ link right next }
