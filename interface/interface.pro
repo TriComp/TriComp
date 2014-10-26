@@ -5,10 +5,12 @@
 TEMPLATE = app
 TARGET = interface
 INCLUDEPATH += .
-
 # Input
-HEADERS += mainwindow.h
-FORMS += mainwindow.ui
-SOURCES += main.cpp mainwindow.cpp
+HEADERS += mainwindow.h \
+    newknitdialog.h
+FORMS += mainwindow.ui \
+    newknitdialog.ui
+SOURCES += main.cpp mainwindow.cpp \
+    newknitdialog.cpp
 RESOURCES += ressources.qrc
 QT += widgets
