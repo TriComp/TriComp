@@ -31,6 +31,11 @@ void MainWindow::on_newAction_triggered()
     newDlg->show();
 }
 
+void MainWindow::on_openAction_triggered()
+{
+    QMessageBox::information(this,"Your choice",newDlg->getChoice());
+}
+
 void MainWindow::on_aboutTricompAction_triggered()
 {
     QMessageBox::information(this,"A propos de TriComp",

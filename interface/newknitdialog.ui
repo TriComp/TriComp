@@ -102,5 +102,24 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>choiceBox</sender>
+   <signal>currentTextChanged(QString)</signal>
+   <receiver>newKnitDialog</receiver>
+   <slot>changeChoice()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>151</x>
+     <y>125</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>151</x>
+     <y>146</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>changeChoice()</slot>
+ </slots>
 </ui>

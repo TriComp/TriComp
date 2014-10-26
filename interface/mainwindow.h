@@ -21,10 +21,12 @@ private slots:
     void on_aboutTricompAction_triggered();
     void on_instructionsAction_triggered();
     void on_newAction_triggered();
+    void on_openAction_triggered();
 
 private:
     Ui::MainWindow *ui;
     newKnitDialog *newDlg;
+
 };
 
 #endif // MAINWINDOW_H
