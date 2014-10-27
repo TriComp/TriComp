@@ -273,7 +273,7 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QTextEdit" name="textEdit">
+        <widget class="QTextEdit" name="instrLabel">
          <property name="readOnly">
           <bool>true</bool>
          </property>

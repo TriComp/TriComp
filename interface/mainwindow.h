@@ -22,10 +22,12 @@ private slots:
     void on_instructionsAction_triggered();
     void on_newAction_triggered();
     void on_openAction_triggered();
+    void newKnit();
 
 private:
     Ui::MainWindow *ui;
     newKnitDialog *newDlg;
+    bool saveDone;
 
 };
 

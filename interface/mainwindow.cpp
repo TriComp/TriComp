@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(qApp, SIGNAL(lastWindowClosed()), ui->quitAction, SLOT(trigger()));
     connect(ui->quitAction, SIGNAL(), qApp, SLOT(quit()));
-    connect(newDlg, SIGNAL(buttonClicked(QAbstractButton*)),this, SLOT(createNewKnit(QAbstractButton*)));
+    connect(newDlg,SIGNAL(newKnit()),this,SLOT(newKnit()));
 }
 
 MainWindow::~MainWindow()
@@ -31,9 +31,16 @@ void MainWindow::on_newAction_triggered()
     newDlg->show();
 }
 
+void MainWindow::newKnit()
+{
+    QString choice = newDlg->getChoice();
+    // Now just put the choice in the instructions window
+    ui->instrLabel->setHtml(newDlg->getChoice());
+}
+
 void MainWindow::on_openAction_triggered()
 {
-    QMessageBox::information(this,"Your choice",newDlg->getChoice());
+
 }
 
 void MainWindow::on_aboutTricompAction_triggered()

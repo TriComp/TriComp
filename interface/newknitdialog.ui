@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>381</width>
-    <height>249</height>
+    <width>384</width>
+    <height>167</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>210</y>
+     <x>20</x>
+     <y>110</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -32,8 +32,8 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>66</y>
+     <x>40</x>
+     <y>30</y>
      <width>241</width>
      <height>21</height>
     </rect>
@@ -45,8 +45,8 @@
   <widget class="QComboBox" name="choiceBox">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>100</y>
+     <x>30</x>
+     <y>60</y>
      <width>251</width>
      <height>27</height>
     </rect>
@@ -74,15 +74,15 @@
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
    <receiver>newKnitDialog</receiver>
-   <slot>accept()</slot>
+   <slot>ok()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>238</x>
+     <y>141</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
-     <y>274</y>
+     <y>166</y>
     </hint>
    </hints>
   </connection>
@@ -93,12 +93,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>306</x>
+     <y>141</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
-     <y>274</y>
+     <y>166</y>
     </hint>
    </hints>
   </connection>
@@ -109,8 +109,8 @@
    <slot>changeChoice()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>151</x>
-     <y>125</y>
+     <x>121</x>
+     <y>85</y>
     </hint>
     <hint type="destinationlabel">
      <x>151</x>
@@ -121,5 +121,6 @@
  </connections>
  <slots>
   <slot>changeChoice()</slot>
+  <slot>ok()</slot>
  </slots>
 </ui>

@@ -18,9 +18,12 @@ public:
     ~newKnitDialog();
     QString getChoice();
 
+signals:
+    void newKnit();
+
 public slots:
-    void createNewKnit(QAbstractButton* b);
     void changeChoice();
+    void ok();
 
 private:
     Ui::newKnitDialog *ui;
