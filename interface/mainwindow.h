@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMessageBox>
 #include "newknitdialog.h"
 
 namespace Ui {
@@ -17,17 +18,33 @@ public:
     ~MainWindow();
 
 private slots:
+    // quit
     void on_quitAction_triggered();
-    void on_aboutTricompAction_triggered();
-    void on_instructionsAction_triggered();
+    // new
     void on_newAction_triggered();
-    void on_openAction_triggered();
     void newKnit();
+    // open
+    void on_openAction_triggered();
+    void open();
+    // save
+    void saveDlgTreatButton(QAbstractButton* button);
+    void doSaveDlgAction();
+    void save();
+    void on_saveAction_triggered();
+    void on_saveAsAction_triggered();
+    // instructions
+    void on_instructionsAction_triggered();
+    // others
+    void on_aboutTricompAction_triggered();
+
 
 private:
     Ui::MainWindow *ui;
     newKnitDialog *newDlg;
-    bool saveDone;
+    QMessageBox *saveDlg;
+    bool isSaved;
+    enum afterSaveAction {NEW, OPEN, QUIT, NOTHING}; // useful with the save dialog and cancel options
+    afterSaveAction act;
 
 };
 
