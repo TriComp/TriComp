@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QGraphicsView>
 #include <QGraphicsTextItem>
+#include <representation.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -72,20 +73,31 @@ void MainWindow::on_openAction_triggered()
 {
 
     auto *v = ui->patternView;
-    QGraphicsScene *scene = new QGraphicsScene(-100, -100, 200, 200);
+    QGraphicsScene *scene = new QGraphicsScene();
     QPen p;
     p.setColor(QColor(100, 20, 12));
-    auto *r = scene->addRect(QRect(50, 50, 50, 50), p);
     auto *text = scene->addText("La vie est belle");
-    r->setPos(0,0);
     v->setScene(scene);
-    v->show();
-    v->ensureVisible(text->boundingRect());
     ui->patternView->setBackgroundBrush(QBrush(QColor("red")));
     ui->instrLabel->setHtml("gggggrrrr");
+
+    auto *stop1 = new Stop();
+    auto *stop2 = new Stop();
+    auto *l = new TrapezoidElem(Trapezoid{120, -13, 60, 22}, stop1);
+    auto *r = new TrapezoidElem(Trapezoid{120, 22, 120, 100}, stop2);
+    auto *split = new Split(l, r, 60);
+    auto *e2 = new TrapezoidElem(Trapezoid{120, -13, 180, 240}, split);
+    auto *e1 = new TrapezoidElem(Trapezoid{100, 30, 200, 180}, e2);
+    e1->addToScene(scene, QPointF(0,0));
+
+    v->setRenderHint(QPainter::HighQualityAntialiasing);
+    //v->translate(100, -100);
+
+
     v->update();
     v->setUpdatesEnabled(true);
     v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+
 
     if(!isSaved) {
         saveDlg->show();
@@ -98,7 +110,7 @@ void MainWindow::on_openAction_triggered()
 void MainWindow::open()
 {
     // open, just to check the program works
-    ui->instrLabel->setHtml("You want to open");
+    //ui->instrLabel->setHtml("You want to open");
 
     /*************************\
      * The opening file code *
