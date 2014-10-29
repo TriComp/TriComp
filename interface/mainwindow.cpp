@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include "newknitdialog.h"
 #include <QMessageBox>
+#include <QGraphicsView>
+#include <QGraphicsTextItem>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,8 +25,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(newDlg,SIGNAL(newKnit()),this,SLOT(newKnit()));
 
     // Variables
-    isSaved = true ;
-    act = NOTHING ;
+    isSaved = true;
+    act = NOTHING;
+
 }
 
 MainWindow::~MainWindow()
@@ -67,6 +70,23 @@ void MainWindow::newKnit()
 
 void MainWindow::on_openAction_triggered()
 {
+
+    auto *v = ui->patternView;
+    QGraphicsScene *scene = new QGraphicsScene(-100, -100, 200, 200);
+    QPen p;
+    p.setColor(QColor(100, 20, 12));
+    auto *r = scene->addRect(QRect(50, 50, 50, 50), p);
+    auto *text = scene->addText("La vie est belle");
+    r->setPos(0,0);
+    v->setScene(scene);
+    v->show();
+    v->ensureVisible(text->boundingRect());
+    ui->patternView->setBackgroundBrush(QBrush(QColor("red")));
+    ui->instrLabel->setHtml("gggggrrrr");
+    v->update();
+    v->setUpdatesEnabled(true);
+    v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+
     if(!isSaved) {
         saveDlg->show();
     }
@@ -84,6 +104,8 @@ void MainWindow::open()
      * The opening file code *
      *************************/
     act = NOTHING ;
+
+
 }
 
 void MainWindow::saveDlgTreatButton(QAbstractButton* b)
