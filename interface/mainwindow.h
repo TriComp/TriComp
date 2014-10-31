@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include "newknitdialog.h"
+#include "editor.h"
 
 namespace Ui {
   class MainWindow /*: public Ui::MainWindow {}*/;
@@ -15,6 +16,7 @@ class MainWindow : public QMainWindow //, public Ui::MainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+    static Editor *editor() { return editor(); }
     ~MainWindow();
 
 private slots:
@@ -45,7 +47,7 @@ private:
     bool isSaved;
     enum afterSaveAction {NEW, OPEN, QUIT, NOTHING}; // useful with the save dialog and cancel options
     afterSaveAction act;
-
+    static Editor *editor_;
 };
 
 #endif // MAINWINDOW_H

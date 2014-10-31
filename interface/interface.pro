@@ -8,11 +8,13 @@ INCLUDEPATH += .
 # Input
 HEADERS += mainwindow.h \
     newknitdialog.h \
-    representation.h
+    representation.h \
+    editor.h
 FORMS += mainwindow.ui \
     newknitdialog.ui
 SOURCES += main.cpp mainwindow.cpp \
-    newknitdialog.cpp representation.cpp
+    newknitdialog.cpp representation.cpp \
+    editor.cpp
 RESOURCES += ressources.qrc
 QT += widgets
 CONFIG += c++11

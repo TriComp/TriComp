@@ -74,12 +74,7 @@ void MainWindow::on_openAction_triggered()
 
     auto *v = ui->patternView;
     QGraphicsScene *scene = new QGraphicsScene();
-    QPen p;
-    p.setColor(QColor(100, 20, 12));
-    auto *text = scene->addText("La vie est belle");
     v->setScene(scene);
-    ui->patternView->setBackgroundBrush(QBrush(QColor("red")));
-    ui->instrLabel->setHtml("gggggrrrr");
 
     auto *stop1 = new Stop();
     auto *stop2 = new Stop();
@@ -88,15 +83,15 @@ void MainWindow::on_openAction_triggered()
     auto *split = new Split(l, r, 60);
     auto *e2 = new TrapezoidElem(Trapezoid{120, -13, 180, 240}, split);
     auto *e1 = new TrapezoidElem(Trapezoid{100, 30, 200, 180}, e2);
-    e1->addToScene(scene, QPointF(0,0));
+
+    attachItems(e1, scene);
 
     v->setRenderHint(QPainter::HighQualityAntialiasing);
-    //v->translate(100, -100);
 
 
     v->update();
-    v->setUpdatesEnabled(true);
-    v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+//    v->setUpdatesEnabled(true);
+//    v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 
 
     if(!isSaved) {

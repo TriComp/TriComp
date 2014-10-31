@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <QGraphicsItem>
 #include <QGraphicsPolygonItem>
@@ -6,6 +8,10 @@
 #include <QGraphicsTextItem>
 #include <QVector2D>
 #include <vector>
+#include <functional>
+
+class EditorItem;
+
 class Pattern {
     std::string name;
 };
@@ -24,14 +30,19 @@ enum class Slot { Left, Right };
 /*
  * TODO: destructors, investigate hierachy features of GraphicsScene
  */
-
+enum class ElementType {Trapezoid, Split, Stop, Link};
 class Element {
 public:
+    const ElementType kind;
+    Element(ElementType k) : kind(k) {}
+
+
     // In subclasses, delegate to QGraphicsPolygonItem
-    QGraphicsItem *gfx;
+    EditorItem *gfx;
     virtual std::vector<Element *> children() const = 0;
-    virtual void addToScene(QGraphicsScene *s, QPointF origin) const = 0;
     virtual int width() const = 0;
+
+    virtual void forEach(std::function<void(Element *)> f) = 0;
 };
 
 class TrapezoidElem : public Element {
@@ -39,28 +50,19 @@ public:
     Trapezoid geom;
     Element *next;
 
-    TrapezoidElem(Trapezoid t, Element *next) : next(next) {
-        geom = t;
-        QPointF p2(t.shift, -t.height); // Inverted y axis :-[
-        QPointF p3(p2.x() + t.upper_width, p2.y());
-        QPointF p4(t.lower_width, 0);
-        QVector<QPointF> points {QPointF(0, 0), p2, p3, p4};
-        auto *item = new QGraphicsPolygonItem();
-        item->setPolygon(QPolygonF(points));
-
-        gfx = item;
+    TrapezoidElem(Trapezoid t, Element *next) :
+        Element(ElementType::Trapezoid), geom(t), next(next) {
     }
 
     std::vector<Element *> children() const override { return {next}; }
 
-    void addToScene(QGraphicsScene *s, QPointF origin) const override {
-        s->addItem(gfx);
-        gfx->setPos(origin);
-        if (next)
-            next->addToScene(s, QPointF(origin.x() + geom.shift, origin.y() - geom.height));
-    }
-
     int width() const override { return geom.lower_width; }
+
+    void forEach(std::function<void(Element *)> f) override {
+        f(this);
+        if (next)
+            next->forEach(f);
+    }
 };
 
 class Split : public Element {
@@ -70,24 +72,20 @@ public:
     Element *right;
     int gap;
 
-    Split(Element *l, Element *r, int gap) : right(r), left(l), gap(gap) {
-        if (r && l) {
-            auto *item = new QGraphicsLineItem(0, 0, width(), 0);
-            gfx = item;
-        } else {
-            printf(":p %d", 2/0); // Whoever you are, I hate you
-        }
+    Split(Element *l, Element *r, int gap)
+        : Element(ElementType::Split), left(l), right(r), gap(gap) {
     }
 
     int width() const override { return left->width() + gap + right->width(); }
 
     std::vector<Element *> children() const override { return {left, right}; }
 
-    void addToScene(QGraphicsScene *s, QPointF origin) const override {
-        gfx->setPos(origin);
-        s->addItem(gfx);
-        left->addToScene(s, origin);
-        right->addToScene(s, origin + QPointF(left->width() + gap, 0));
+    void forEach(std::function<void(Element *)> f) override {
+        f(this);
+        if (left)
+            left->forEach(f);
+        if (right)
+            right->forEach(f);
     }
 };
 
@@ -95,47 +93,44 @@ class Link : public Element {
 public:
     std::string name;
     Slot slot;
-    Link(std::string name) : name(name) {
-        auto *item = new QGraphicsTextItem(QString("LINK to ") + name.c_str());
-        gfx = item;
+    Link(std::string name) : Element(ElementType::Link), name(name) {
     }
     std::vector<Element *> children() const override { return {}; }
 
-    void addToScene(QGraphicsScene *s, QPointF origin) const override {
-        gfx->setPos(origin + QPointF(0, -20));
-        s->addItem(gfx);
-    }
-
     int width() const override { return 100; } // hack
+
+    void forEach(std::function<void(Element *)> f) override {
+        f(this);
+    }
 };
 
 class Stop : public Element {
 public:
-    Stop() {
-        auto *item = new QGraphicsTextItem(QString("STOP"));
-        gfx = item;
+    Stop() : Element(ElementType::Stop) {
     }
     std::vector<Element *> children() const override { return {}; }
 
-    void addToScene(QGraphicsScene *s, QPointF origin) const override {
-        gfx->setPos(origin + QPointF(0, -20));
-        s->addItem(gfx);
-    }
-
     int width() const override { return 100; } // hack
+
+    void forEach(std::function<void(Element *)> f) override {
+        f(this);
+    }
 };
 
+template<typename T, typename A>
+class ElementVisitor {
+public:
+    virtual T visitLink(Link *s, A a) = 0;
+    virtual T visitTrapezoid(TrapezoidElem *s, A a) = 0;
+    virtual T visitStop(Stop *s, A a) = 0;
+    virtual T visitSplit(Split *s, A a) = 0;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    T visit(Element *e, A a) {
+        switch (e->kind) {
+        case ElementType::Link: visitLink(dynamic_cast<Link *>(e), a); break;
+        case ElementType::Stop: visitStop(dynamic_cast<Stop *>(e), a); break;
+        case ElementType::Trapezoid: visitTrapezoid(dynamic_cast<TrapezoidElem *>(e), a); break;
+        case ElementType::Split: visitSplit(dynamic_cast<Split *>(e), a);
+        }
+    }
+};
