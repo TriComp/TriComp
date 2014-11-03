@@ -15,13 +15,11 @@ TrapezoidItem::TrapezoidItem(TrapezoidElem *e) : elem(e) {
 }
 
 void TrapezoidItem::hoverEnterEvent (QGraphicsSceneHoverEvent * event) {
-    //if(!poly->isUnderMouse()) return;
     QBrush b(QColor("blue"));
     poly->setBrush(b);
     update();
 }
 void TrapezoidItem::hoverLeaveEvent (QGraphicsSceneHoverEvent * event) {
-    //if(poly->isUnderMouse()) return;
     QBrush b(QColor("green"));
     poly->setBrush(b);
     update();
