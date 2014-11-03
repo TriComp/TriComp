@@ -17,25 +17,26 @@ Synopsis: Synopsis
 Description:
   Blablabla.
 
-Library graph
-  Path: src/graph
-  Modules: Graph # Ajouter en dessous les modules qui se trouvent dans le dossier
+Library utils # Trucs pour le runtime
+  Path: src/utils
+  Modules: Utils
   CompiledObject: Best
-  Install: false
+  BuildDepends: core, threads
+  Install: true
 
-Library frontend
-  Path: src/frontend
-  Modules: Frontend, Descr, Descr_lexer, Descr_parser
+Library tricot # Le langage descriptif et ses fonctions de manipulation:
+  Path: src/tricot
+  Modules: Tricot, Descr, Descr_lexer, Descr_parser
   CompiledObject: Best
-  BuildDepends: graph
+  BuildDepends: utils
   BuildTools+: ocamllex, menhir
-  Install: false
+  Install: true
 
-Library backend
-  Path: src/backend
-  Modules: Backend # Ajouter en dessous les modules qui se trouvent dans le dossier
+Library compil # Le traducteur
+  Path: src/compil
+  Modules: Compil # Ajouter en dessous les modules qui se trouvent dans le dossier
   CompiledObject: Best
-  BuildDepends: graph
+  BuildDepends: utils, tricot
   Install: false
 
 Executable tricomp
@@ -43,10 +44,7 @@ Executable tricomp
   Path: src
   CompiledObject: best
   MainIs: main.ml
-  BuildDepends: core,
-                threads,
-                frontend,
-                backend
+  BuildDepends: utils, tricot, compil
 
 SourceRepository head
   Type: git

@@ -2,10 +2,11 @@ true: bin_annot
 true: use_menhir
 
 # OASIS_START
-# DO NOT EDIT (digest: 44305c8d8facf0c413ef7e19593226be)
+# DO NOT EDIT (digest: 83045f5bb266e8b9ad4a4cd05963c71b)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
+true: annot, bin_annot
 <**/.svn>: -traverse
 <**/.svn>: not_hygienic
 ".bzr": -traverse
@@ -16,23 +17,30 @@ true: use_menhir
 ".git": not_hygienic
 "_darcs": -traverse
 "_darcs": not_hygienic
-# Library graph
-"src/graph/graph.cmxs": use_graph
-# Library frontend
-"src/frontend/frontend.cmxs": use_frontend
-<src/frontend/*.ml{,i}>: use_graph
-# Library backend
-"src/backend/backend.cmxs": use_backend
-<src/backend/*.ml{,i}>: use_graph
+# Library utils
+"src/utils/utils.cmxs": use_utils
+<src/utils/*.ml{,i,y}>: package(core)
+<src/utils/*.ml{,i,y}>: package(threads)
+# Library tricot
+"src/tricot/tricot.cmxs": use_tricot
+<src/tricot/*.ml{,i,y}>: package(core)
+<src/tricot/*.ml{,i,y}>: package(threads)
+<src/tricot/*.ml{,i,y}>: use_utils
+# Library compil
+"src/compil/compil.cmxs": use_compil
+<src/compil/*.ml{,i,y}>: package(core)
+<src/compil/*.ml{,i,y}>: package(threads)
+<src/compil/*.ml{,i,y}>: use_tricot
+<src/compil/*.ml{,i,y}>: use_utils
 # Executable tricomp
 <src/main.{native,byte}>: package(core)
 <src/main.{native,byte}>: package(threads)
-<src/main.{native,byte}>: use_backend
-<src/main.{native,byte}>: use_frontend
-<src/main.{native,byte}>: use_graph
-<src/*.ml{,i}>: package(core)
-<src/*.ml{,i}>: package(threads)
-<src/*.ml{,i}>: use_backend
-<src/*.ml{,i}>: use_frontend
-<src/*.ml{,i}>: use_graph
+<src/main.{native,byte}>: use_compil
+<src/main.{native,byte}>: use_tricot
+<src/main.{native,byte}>: use_utils
+<src/*.ml{,i,y}>: package(core)
+<src/*.ml{,i,y}>: package(threads)
+<src/*.ml{,i,y}>: use_compil
+<src/*.ml{,i,y}>: use_tricot
+<src/*.ml{,i,y}>: use_utils
 # OASIS_STOP

@@ -1,26 +1,32 @@
 %{
 open Descr
-open Printf
+
+let eprintf = Core.Std.eprintf (* It had to be done *)
+
 type param = Int of int | Name of string
 
 exception Parse_error of string (* TODO : Add position in file *)
 
-
 let get_arg arg map =
-  try StringMap.find arg map
-    with Not_found -> eprintf "Arg missing : %s\n%!" arg; exit 1
+  match Core.Std.String.Map.find map arg with
+    Some arg -> arg
+  | None ->
+    eprintf "Arg missing : %s\n%!" arg;
+    exit 1
 
 let get_arg_int arg map =
   match get_arg arg map with
     Int i -> i
-  | _ -> eprintf "Int missing : %s\n%!" arg; exit 2
-
+  | _ ->
+    eprintf "Int missing : %s\n%!" arg;
+    exit 2
 
 let get_arg_name arg map =
   match get_arg arg map with
     Name n -> n
-  | _ -> eprintf "Name missing : %s\n%!" arg; exit 3
-
+  | _ ->
+    eprintf "Name missing : %s\n%!" arg;
+    exit 3
 
 let make_trapezoid args =
   { height = get_arg_int "height" args
@@ -40,8 +46,6 @@ let make_trapezoid args =
 %token START STOP TRAPEZOID LINK LEFT RIGHT SPLIT
 %token EOF
 
-%right SEQ
-
 %start <Descr.garment> main
 
 %%
@@ -56,9 +60,9 @@ main:
 ;
 
 body:
-  (* Empty *)                                   { StringMap.empty }
+  (* Empty *)                                   { Core.Std.String.Map.empty }
 | PIECE; n = NAME; DEF; START; SEQ; e = element; b = body
-                                                { StringMap.add n e b }
+                                                { Core.Std.String.Map.add b n e }
 ;
 
 element:
@@ -80,11 +84,11 @@ trapezoid_params:
   LPAREN; ps = params; RPAREN                    { (make_trapezoid ps) }
 
 params:
-  (* Empty *)                                   { StringMap.empty }
+  (* Empty *)                                   { Core.Std.String.Map.empty }
 | p = param                                     { let (k,v) = p in
-                                                  StringMap.add k v StringMap.empty }
+                                                  Core.Std.String.Map.singleton k v }
 | p = param; SEP; ps = params                   { let (k,v) = p in
-                                                  StringMap.add k v ps }
+                                                  Core.Std.String.Map.add ps k v }
 ;
 
 param:

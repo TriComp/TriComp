@@ -1,8 +1,8 @@
+open Core.Std
+
 (* High-level specification of a knitted garment *)
 
 type name = string
-
-module StringMap : (Map.S with type key = name)
 
 (* Atoms*)
 
@@ -28,7 +28,7 @@ type element = (* Bottom of element *)
 
 (* Garment *)
 
-type garment = { elements : element StringMap.t
+type garment = { elements : element String.Map.t
                ; name : string
                ; descr : string
                }

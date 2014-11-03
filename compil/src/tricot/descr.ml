@@ -1,10 +1,8 @@
-open Printf
+open Core.Std
 
 (* High-level specification of a knitted garment *)
 
 type name = string
-
-module StringMap = Map.Make (struct type t = name let compare = compare end)
 
 (* Atoms*)
 
@@ -30,7 +28,7 @@ type element = (* Bottom of element *)
 
 (* Garment *)
 
-type garment = { elements : element StringMap.t
+type garment = { elements : element String.Map.t
                ; name : string
                ; descr : string
                }
@@ -58,10 +56,10 @@ and print_element padding = function
     let new_padding = tab padding (String.length head) in
     sprintf "%s %s%s" head (print_block new_padding e1) (print_block new_padding e2)
 
-let print_elements name element s =
+let print_elements ~key:name ~data:element s : string = (* Fucking bullshit *)
   let head = sprintf "piece %s " name in
   let padding = tab "" (String.length head) in
   sprintf "%s\n\n%s:= start\n%s|| %s" s head padding (print_element padding element)
 
 let print_garment g =
-  sprintf "Name : %s\nDescription : \"%s\"%s\n%!" g.name g.descr (StringMap.fold print_elements g.elements "")
+  sprintf "Name : %s\nDescription : \"%s\"%s\n%!" g.name g.descr (String.Map.fold g.elements ~init:"" ~f:print_elements)

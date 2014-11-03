@@ -1,0 +1,12 @@
+# OASIS_START
+# DO NOT EDIT (digest: 3100e13a410041f549a0e00b5630569b)
+version = "0"
+description = "Synopsis"
+requires = "utils"
+archive(byte) = "tricot.cma"
+archive(byte, plugin) = "tricot.cma"
+archive(native) = "tricot.cmxa"
+archive(native, plugin) = "tricot.cmxs"
+exists_if = "tricot.cma"
+# OASIS_STOP
+
