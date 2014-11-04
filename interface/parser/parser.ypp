@@ -75,6 +75,7 @@ void error(char *s){
 %type<name> NAME
 %type<name> DESCR
 
+%type<integer> value
 %type<elt> element
 
 
@@ -101,10 +102,10 @@ body:
 ;
 
 element:
-  STOP                                        			{ }
-| LINK LEFT NAME                      				{ }
-| LINK RIGHT NAME						{ }
-| SPLIT INT LBRACE element RBRACE LBRACE element RBRACE	 	{ } 
+  STOP                                        			{ $$ = new Stop(); }
+| LINK LEFT NAME                      				{ $$ = new Link($3,/* Left */ ); }
+| LINK RIGHT NAME						{ $$ = new Link($3,/* Right */); }
+| SPLIT INT LBRACE element RBRACE LBRACE element RBRACE	 	{ $$ = new Split($4,$7,$2); } 
 | TRAPEZOID trapezoid_params SEQ element 			{ }
 ;
 

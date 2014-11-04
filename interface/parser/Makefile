@@ -17,7 +17,7 @@ representation.o: ../representation.cpp
 	g++ $(FLAGOUS) $(DEBUG) -c $<
 
 clean:
-	-rm -f $(OBJS) parser.cc parser.h lexer.cc *~ \#*
+	-rm -f $(OBJS) $(BIN) parser.cc parser.h lexer.cc *~ \#*
 
 realclean:
 	$(MAKE) clean

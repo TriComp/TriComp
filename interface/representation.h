@@ -87,7 +87,7 @@ class Link : public Element {
 public:
     std::string name;
     Slot slot;
-    Link(std::string name) : Element(ElementType::Link), name(name) {
+    Link(std::string name, Slot slot) : Element(ElementType::Link), name(name), slot(slot) {
     }
     std::vector<Element *> children() const override { return {}; }
 
