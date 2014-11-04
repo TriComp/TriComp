@@ -1,0 +1,129 @@
+/* ============================================================== */
+/*                             C PRELUDE                          */
+/* ============================================================== */
+
+%{
+
+#include "../representation.h"
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <iostream>
+#include <map>
+
+
+using namespace std;
+
+int line_number	= 1;	/* number of current source line */
+extern int yylex();	/* lexical analyzer generated from lex.l */
+extern char *yytext;	/* last token, defined in lex.l  */
+
+void yyerror(char *s){
+	fprintf(stderr, "line %d: syntax error. Last token was \"%s\"\n", line_number, yytext);
+	exit(1);
+}
+
+void error(char *s){
+	fprintf(stderr, "line %d: error: %s\n", line_number, s);
+	exit(1);
+}
+
+%}
+
+/* ============================================================== */
+/*                     TYPES OF NON-TERMINALS                     */         
+/* ============================================================== */
+
+%union {
+  int integer;
+  char* name;
+  map<string,int> param_map;
+}
+
+
+/* ============================================================== */
+/*                       TOKENS DECLARATION
+/* ============================================================== */
+
+/* Types */
+%token INT
+%token NAME
+%token DESCR
+
+/* Délimiteurs */
+%token LPAREN RPAREN
+%token LBRACE RBRACE
+
+/* Pieces */
+%token  PIECE DEF SEQ SEP COL
+
+/* Entete */
+%token H_NAME H_DESCR
+
+/* Vocabulary */
+%token START STOP TRAPEZOID LINK LEFT RIGHT SPLIT
+
+/* others */
+
+%token END_OF_FILE
+%right SEQ
+
+/* associate the types */
+
+%type<integer> INT
+%type<name> NAME
+%type<name> DESCR
+
+%type<param_map> params
+
+
+
+
+/* Axiom */
+%start main
+
+%%
+
+/* ============================================== */
+/*            The grammar with actions            */
+/* ============================================== */
+
+// TODO : Add actions
+
+main:
+	H_NAME NAME H_DESCR DESCR body END_OF_FILE 		{ }
+;
+
+body:
+      /* Empty */ 						{ }   
+      | PIECE NAME DEF START SEQ element body 			{ }
+;
+
+element:
+  STOP                                        			{ }
+| LINK LEFT NAME                      				{ }
+| LINK RIGHT NAME						{ }
+| SPLIT INT LBRACE element RBRACE LBRACE element RBRACE	 	{ } 
+| TRAPEZOID trapezoid_params SEQ element 			{ }
+;
+
+trapezoid_params:
+  LPAREN params RPAREN                    			{ }
+;
+
+params:
+  /* Empty */                                  			{ }
+|  param                                     			{ }
+| param SEP params                   				{ } 
+;
+
+param:
+  NAME COL value                      				{ }
+;
+
+value:
+  INT                                       			{ }
+| NAME                                      			{ }
+;
+
+

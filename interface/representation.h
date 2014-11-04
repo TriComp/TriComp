@@ -1,12 +1,6 @@
 #pragma once
 
 #include <string>
-#include <QGraphicsItem>
-#include <QGraphicsPolygonItem>
-#include <QGraphicsScene>
-#include <QGraphicsLineItem>
-#include <QGraphicsTextItem>
-#include <QVector2D>
 #include <vector>
 #include <functional>
 
