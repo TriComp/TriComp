@@ -1,5 +1,6 @@
 %{
 
+#include "../representation.h" /* used in parser.ypp */
 #include <string.h>	/* for strcmp, strdup & friends */
 #include <stdio.h>	/* for strcmp, strdup & friends */
 #include <stdlib.h>	/* for atoi() */

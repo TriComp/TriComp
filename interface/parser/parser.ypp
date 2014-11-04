@@ -37,7 +37,8 @@ void error(char *s){
 %union {
   int integer;
   char* name;
-  map<string,int> param_map;
+  Element* elt;
+//  map<string,int> param_map;
 }
 
 
@@ -74,7 +75,7 @@ void error(char *s){
 %type<name> NAME
 %type<name> DESCR
 
-%type<param_map> params
+%type<elt> element
 
 
 
