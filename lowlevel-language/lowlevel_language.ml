@@ -68,7 +68,7 @@ let string_of_modele m =
 
 (*exemple *)
 let test () =
-	let p = [ [([Vide],12)];[([Endroit; Envers], 12)]; [([Envers; Endroit; Envers],8)]; [([Envers; Endroit],2);([Endroit; Envers],2)]], 10 in
+	let p = [ [([Vide],12)];[([Endroit; Envers], 6)]; [([Envers; Endroit; Envers],4)]; [([Envers; Endroit],3);([Endroit; Envers],3)]], 10 in
 	let m = "ECHARPE", "écharpe polaire de Blaire", [p] in
 	let s = string_of_modele m in
 		print_string s;;
