@@ -4,20 +4,22 @@
 
 %{
 
-#include "../representation.h"
+#include "../representation.h" // includes knit_parser ?
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
 #include <map>
+#include <vector>
 
 
 using namespace std;
 
-int line_number	= 1;	    /* number of current source line */
-map<string,string> param_map;  /* map of parameters */
-extern int yylex();	    /* lexical analyzer generated from lex.l */
-extern char *yytext;	    /* last token, defined in lex.l  */
+int line_number	= 1;	          /* number of current source line */
+map<string,string> local_param;   /* map of (local) parameters for trapezoids */
+map<string,Element* > piece_map;   /* map of the pieces */
+extern int yylex();	          /* lexical analyzer generated from lex.l */
+extern char *yytext;	          /* last token, defined in lex.l  */
 
 void yyerror(char *s){
 	fprintf(stderr, "line %d: syntax error. Last token was \"%s\"\n", line_number, yytext);
@@ -27,24 +29,6 @@ void yyerror(char *s){
 void error(char *s){
 	fprintf(stderr, "line %d: error: %s\n", line_number, s);
 	exit(1);
-}
-
-
-
-string get_argument(string arg, map<string,string> param_map) {
-	map<string,string>::iterator it = param_map.find(arg);
-	if (it != param_map.end()) {
-        	return it->second ;
-        }
-	else {
-	fprintf(stderr, "Argument not found");
-	exit(1);		
-	}
-}
-
-int get_argument_int(string arg, map<string,string> param_map) {
-	string find = get_argument(arg,param_map);
-        return atoi(find.c_str()) ;
 }
 
 %}
@@ -90,10 +74,12 @@ int get_argument_int(string arg, map<string,string> param_map) {
 /* associate the types */
 
 %type<integer> INT
-%type<name> NAME
-%type<name> DESCR
+%type<integer> trapezoid_params params main // Just a return value
+%type<name> NAME DESCR value
 
 %type<elt> element
+
+
 
 
 /* Axiom */
@@ -108,12 +94,12 @@ int get_argument_int(string arg, map<string,string> param_map) {
 // TODO : Add actions
 
 main:
-	H_NAME NAME H_DESCR DESCR body END_OF_FILE 		{ }
+	H_NAME NAME H_DESCR DESCR body END_OF_FILE 		{ knit_parsed = Knit($2,$4,piece_map); $$ = 0;}
 ;
 
 body:
-      /* Empty */ 						{ }   
-      | PIECE NAME DEF START SEQ element body 			{ }
+      /* Empty */ 						{ piece_map.clear(); }   
+      | PIECE NAME DEF START SEQ element body 			{ piece_map.insert(pair<string,Element*> ($2,$6)); }
 ;
 
 element:
@@ -121,25 +107,27 @@ element:
 | LINK LEFT NAME                      				{ $$ = new Link($3,Slot::Left); }
 | LINK RIGHT NAME						{ $$ = new Link($3,Slot::Right); }
 | SPLIT INT LBRACE element RBRACE LBRACE element RBRACE	 	{ $$ = new Split($4,$7,$2); } 
-| TRAPEZOID trapezoid_params SEQ element 			{ }
+| TRAPEZOID trapezoid_params SEQ element 			{ int bidon = $2; // generate parameters
+                                                                  $$ = new TrapezoidElem(Trapezoid(local_param),$4);} // Bug
 ;
 
 trapezoid_params:
-  LPAREN params RPAREN                    			{ }
+  LPAREN params RPAREN                    			{ $$ = $2; }
 ;
 
 params:
-  /* Empty */                                  			{ }
-|  param                                     			{ }
-| param SEP params                   				{ } 
+  /* Empty */                                  			{ local_param.clear(); $$ = 0; } // stupid return value 
+| NAME COL value SEP params                   			{ int bidon = $5; // generate the end, to start with clean (empty)
+								  local_param.insert(pair<string,string>($1,$3)); 
+								  $$ = bidon; }
 ;
-
+/*
 param:
-  NAME COL value                      				{ }
+  NAME COL value                      				{ pair<string,string>($1,$3);}
 ;
-
+*/
 value:
-  INT                                       			{ $1; }
+  INT                                       			{ to_string($1); }
 | NAME                                      			{ $1; }
 ;
 

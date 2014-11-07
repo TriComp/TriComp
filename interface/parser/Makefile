@@ -3,17 +3,20 @@ OBJS            = representation.o parser.o lexer.o main.o
 
 BIN             = bin/parser
 
-FLAGOUS           = -std=c++11
+FLAGOUS           = -std=c++11 -Wall -Wno-write-strings
 
 DEBUG		= -g -DDEBUG
 
 all: $(OBJS)
-	g++ $(FLAGOUS) $(DEBUG) $(OBJS) -lfl -lm -std=c++11 -o $(BIN)
+	g++ $(FLAGOUS) $(DEBUG) $(OBJS) -lfl -lm -o $(BIN)
 
 representation.o: ../representation.cpp
 	g++ $(FLAGOUS) -c ../representation.cpp
 
 %.o: %.cc
+	g++ $(FLAGOUS) $(DEBUG) -c $<
+
+%.o: %.cpp
 	g++ $(FLAGOUS) $(DEBUG) -c $<
 
 clean:

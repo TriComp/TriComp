@@ -3,11 +3,16 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <map>
+#include <iostream>
 
 class EditorItem;
 
 class Pattern {
+public:
     std::string name;
+    Pattern(std::string name) : name(name) {
+    }
 };
 
 class Trapezoid {
@@ -17,19 +22,28 @@ public:
     int lower_width;
     int upper_width;
     Pattern *pattern;
+
+    Trapezoid(std::map<std::string,std::string> parameters);
 };
 
+// Usefull function in the parser
+
+std::string get_argument(std::string arg, std::map<std::string,std::string> param_map);
+int get_argument_int(std::string arg, std::map<std::string,std::string> param_map);
+
 enum class Slot { Left, Right };
+
 
 /*
  * TODO: destructors, investigate hierachy features of GraphicsScene
  */
 enum class ElementType {Trapezoid, Split, Stop, Link};
+
 class Element {
 public:
     const ElementType kind;
     Element(ElementType k) : kind(k) {}
-
+    virtual std::ostream& print(std::ostream &os);
 
     // In subclasses, delegate to QGraphicsPolygonItem
     EditorItem *gfx;
@@ -47,6 +61,8 @@ public:
     TrapezoidElem(Trapezoid t, Element *next) :
         Element(ElementType::Trapezoid), geom(t), next(next) {
     }
+
+    std::ostream& print(std::ostream &os);
 
     std::vector<Element *> children() const override { return {next}; }
 
@@ -70,6 +86,8 @@ public:
         : Element(ElementType::Split), left(l), right(r), gap(gap) {
     }
 
+    std::ostream& print(std::ostream &os);
+
     int width() const override { return left->width() + gap + right->width(); }
 
     std::vector<Element *> children() const override { return {left, right}; }
@@ -89,6 +107,9 @@ public:
     Slot slot;
     Link(std::string name, Slot slot) : Element(ElementType::Link), name(name), slot(slot) {
     }
+
+    std::ostream& print(std::ostream &os);
+
     std::vector<Element *> children() const override { return {}; }
 
     int width() const override { return 100; } // hack
@@ -102,6 +123,9 @@ class Stop : public Element {
 public:
     Stop() : Element(ElementType::Stop) {
     }
+
+    std::ostream& print(std::ostream &os);
+
     std::vector<Element *> children() const override { return {}; }
 
     int width() const override { return 100; } // hack
@@ -110,6 +134,26 @@ public:
         f(this);
     }
 };
+
+class Knit {
+public:
+    std::string name;
+    std::string description;
+    std::map< std::string,Element* > elements;
+    Knit(std::string name, std::string description, std::map<std::string,Element*> elements) :
+        name(name), description(description), elements(elements) {}
+    Knit() {};
+};
+
+extern Knit knit_parsed; 
+
+// (Pretty?) Printers to control 
+
+std::ostream& operator <<(std::ostream &os, Slot slot);
+std::ostream& operator <<(std::ostream &os, Trapezoid geom);
+std::ostream& operator <<(std::ostream &os, Element* elt);
+std::ostream& operator <<(std::ostream &os, std::map<std::string,Element*> elements);
+std::ostream& operator <<(std::ostream &os, Knit knit);
 
 template<typename T, typename A>
 class ElementVisitor {
