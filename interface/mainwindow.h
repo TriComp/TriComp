@@ -33,6 +33,7 @@ private slots:
     void doSaveDlgAction();
     void save();
     void on_saveAction_triggered();
+    void saveAs();
     void on_saveAsAction_triggered();
     // instructions
     void on_instructionsAction_triggered();
@@ -45,6 +46,8 @@ private:
     newKnitDialog *newDlg;
     QMessageBox *saveDlg;
     bool isSaved;
+    QString path;
+    QString fileName;
     enum afterSaveAction {NEW, OPEN, QUIT, NOTHING}; // useful with the save dialog and cancel options
     afterSaveAction act;
     static Editor *editor_;

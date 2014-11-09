@@ -66,11 +66,10 @@ public:
     }
 
     std::ostream& print(std::ostream &os) const override{
-    // DOESN'T WORK
-    //
-    // os <<  "TrapezoidElem(" << geom << "," << *next << ")" ;
-    os << "TrapezoidElem" ;
-    return os ;
+        // DOESN'T WORK
+        //
+        // os << "TrapezoidElem(" << geom << "," << *next << ")" << "TrapezoidElem" ;
+        return os ;
     }
 
     std::vector<Element *> children() const override { return {next}; }
@@ -96,12 +95,12 @@ public:
     }
 
     std::ostream& print(std::ostream &os) const override {
-    // DOESN'T WORK
-    //
-    // os << "Split(" << *left << "," << *right << "," << gap << ")" ;
-    os << "Split" ;
-    return os ;
-}
+        // DOESN'T WORK
+        //
+        // os << "Split(" << *left << "," << *right << "," << gap << ")" ;
+        os << "Split" ;
+        return os ;
+    }
 
     int width() const override { return left->width() + gap + right->width(); }
 
@@ -124,11 +123,11 @@ public:
     }
 
     std::ostream& print(std::ostream &os) const override {
-    // DOESN'T WORK
-    // os << "Link(" << name << "," << slot << ")" ;
-    os << "Link" ; 
-    return os ;
-}
+        // DOESN'T WORK
+        // os << "Link(" << name << "," << slot << ")" ;
+        os << "Link" ;
+        return os ;
+    }
 
     std::vector<Element *> children() const override { return {}; }
 
@@ -145,9 +144,9 @@ public:
     }
 
     std::ostream& print(std::ostream &os) const override {
-    os << "Stop" ;
-    return os ;
-};
+        os << "Stop" ;
+        return os ;
+    }
 
     std::vector<Element *> children() const override { return {}; }
 

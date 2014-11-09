@@ -4,6 +4,8 @@
 #include <QMessageBox>
 #include <QGraphicsView>
 #include <QGraphicsTextItem>
+#include <QFileDialog>
+
 #include <representation.h>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -28,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Variables
     isSaved = true;
     act = NOTHING;
+    path = QDir::homePath(); // set the path to home directory
 
 }
 
@@ -107,12 +110,22 @@ void MainWindow::open()
     // open, just to check the program works
     //ui->instrLabel->setHtml("You want to open");
 
-    /*************************\
-     * The opening file code *
-     *************************/
+    if (!isSaved) {
+        save();
+        isSaved = true ;
+    }
+    QString file = QFileDialog::getOpenFileName (this, "Load a knit", path, "knit (*.tricot)");
+    if (file.endsWith(".tricot")) {
+        fileName = file;
+
+        /*************************\
+         * The opening file code *
+         *************************/
+    }
+    else if (file != ""){
+        QMessageBox::warning(this, "Wrong file format", "The selected file is not of format .ori");
+    }
     act = NOTHING ;
-
-
 }
 
 void MainWindow::saveDlgTreatButton(QAbstractButton* b)
@@ -157,11 +170,12 @@ void MainWindow::doSaveDlgAction()
 void MainWindow::save()
 {
     // Just to check the program works
-    ui->instrLabel->setHtml(QString::fromStdString("You want to save"));
+    ui->instrLabel->setHtml(QString::fromStdString("You want to save in the file ")+fileName);
 
-    /************************
-     * The saving file code *
-     * **********************/
+    /***********************************************************
+     * The saving file code ( may uses the printer functions ) *
+     * *********************************************************/
+
 }
 
 void MainWindow::on_saveAction_triggered()
@@ -174,7 +188,20 @@ void MainWindow::on_saveAction_triggered()
 
 void MainWindow::on_saveAsAction_triggered()
 {
-    // choose filename and save
+    saveAs();
+}
+
+void MainWindow::saveAs()
+{
+    if(fileName != "") { // set a smarter path
+        path = fileName;
+    }
+    fileName = QFileDialog::getSaveFileName(this, "Save your knit", path, "knit (*.tricot)");
+    if (fileName != "") {
+        save();
+    } else { // nothing to do
+        act = NOTHING;
+    }
 }
 
 void MainWindow::on_instructionsAction_triggered()
