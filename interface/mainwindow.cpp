@@ -81,11 +81,11 @@ void MainWindow::on_openAction_triggered()
 
     auto *stop1 = new Stop();
     auto *stop2 = new Stop();
-    auto *l = new TrapezoidElem(Trapezoid(120, -13, 60, 22,"endroit"), stop1);
+    auto *l = new TrapezoidElem(Trapezoid(120, -13, 60, 22, "endroit"), stop1);
     auto *r = new TrapezoidElem(Trapezoid(120, 22, 120, 100, "endroit"), stop2);
     auto *split = new Split(l, r, 60);
-    auto *e2 = new TrapezoidElem(Trapezoid(120, -13, 180, 240,"endroit"), split);
-    auto *e1 = new TrapezoidElem(Trapezoid(100, 30, 200, 180,"endroit" ), e2);
+    auto *e2 = new TrapezoidElem(Trapezoid(120, -13, 180, 240, "endroit"), split);
+    auto *e1 = new TrapezoidElem(Trapezoid(100, 30, 200, 180, "endroit" ), e2);
 
     attachItems(e1, scene);
 
@@ -107,9 +107,6 @@ void MainWindow::on_openAction_triggered()
 
 void MainWindow::open()
 {
-    // open, just to check the program works
-    //ui->instrLabel->setHtml("You want to open");
-
     if (!isSaved) {
         save();
         isSaved = true ;
@@ -117,13 +114,12 @@ void MainWindow::open()
     QString file = QFileDialog::getOpenFileName (this, "Load a knit", path, "knit (*.tricot)");
     if (file.endsWith(".tricot")) {
         fileName = file;
-
         /*************************\
          * The opening file code *
          *************************/
     }
     else if (file != ""){
-        QMessageBox::warning(this, "Wrong file format", "The selected file is not of format .ori");
+        QMessageBox::warning(this, "Wrong file format", "The selected file is not of format .tricot");
     }
     act = NOTHING ;
 }
@@ -175,7 +171,6 @@ void MainWindow::save()
     /***********************************************************
      * The saving file code ( may uses the printer functions ) *
      * *********************************************************/
-
 }
 
 void MainWindow::on_saveAction_triggered()
