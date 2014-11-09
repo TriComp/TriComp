@@ -78,11 +78,11 @@ void MainWindow::on_openAction_triggered()
 
     auto *stop1 = new Stop();
     auto *stop2 = new Stop();
-    auto *l = new TrapezoidElem(Trapezoid{120, -13, 60, 22}, stop1);
-    auto *r = new TrapezoidElem(Trapezoid{120, 22, 120, 100}, stop2);
+    auto *l = new TrapezoidElem(Trapezoid(120, -13, 60, 22,"endroit"), stop1);
+    auto *r = new TrapezoidElem(Trapezoid(120, 22, 120, 100, "endroit"), stop2);
     auto *split = new Split(l, r, 60);
-    auto *e2 = new TrapezoidElem(Trapezoid{120, -13, 180, 240}, split);
-    auto *e1 = new TrapezoidElem(Trapezoid{100, 30, 200, 180}, e2);
+    auto *e2 = new TrapezoidElem(Trapezoid(120, -13, 180, 240,"endroit"), split);
+    auto *e1 = new TrapezoidElem(Trapezoid(100, 30, 200, 180,"endroit" ), e2);
 
     attachItems(e1, scene);
 

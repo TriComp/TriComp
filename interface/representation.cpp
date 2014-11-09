@@ -7,6 +7,8 @@ using namespace std;
 
 Knit knit_parsed;
 
+// To build trapezoid in the parser
+
 Trapezoid::Trapezoid(std::map<string,string> parameters) {
     height = get_argument_int("height",parameters);
     shift = get_argument_int("shift",parameters);
@@ -32,31 +34,7 @@ int get_argument_int(string arg, map<string,string> param_map) {
         return atoi(find.c_str()) ;
 }
 
-// Pretty printers
-
-ostream& TrapezoidElem::print(ostream &os) {
-    // DOESN'T WORK
-    //
-    os <<  "TrapezoidElem(" << geom << "," << *next << ")" ;
-    return os ;
-}
-
-ostream& Split::print(ostream &os) {
-    // DOESN'T WORK
-    //
-    os << "Split(" << *left << "," << *right << "," << gap << ")" ;
-    return os ;
-}
-
-ostream& Link::print(ostream &os) {
-    os << "Link(" << name << "," << slot << ")" ;
-    return os ;
-}
-
-ostream& Stop::print(ostream &os) {
-    os << "Stop" ;
-    return os ;
-}
+// Printer functions
 
 ostream& operator <<(ostream &os, Slot slot) {
     if (slot == Slot::Right) {

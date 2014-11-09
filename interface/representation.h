@@ -24,6 +24,8 @@ public:
     Pattern *pattern;
 
     Trapezoid(std::map<std::string,std::string> parameters);
+    Trapezoid(int h, int s, int l, int u, std::string name) :
+        height(h), shift(s), lower_width(l), upper_width(u), pattern(new Pattern(name)) {}
 };
 
 // Usefull function in the parser
@@ -43,11 +45,12 @@ class Element {
 public:
     const ElementType kind;
     Element(ElementType k) : kind(k) {}
-    virtual std::ostream& print(std::ostream &os);
+    // (Pretty ?) printers
+    virtual std::ostream& print(std::ostream &os) const = 0 ;
 
     // In subclasses, delegate to QGraphicsPolygonItem
     EditorItem *gfx;
-    virtual std::vector<Element *> children() const = 0;
+    virtual std::vector<Element *> children() const  = 0;
     virtual int width() const = 0;
 
     virtual void forEach(std::function<void(Element *)> f) = 0;
@@ -55,14 +58,20 @@ public:
 
 class TrapezoidElem : public Element {
 public:
-    Trapezoid geom;
+    Trapezoid geom;	
     Element *next;
 
     TrapezoidElem(Trapezoid t, Element *next) :
         Element(ElementType::Trapezoid), geom(t), next(next) {
     }
 
-    std::ostream& print(std::ostream &os);
+    std::ostream& print(std::ostream &os) const override{
+    // DOESN'T WORK
+    //
+    // os <<  "TrapezoidElem(" << geom << "," << *next << ")" ;
+    os << "TrapezoidElem" ;
+    return os ;
+    }
 
     std::vector<Element *> children() const override { return {next}; }
 
@@ -86,7 +95,13 @@ public:
         : Element(ElementType::Split), left(l), right(r), gap(gap) {
     }
 
-    std::ostream& print(std::ostream &os);
+    std::ostream& print(std::ostream &os) const override {
+    // DOESN'T WORK
+    //
+    // os << "Split(" << *left << "," << *right << "," << gap << ")" ;
+    os << "Split" ;
+    return os ;
+}
 
     int width() const override { return left->width() + gap + right->width(); }
 
@@ -108,7 +123,12 @@ public:
     Link(std::string name, Slot slot) : Element(ElementType::Link), name(name), slot(slot) {
     }
 
-    std::ostream& print(std::ostream &os);
+    std::ostream& print(std::ostream &os) const override {
+    // DOESN'T WORK
+    // os << "Link(" << name << "," << slot << ")" ;
+    os << "Link" ; 
+    return os ;
+}
 
     std::vector<Element *> children() const override { return {}; }
 
@@ -124,7 +144,10 @@ public:
     Stop() : Element(ElementType::Stop) {
     }
 
-    std::ostream& print(std::ostream &os);
+    std::ostream& print(std::ostream &os) const override {
+    os << "Stop" ;
+    return os ;
+};
 
     std::vector<Element *> children() const override { return {}; }
 
