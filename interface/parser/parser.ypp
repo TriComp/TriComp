@@ -4,11 +4,13 @@
 
 %{
 
-#include "../representation.h" // includes knit_parser ?
+#include "../representation.h" // includes extern knit_parser
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
+#include <cstring>
+
 #include <map>
 #include <vector>
 
@@ -17,7 +19,7 @@ using namespace std;
 
 int line_number	= 1;	          /* number of current source line */
 map<string,string> local_param;   /* map of (local) parameters for trapezoids */
-map<string,Element* > piece_map;   /* map of the pieces */
+map<string,Element* > piece_map;  /* map of the pieces */
 extern int yylex();	          /* lexical analyzer generated from lex.l */
 extern char *yytext;	          /* last token, defined in lex.l  */
 
@@ -88,24 +90,25 @@ void error(char *s){
 /*            The grammar with actions            */
 /* ============================================== */
 
-// TODO : Add actions
+// TODO : Debug 
 
 main:
-	H_NAME NAME H_DESCR DESCR body END_OF_FILE 		{ knit_parsed = Knit($2,$4,piece_map); $$ = 0;}
+  H_NAME NAME H_DESCR DESCR body		 		{ knit_parsed = Knit($2,$4,piece_map); $$ = 0;}
+| H_NAME NAME H_DESCR DESCR body END_OF_FILE			{ knit_parsed = Knit($2,$4,piece_map); $$ = 0;}
 ;
 
 body:
-      /* Empty */ 						{ piece_map.clear(); }   
-      | PIECE NAME DEF START SEQ element body 			{ std::cout << $6 ; piece_map.insert(pair<string,Element*> ($2,$6)); }
+PIECE NAME DEF START SEQ element				{ piece_map.clear(); piece_map.insert(pair<string,Element* >($2,$6)); }   
+| PIECE NAME DEF START SEQ element body 			{ piece_map.insert(pair<string,Element* >($2,$6)); }
 ;
 
-element:
-  STOP                                        			{ std::cout << "stop \n"; $$ = new Stop(); }
+element:	
+  STOP                                        			{ $$ = new Stop(); }
 | LINK LEFT NAME                      				{ $$ = new Link($3,Slot::Left); }
 | LINK RIGHT NAME						{ $$ = new Link($3,Slot::Right); }
 | SPLIT INT LBRACE element RBRACE LBRACE element RBRACE	 	{ $$ = new Split($4,$7,$2); } 
 | TRAPEZOID trapezoid_params SEQ element 			{ int bidon = $2; // generate parameters
-                                                                  $$ = new TrapezoidElem(Trapezoid(local_param),$4);} // Bug
+                                                                  $$ = new TrapezoidElem(Trapezoid(local_param),$4);}
 ;
 
 trapezoid_params:
@@ -113,17 +116,21 @@ trapezoid_params:
 ;
 
 params:
-  NAME COL value                                 		{ local_param.clear();
-								  local_param.insert(pair<string,string>($1,$3));
-								  $$ = 0; } // stupid return value 
-| NAME COL value SEP params                   			{ int bidon = $5; // generate the end, to start with clean (empty)
-								  local_param.insert(pair<string,string>($1,$3)); 
-								  $$ = bidon; }
+NAME COL value                                 			{ local_param.clear();
+								  local_param.insert(std::make_pair<string,string>($1,$3));
+								  $$ = 0; } // useless return value 
+| NAME COL value SEP params                   			{ int bidon = $5; // generate the other parameters
+								  local_param.insert(std::make_pair<string,string>($1,$3));
+								  std::cout<< "pair inserted...\n"; 
+								  $$ = 0 ; }
 ;
 
 value:
-  INT                                       			{ to_string($1); }
-| NAME                                      			{ $1; }
+  INT                                       			{ std::string s = std::to_string($1); 
+								  char* converted = new char[s.length()];
+								  std::strcpy(converted, s.c_str());
+								  $$ = converted; }
+| NAME                                      			{ $$ = $1; }
 ;
 
 

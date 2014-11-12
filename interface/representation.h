@@ -35,24 +35,22 @@ int get_argument_int(std::string arg, std::map<std::string,std::string> param_ma
 
 enum class Slot { Left, Right };
 
-
 /*
  * TODO: destructors, investigate hierachy features of GraphicsScene
  */
+
 enum class ElementType {Trapezoid, Split, Stop, Link};
 
 class Element {
 public:
     const ElementType kind;
     Element(ElementType k) : kind(k) {}
-    // (Pretty ?) printers
-    virtual std::ostream& print(std::ostream &os) const = 0 ;
 
+    virtual std::ostream& print(std::ostream &os) const = 0 ;
     // In subclasses, delegate to QGraphicsPolygonItem
     EditorItem *gfx;
     virtual std::vector<Element *> children() const  = 0;
     virtual int width() const = 0;
-
     virtual void forEach(std::function<void(Element *)> f) = 0;
 };
 
@@ -65,9 +63,7 @@ public:
         Element(ElementType::Trapezoid), geom(t), next(next) {
     }
     
-    
-
-    std::ostream& print(std::ostream &os) const override{
+    std::ostream& print(std::ostream &os) const override {
         // DOESN'T WORK
         //
         // os << "TrapezoidElem(" << geom << "," << *next << ")" << "TrapezoidElem" ;

@@ -24,7 +24,7 @@ string get_argument(string arg, map<string,string> param_map) {
         	return it->second ;
         }
 	else {
-	fprintf(stderr, "Argument not found");
+	fprintf(stderr, "Argument not found \n");
 	exit(1);		
 	}
 }
@@ -34,7 +34,7 @@ int get_argument_int(string arg, map<string,string> param_map) {
         return atoi(find.c_str()) ;
 }
 
-// Printer functions
+// Ugly Printer functions
 
 ostream& operator <<(ostream &os, Slot slot) {
     if (slot == Slot::Right) {

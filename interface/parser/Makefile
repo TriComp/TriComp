@@ -3,7 +3,7 @@ OBJS            = representation.o parser.o lexer.o main.o
 
 BIN             = bin/parser
 
-FLAGOUS           = -std=c++11 -Wall -Wno-write-strings
+FLAGOUS           = -std=c++11 -Wall -Wno-write-strings -Wno-unused
 
 DEBUG		= -g -DDEBUG
 
