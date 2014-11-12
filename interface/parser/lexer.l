@@ -26,8 +26,8 @@ extern int line_number;	/* defined in parser.ypp */
 "piece"			    return PIECE;
 ":="                        return DEF;
 "||"                	    return SEQ;
-','                 	    return SEP;
-':'                 	    return COL;
+","                 	    return SEP;
+":"                 	    return COL;
 
 "Name :"                    return H_NAME;
 "Description :"             return H_DESCR;
@@ -62,22 +62,25 @@ extern int line_number;	/* defined in parser.ypp */
 
 [0-9]+                      { 
                               yylval.integer = atoi(yytext); 
+			      fprintf(stderr, "line %d : %d \n",line_number, yylval.integer);
                               return INT; 
                             }
 
 [A-Za-z_]([A-Za-z0-9_])*    {
                               yylval.name = strdup(yytext);
+                              fprintf(stderr, "line %d : %s \n", line_number, yylval.name);
                               return NAME;
                             }
 
 
 \"[^\n]*\"                  {
                               yylval.name = strdup(yytext);
+                              fprintf(stderr, "line %d : %s \n", line_number, yylval.name);
                               return DESCR ; 
                             }
 
 .			    { 
-                              fprintf(stderr,"line %d: error: illegal character\n", line_number); 
+                              fprintf(stderr,"line %d: error: illegal character %s\n", line_number, strdup(yytext)); 
                               exit(1);
                             }
 

@@ -79,9 +79,6 @@ void error(char *s){
 
 %type<elt> element
 
-
-
-
 /* Axiom */
 %start main
 
@@ -99,11 +96,11 @@ main:
 
 body:
       /* Empty */ 						{ piece_map.clear(); }   
-      | PIECE NAME DEF START SEQ element body 			{ piece_map.insert(pair<string,Element*> ($2,$6)); }
+      | PIECE NAME DEF START SEQ element body 			{ std::cout << $6 ; piece_map.insert(pair<string,Element*> ($2,$6)); }
 ;
 
 element:
-  STOP                                        			{ $$ = new Stop(); }
+  STOP                                        			{ std::cout << "stop \n"; $$ = new Stop(); }
 | LINK LEFT NAME                      				{ $$ = new Link($3,Slot::Left); }
 | LINK RIGHT NAME						{ $$ = new Link($3,Slot::Right); }
 | SPLIT INT LBRACE element RBRACE LBRACE element RBRACE	 	{ $$ = new Split($4,$7,$2); } 
@@ -116,16 +113,14 @@ trapezoid_params:
 ;
 
 params:
-  /* Empty */                                  			{ local_param.clear(); $$ = 0; } // stupid return value 
+  NAME COL value                                 		{ local_param.clear();
+								  local_param.insert(pair<string,string>($1,$3));
+								  $$ = 0; } // stupid return value 
 | NAME COL value SEP params                   			{ int bidon = $5; // generate the end, to start with clean (empty)
 								  local_param.insert(pair<string,string>($1,$3)); 
 								  $$ = bidon; }
 ;
-/*
-param:
-  NAME COL value                      				{ pair<string,string>($1,$3);}
-;
-*/
+
 value:
   INT                                       			{ to_string($1); }
 | NAME                                      			{ $1; }

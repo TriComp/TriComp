@@ -64,6 +64,8 @@ public:
     TrapezoidElem(Trapezoid t, Element *next) :
         Element(ElementType::Trapezoid), geom(t), next(next) {
     }
+    
+    
 
     std::ostream& print(std::ostream &os) const override{
         // DOESN'T WORK
