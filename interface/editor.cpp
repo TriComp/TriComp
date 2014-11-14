@@ -1,6 +1,5 @@
 #include "editor.h"
-
-TrapezoidItem::TrapezoidItem(TrapezoidElem *e) : elem(e) {
+TrapezoidItem::TrapezoidItem(TrapezoidElem *e) : elem(e), selected(false) {
     Trapezoid t = e->geom;
     QPointF p2(t.shift, -t.height); // Inverted y axis :-[
     QPointF p3(p2.x() + t.upper_width, p2.y());
@@ -12,16 +11,27 @@ TrapezoidItem::TrapezoidItem(TrapezoidElem *e) : elem(e) {
 
     setAcceptHoverEvents(true);
     poly->setAcceptHoverEvents(true);
+
+    brush_normal = QBrush("#444");
+    brush_selected = QBrush("#ccc");
+
+    poly->setBrush(brush_normal);
 }
 
 void TrapezoidItem::hoverEnterEvent (QGraphicsSceneHoverEvent * event) {
-    QBrush b(QColor("blue"));
+    QBrush c = selected ? brush_selected : brush_normal;
+    QBrush b(c.color().light());
     poly->setBrush(b);
     update();
 }
 void TrapezoidItem::hoverLeaveEvent (QGraphicsSceneHoverEvent * event) {
-    QBrush b(QColor("green"));
-    poly->setBrush(b);
+    poly->setBrush(selected ? brush_selected : brush_normal);
+    update();
+}
+
+void TrapezoidItem::mousePressEvent(QGraphicsSceneMouseEvent * event) {
+    selected = !selected;
+    poly->setBrush(selected ? brush_selected : brush_normal);
     update();
 }
 

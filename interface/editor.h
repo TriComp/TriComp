@@ -19,8 +19,14 @@ public:
 
     TrapezoidItem(TrapezoidElem *e);
 
+    QBrush brush_normal;
+    QBrush brush_selected;
+
+    bool selected;
+
     void hoverEnterEvent ( QGraphicsSceneHoverEvent * event);
     void hoverLeaveEvent ( QGraphicsSceneHoverEvent * event);
+    void mousePressEvent(QGraphicsSceneMouseEvent * event) override;
     Element *element() override { return elem; }
 };
 
