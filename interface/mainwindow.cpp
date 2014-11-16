@@ -6,6 +6,8 @@
 #include <QGraphicsTextItem>
 #include <QFileDialog>
 
+#include <iostream>
+#include <fstream>
 #include <representation.h>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -114,9 +116,14 @@ void MainWindow::open()
     QString file = QFileDialog::getOpenFileName (this, "Load a knit", path, "knit (*.tricot)");
     if (file.endsWith(".tricot")) {
         fileName = file;
+		// Something like that
+		/*		
+		yyin = fopen((fileName.toStdString()).c_str(),"r");
+		int bison_return_code = yyparse();
+		*/
         /*************************\
          * The opening file code *
-         *************************/
+         *************************/				
     }
     else if (file != ""){
         QMessageBox::warning(this, "Wrong file format", "The selected file is not of format .tricot");
@@ -165,12 +172,22 @@ void MainWindow::doSaveDlgAction()
 
 void MainWindow::save()
 {
-    // Just to check the program works
     ui->instrLabel->setHtml(QString::fromStdString("You want to save in the file ")+fileName);
 
-    /***********************************************************
-     * The saving file code ( may uses the printer functions ) *
-     * *********************************************************/
+	if (fileName != "") { 
+		std::ofstream save_file ((fileName.toStdString()).c_str()) ;
+		if (save_file.is_open()) {
+			// save something 
+			save_file << "Yes, you can save !\n" ;
+			save_file.close();
+		}
+		else {
+			QMessageBox::warning(this, "Unable to save", "I'm unable to save to file...");
+		}
+	}
+	else { // knit not already saved 
+		saveAs();
+	}
 }
 
 void MainWindow::on_saveAction_triggered()

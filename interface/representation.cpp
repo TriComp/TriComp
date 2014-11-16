@@ -36,7 +36,7 @@ int get_argument_int(string arg, map<string,string> param_map) {
 
 // Ugly Printer functions
 
-ostream& operator <<(ostream &os, Slot slot) {
+ostream& operator <<(ostream &os, Slot const& slot) {
     if (slot == Slot::Right) {
         os << "right" ;
     }
@@ -46,22 +46,44 @@ ostream& operator <<(ostream &os, Slot slot) {
     return os;
 }
 
-ostream& operator <<(ostream &os, Trapezoid geom) {
-    os << "Trapezoid( height : " << geom.height
-                    << ", shift : " << geom.shift 
-		    << ", upper_width : " << geom.upper_width
-                    << ", lower_width : " << geom.lower_width
-		    << ", pattern : " << (geom.pattern)->name ;
-    return os; 
+ostream& operator <<(ostream &os, Stop const& stop) {
+    os << "Stop" ;
+    return os ;
 }
 
-ostream& operator <<(ostream &os, Element* elt) {
-    return (*elt).print(os);
+ostream& operator <<(ostream &os, Trapezoid const& trapezoid) {
+    	os << "Trapezoid( height : " << trapezoid.height
+                    << ", shift : " << trapezoid.shift 
+		    << ", upper_width : " << trapezoid.upper_width
+                    << ", lower_width : " << trapezoid.lower_width
+		    << ", pattern : " << trapezoid.pattern->name ;
+	return os ;
+} 
+
+
+ostream& operator <<(ostream &os, TrapezoidElem const& elt) {
+    os << "TrapezoidElem(" << elt.geom << "," << elt.next << ")" ;
+    return os ;
+}
+ostream& operator <<(ostream &os, Split const& split) {
+    os << "Split(" << split.left << "," << split.right << "," << split.gap << ")" ;
+    return os ;
 }
 
-ostream& operator <<(ostream &os, map<string,Element*> elements) {
-    for (map<string,Element*>::iterator it = elements.begin(); it!=elements.end(); ++it) {
-        os << it->first << " : " << it->second << endl ; 
+ostream& operator <<(ostream &os, Link const& link) {
+    os << "Link(" << link.name << "," << link.slot << ")" ;
+    return os ;
+}
+
+ostream& operator <<(ostream &os, Element *element) {
+    element->print(os) ;
+    return os ;
+}
+
+
+ostream& operator <<(ostream &os, map<string,Element*> const& elements) {
+    for (map<string,Element*>::const_iterator it = elements.begin(); it!= elements.end(); ++it) {
+        os << it->first << " : " << dynamic_cast<Element *> (it->second) << endl ; 
     }
     return os ;
 }

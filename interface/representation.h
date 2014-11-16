@@ -26,6 +26,7 @@ public:
     Trapezoid(std::map<std::string,std::string> parameters);
     Trapezoid(int h, int s, int l, int u, std::string name) :
         height(h), shift(s), lower_width(l), upper_width(u), pattern(new Pattern(name)) {}
+
 };
 
 // Usefull function in the parser
@@ -45,10 +46,9 @@ class Element {
 public:
     const ElementType kind;
     Element(ElementType k) : kind(k) {}
-
-    virtual std::ostream& print(std::ostream &os) const = 0 ;
     // In subclasses, delegate to QGraphicsPolygonItem
     EditorItem *gfx;
+    virtual void print(std::ostream &os) const = 0;
     virtual std::vector<Element *> children() const  = 0;
     virtual int width() const = 0;
     virtual void forEach(std::function<void(Element *)> f) = 0;
@@ -62,13 +62,12 @@ public:
     TrapezoidElem(Trapezoid t, Element *next) :
         Element(ElementType::Trapezoid), geom(t), next(next) {
     }
-    
-    std::ostream& print(std::ostream &os) const override {
-        // DOESN'T WORK
-        //
-        // os << "TrapezoidElem(" << geom << "," << *next << ")" << "TrapezoidElem" ;
-        return os ;
+
+    void print(std::ostream &os) const override {
+       os << this ;
+       return ;
     }
+
 
     std::vector<Element *> children() const override { return {next}; }
 
@@ -92,12 +91,9 @@ public:
         : Element(ElementType::Split), left(l), right(r), gap(gap) {
     }
 
-    std::ostream& print(std::ostream &os) const override {
-        // DOESN'T WORK
-        //
-        // os << "Split(" << *left << "," << *right << "," << gap << ")" ;
-        os << "Split" ;
-        return os ;
+    void print(std::ostream &os) const override {
+        os << this ;
+        return ;
     }
 
     int width() const override { return left->width() + gap + right->width(); }
@@ -120,11 +116,9 @@ public:
     Link(std::string name, Slot slot) : Element(ElementType::Link), name(name), slot(slot) {
     }
 
-    std::ostream& print(std::ostream &os) const override {
-        // DOESN'T WORK
-        // os << "Link(" << name << "," << slot << ")" ;
-        os << "Link" ;
-        return os ;
+    void print(std::ostream &os) const override {
+        os << this ;
+        return ;
     }
 
     std::vector<Element *> children() const override { return {}; }
@@ -141,9 +135,9 @@ public:
     Stop() : Element(ElementType::Stop) {
     }
 
-    std::ostream& print(std::ostream &os) const override {
-        os << "Stop" ;
-        return os ;
+    void print(std::ostream &os) const override {
+        os << this ; // Doesn't work    
+        return ;
     }
 
     std::vector<Element *> children() const override { return {}; }
@@ -167,12 +161,16 @@ public:
 
 extern Knit knit_parsed; 
 
-// (Pretty?) Printers to control 
+// (Printers?) Pretty 
 
-std::ostream& operator <<(std::ostream &os, Slot slot);
-std::ostream& operator <<(std::ostream &os, Trapezoid geom);
-std::ostream& operator <<(std::ostream &os, Element* elt);
-std::ostream& operator <<(std::ostream &os, std::map<std::string,Element*> elements);
+std::ostream& operator <<(std::ostream &os, Link const& link);
+std::ostream& operator <<(std::ostream &os, Stop const& stop);
+std::ostream& operator <<(std::ostream &os, Trapezoid const& trapezoid);
+std::ostream& operator <<(std::ostream &os, TrapezoidElem const& elt);
+std::ostream& operator <<(std::ostream &os, Split const& split);
+std::ostream& operator <<(std::ostream &os, Slot const& slot);
+std::ostream& operator <<(std::ostream &os, Element const& element);
+std::ostream& operator <<(std::ostream &os, std::map<std::string,Element*> const& elements );
 std::ostream& operator <<(std::ostream &os, Knit knit);
 
 template<typename T, typename A>
