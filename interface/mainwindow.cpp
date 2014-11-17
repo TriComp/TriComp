@@ -10,6 +10,10 @@
 #include <fstream>
 #include <representation.h>
 
+extern FILE *yyin; 			// from Flex
+extern int yyparse(void);	// from Bison
+extern Knit knit_parseD;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -22,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     saveDlg->setText("Are you sure you want to quit without saving your knit ?");
     saveDlg->addButton(QString("Cancel"), QMessageBox::RejectRole);
     saveDlg->addButton(QString("Save"), QMessageBox::YesRole);
-    saveDlg->addButton(QString("Do not save"),QMessageBox::NoRole);
+    saveDlg->addButton(QString("Close without saving"),QMessageBox::NoRole);
     connect(saveDlg,SIGNAL(buttonClicked(QAbstractButton*)),this,SLOT(saveDlgTreatButton(QAbstractButton*)));
 
     // Connections
@@ -115,12 +119,12 @@ void MainWindow::open()
     }
     QString file = QFileDialog::getOpenFileName (this, "Load a knit", path, "knit (*.tricot)");
     if (file.endsWith(".tricot")) {
-        fileName = file;
-		// Something like that
-		/*		
+        fileName = file;	
 		yyin = fopen((fileName.toStdString()).c_str(),"r");
 		int bison_return_code = yyparse();
-		*/
+		// Something to see it works
+		ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));
+
         /*************************\
          * The opening file code *
          *************************/				

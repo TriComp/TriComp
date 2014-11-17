@@ -4,12 +4,10 @@ User Interface
 How to compile :
 ----------------
 
-1) The parsor (not already integrated in the UI)
-
 $ cd parser
 $ make
 
-2) the UI
+Note : don't take care about the error, we will fix it later. This really works...
 
 $ cd ..
 $ qmake

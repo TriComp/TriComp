@@ -90,46 +90,43 @@ void error(char *s){
 /*            The grammar with actions            */
 /* ============================================== */
 
-// TODO : Debug 
-
 main:
-  H_NAME NAME H_DESCR DESCR body		 		{ knit_parsed = Knit($2,$4,piece_map); $$ = 0;}
+  H_NAME NAME H_DESCR DESCR body		 				{ knit_parsed = Knit($2,$4,piece_map); $$ = 0;}
 | H_NAME NAME H_DESCR DESCR body END_OF_FILE			{ knit_parsed = Knit($2,$4,piece_map); $$ = 0;}
 ;
 
 body:
-PIECE NAME DEF START SEQ element				{ piece_map.clear(); piece_map.insert(pair<string,Element* >($2,$6)); }   
-| PIECE NAME DEF START SEQ element body 			{ piece_map.insert(pair<string,Element* >($2,$6)); }
+PIECE NAME DEF START SEQ element						{ piece_map.clear(); piece_map.insert(pair<string,Element* >($2,$6)); }   
+| PIECE NAME DEF START SEQ element body 				{ piece_map.insert(pair<string,Element* >($2,$6)); }
 ;
 
 element:	
   STOP                                        			{ $$ = new Stop(); }
-| LINK LEFT NAME                      				{ $$ = new Link($3,Slot::Left); }
-| LINK RIGHT NAME						{ $$ = new Link($3,Slot::Right); }
-| SPLIT INT LBRACE element RBRACE LBRACE element RBRACE	 	{ $$ = new Split($4,$7,$2); } 
-| TRAPEZOID trapezoid_params SEQ element 			{ int bidon = $2; // generate parameters
-                                                                  $$ = new TrapezoidElem(Trapezoid(local_param),$4);}
+| LINK LEFT NAME                      					{ $$ = new Link($3,Slot::Left); }
+| LINK RIGHT NAME										{ $$ = new Link($3,Slot::Right); }
+| SPLIT INT LBRACE element RBRACE LBRACE element RBRACE	{ $$ = new Split($4,$7,$2); } 
+| TRAPEZOID trapezoid_params SEQ element 				{ int bidon = $2; // generate parameters
+														  $$ = new TrapezoidElem(Trapezoid(local_param),$4);}
 ;
 
 trapezoid_params:
-  LPAREN params RPAREN                    			{ $$ = $2; }
+  LPAREN params RPAREN                    				{ $$ = $2; }
 ;
 
 params:
 NAME COL value                                 			{ local_param.clear();
-								  local_param.insert(std::make_pair<string,string>($1,$3));
-								  $$ = 0; } // useless return value 
+														  local_param.insert(std::make_pair<string,string>($1,$3));
+								  						  $$ = 0; } // useless return value 
 | NAME COL value SEP params                   			{ int bidon = $5; // generate the other parameters
-								  local_param.insert(std::make_pair<string,string>($1,$3));
-								  std::cout<< "pair inserted...\n"; 
-								  $$ = 0 ; }
+								  						  local_param.insert(std::make_pair<string,string>($1,$3));
+								  						  $$ = 0 ; }
 ;
 
 value:
   INT                                       			{ std::string s = std::to_string($1); 
-								  char* converted = new char[s.length()];
-								  std::strcpy(converted, s.c_str());
-								  $$ = converted; }
+								  						  char* converted = new char[s.length()];
+								  						  std::strcpy(converted, s.c_str());
+								  						  $$ = converted; }
 | NAME                                      			{ $$ = $1; }
 ;
 

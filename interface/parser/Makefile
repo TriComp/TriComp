@@ -27,7 +27,7 @@ realclean:
 	-rm -f $(BIN)
 
 parser.cc: parser.ypp
-	bison --defines=parser.h --report=lookahead --report-file=bison_report -o parser.cc parser.ypp
+	bison --defines=parser.h -o parser.cc parser.ypp
 
 lexer.cc: lexer.l
 	flex -o lexer.cc lexer.l
