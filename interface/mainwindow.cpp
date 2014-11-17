@@ -80,59 +80,53 @@ void MainWindow::newKnit()
 
 void MainWindow::on_openAction_triggered()
 {
-
-    auto *v = ui->patternView;
-    QGraphicsScene *scene = new QGraphicsScene();
-    v->setScene(scene);
-
-    auto *stop1 = new Stop();
-    auto *stop2 = new Stop();
-    auto *l = new TrapezoidElem(Trapezoid(120, -13, 60, 22, "endroit"), stop1);
-    auto *r = new TrapezoidElem(Trapezoid(120, 22, 120, 100, "endroit"), stop2);
-    auto *split = new Split(l, r, 60);
-    auto *e2 = new TrapezoidElem(Trapezoid(120, -13, 180, 240, "endroit"), split);
-    auto *e1 = new TrapezoidElem(Trapezoid(100, 30, 200, 180, "endroit" ), e2);
-
-    attachItems(e1, scene);
-
-    v->setRenderHint(QPainter::HighQualityAntialiasing);
-
-
-    v->update();
-//    v->setUpdatesEnabled(true);
-//    v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-
-
-    if(!isSaved) {
-        saveDlg->show();
-    }
-    else {
-        open();
-    }
+    open();
 }
 
 void MainWindow::open()
 {
-    if (!isSaved) {
-        save();
-        isSaved = true ;
+    if(!isSaved) {
+        saveDlg->show();
     }
-    QString file = QFileDialog::getOpenFileName (this, "Load a knit", path, "knit (*.tricot)");
-    if (file.endsWith(".tricot")) {
-        fileName = file;	
-		yyin = fopen((fileName.toStdString()).c_str(),"r");
-		int bison_return_code = yyparse();
-		// Something to see it works
-		ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));
+    else {
+        QString file = QFileDialog::getOpenFileName (this, "Load a knit", path, "knit (*.tricot)");
+        if (file.endsWith(".tricot")) {
+            fileName = file;
+            yyin = fopen((fileName.toStdString()).c_str(),"r");
+            int bison_return_code = yyparse();
+            // Something to see it works
+            ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));
+            isSaved = true;
 
-        /*************************\
-         * The opening file code *
-         *************************/				
+            /* some test for the interface */
+
+            auto *v = ui->patternView;
+            QGraphicsScene *scene = new QGraphicsScene();
+            v->setScene(scene);
+
+            auto *stop1 = new Stop();
+            auto *stop2 = new Stop();
+            auto *l = new TrapezoidElem(Trapezoid(120, -13, 60, 22, "endroit"), stop1);
+            auto *r = new TrapezoidElem(Trapezoid(120, 22, 120, 100, "endroit"), stop2);
+            auto *split = new Split(l, r, 60);
+            auto *e2 = new TrapezoidElem(Trapezoid(120, -13, 180, 240, "endroit"), split);
+            auto *e1 = new TrapezoidElem(Trapezoid(100, 30, 200, 180, "endroit" ), e2);
+
+            attachItems(e1, scene);
+
+            v->setRenderHint(QPainter::HighQualityAntialiasing);
+
+
+            v->update();
+        //  v->setUpdatesEnabled(true);
+        //  v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+
+        }
+        else if (file != ""){
+            QMessageBox::warning(this, "Wrong file format", "The selected file is not of format .tricot");
+        }
+    act = NOTHING;
     }
-    else if (file != ""){
-        QMessageBox::warning(this, "Wrong file format", "The selected file is not of format .tricot");
-    }
-    act = NOTHING ;
 }
 
 void MainWindow::saveDlgTreatButton(QAbstractButton* b)
@@ -181,8 +175,7 @@ void MainWindow::save()
 	if (fileName != "") { 
 		std::ofstream save_file ((fileName.toStdString()).c_str()) ;
 		if (save_file.is_open()) {
-			// save something 
-			save_file << "Yes, you can save !\n" ;
+			save_file << knit_parsed;
 			save_file.close();
 		}
 		else {

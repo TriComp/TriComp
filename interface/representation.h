@@ -64,8 +64,13 @@ public:
     }
 
     void print(std::ostream &os) const override {
-       os << this ;
-       return ;
+       os << "trapezoid ( height : " << geom.height
+          << ", shift = " << geom.shift
+          << ", upper_width : " << geom.upper_width
+          << ", lower_width : " << geom.lower_width
+          << ", pattern : " << (geom.pattern)->name
+          << "\n || ";
+       next->print(os);
     }
 
 
@@ -92,8 +97,11 @@ public:
     }
 
     void print(std::ostream &os) const override {
-        os << this ;
-        return ;
+        os << "split " << gap << " { ";
+        left->print(os);
+        os << " }{ ";
+        right->print(os);
+        os << " }";
     }
 
     int width() const override { return left->width() + gap + right->width(); }
@@ -117,8 +125,14 @@ public:
     }
 
     void print(std::ostream &os) const override {
-        os << this ;
-        return ;
+        os << "link ";
+        if (slot == Slot::Right) {
+            os << "right";
+        }
+        else {
+            os << "left";
+        }
+        os << " " << name;
     }
 
     std::vector<Element *> children() const override { return {}; }
@@ -136,8 +150,7 @@ public:
     }
 
     void print(std::ostream &os) const override {
-        os << this ; // Doesn't work    
-        return ;
+        os << "stop";
     }
 
     std::vector<Element *> children() const override { return {}; }
@@ -156,19 +169,13 @@ public:
     std::map< std::string,Element* > elements;
     Knit(std::string name, std::string description, std::map<std::string,Element*> elements) :
         name(name), description(description), elements(elements) {}
-    Knit() {};
+    Knit() {}
 };
 
 extern Knit knit_parsed; 
 
-// (Printers?) Pretty 
+// Printers
 
-std::ostream& operator <<(std::ostream &os, Link const& link);
-std::ostream& operator <<(std::ostream &os, Stop const& stop);
-std::ostream& operator <<(std::ostream &os, Trapezoid const& trapezoid);
-std::ostream& operator <<(std::ostream &os, TrapezoidElem const& elt);
-std::ostream& operator <<(std::ostream &os, Split const& split);
-std::ostream& operator <<(std::ostream &os, Slot const& slot);
 std::ostream& operator <<(std::ostream &os, Element const& element);
 std::ostream& operator <<(std::ostream &os, std::map<std::string,Element*> const& elements );
 std::ostream& operator <<(std::ostream &os, Knit knit);
