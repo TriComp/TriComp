@@ -12,7 +12,7 @@
 
 extern FILE *yyin; 			// from Flex
 extern int yyparse(void);	// from Bison
-extern Knit knit_parseD;
+extern Knit knit_parsed;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -96,6 +96,7 @@ void MainWindow::open()
             int bison_return_code = yyparse();
             // Something to see it works
             ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));
+            // something added to see what the interface do when quit/open...
             isSaved = true;
 
             /* some test for the interface */
@@ -103,7 +104,7 @@ void MainWindow::open()
             auto *v = ui->patternView;
             QGraphicsScene *scene = new QGraphicsScene();
             v->setScene(scene);
-
+/*
             auto *stop1 = new Stop();
             auto *stop2 = new Stop();
             auto *l = new TrapezoidElem(Trapezoid(120, -13, 60, 22, "endroit"), stop1);
@@ -111,8 +112,9 @@ void MainWindow::open()
             auto *split = new Split(l, r, 60);
             auto *e2 = new TrapezoidElem(Trapezoid(120, -13, 180, 240, "endroit"), split);
             auto *e1 = new TrapezoidElem(Trapezoid(100, 30, 200, 180, "endroit" ), e2);
-
-            attachItems(e1, scene);
+*/
+            Element *elt = knit_parsed.elements["my_piece"];
+            attachItems(elt, scene);
 
             v->setRenderHint(QPainter::HighQualityAntialiasing);
 
@@ -215,9 +217,10 @@ void MainWindow::saveAs()
 
 void MainWindow::on_instructionsAction_triggered()
 {
-    /**********************************
-     * The building instructions code *
-     * ********************************/
+    /************************************
+     * The building instructions code   *
+     * Interactions with the Ocaml part *
+     * **********************************/
 }
 
 void MainWindow::on_aboutTricompAction_triggered()

@@ -1,0 +1,6 @@
+Name : scarf_test
+Description : "A simple scarf"
+
+piece my_piece := start || 
+					 trapezoid ( height : 120, shift : 0, upper_width : 20, lower_width : 20, pattern : endroit ) ||
+					 stop

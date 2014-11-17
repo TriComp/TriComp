@@ -26,7 +26,7 @@ public:
 
     void hoverEnterEvent ( QGraphicsSceneHoverEvent * event);
     void hoverLeaveEvent ( QGraphicsSceneHoverEvent * event);
-    void mousePressEvent(QGraphicsSceneMouseEvent * event) override;
+    void mousePressEvent ( QGraphicsSceneMouseEvent * event) override;
     Element *element() override { return elem; }
 };
 
