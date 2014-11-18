@@ -56,7 +56,7 @@ and print_element padding = function
     let new_padding = tab padding (String.length head) in
     sprintf "%s %s%s" head (print_block new_padding e1) (print_block new_padding e2)
 
-let print_elements ~key:name ~data:element s : string = (* Fucking bullshit *)
+let print_elements ~key:name ~data:element s =
   let head = sprintf "piece %s " name in
   let padding = tab "" (String.length head) in
   sprintf "%s\n\n%s:= start\n%s|| %s" s head padding (print_element padding element)

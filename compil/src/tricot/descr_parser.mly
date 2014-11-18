@@ -3,12 +3,14 @@ open Descr
 
 let eprintf = Core.Std.eprintf (* It had to be done *)
 
+module Map = Core.Std.String.Map
+
 type param = Int of int | Name of string
 
 exception Parse_error of string (* TODO : Add position in file *)
 
 let get_arg arg map =
-  match Core.Std.String.Map.find map arg with
+  match Map.find map arg with
     Some arg -> arg
   | None ->
     eprintf "Arg missing : %s\n%!" arg;
@@ -60,9 +62,9 @@ main:
 ;
 
 body:
-  (* Empty *)                                   { Core.Std.String.Map.empty }
+  (* Empty *)                                   { Map.empty }
 | PIECE; n = NAME; DEF; START; SEQ; e = element; b = body
-                                                { Core.Std.String.Map.add b n e }
+                                                { Map.add b n e }
 ;
 
 element:
@@ -84,11 +86,11 @@ trapezoid_params:
   LPAREN; ps = params; RPAREN                    { (make_trapezoid ps) }
 
 params:
-  (* Empty *)                                   { Core.Std.String.Map.empty }
+  (* Empty *)                                   { Map.empty }
 | p = param                                     { let (k,v) = p in
-                                                  Core.Std.String.Map.singleton k v }
+                                                  Map.singleton k v }
 | p = param; SEP; ps = params                   { let (k,v) = p in
-                                                  Core.Std.String.Map.add ps k v }
+                                                  Map.add ps k v }
 ;
 
 param:
