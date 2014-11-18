@@ -112,14 +112,14 @@ void MainWindow::open()
             auto *split = new Split(l, r, 60);
             auto *e2 = new TrapezoidElem(Trapezoid(120, -13, 180, 240, "endroit"), split);
             auto *e1 = new TrapezoidElem(Trapezoid(100, 30, 200, 180, "endroit" ), e2);
-*/ /*
+*/
             Element *elt = knit_parsed.elements["my_piece"];
             attachItems(elt, scene);
 
             v->setRenderHint(QPainter::HighQualityAntialiasing);
 
 
-            v->update(); */
+            v->update();
         //  v->setUpdatesEnabled(true);
         //  v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 
@@ -178,7 +178,7 @@ void MainWindow::save()
 		std::ofstream save_file ((fileName.toStdString()).c_str()) ;
 		if (save_file.is_open()) {
 			save_file << knit_parsed;
-			save_file.close();
+            save_file.close();
 		}
 		else {
 			QMessageBox::warning(this, "Unable to save", "I'm unable to save to file...");

@@ -25,6 +25,8 @@ SOURCES += editor.cpp \
            parser/parser.cc
 RESOURCES += ressources.qrc
 
-QMAKE_CXXFLAGS += -std=c++11 -lfl -lm
+QMAKE_CXXFLAGS += -std=c++11
+
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 
 QT += widgets

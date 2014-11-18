@@ -65,11 +65,11 @@ public:
 
     void print(std::ostream &os) const override {
        os << "trapezoid ( height : " << geom.height
-          << ", shift = " << geom.shift
+          << ", shift : " << geom.shift
           << ", upper_width : " << geom.upper_width
           << ", lower_width : " << geom.lower_width
           << ", pattern : " << (geom.pattern)->name
-          << "\n || ";
+          << ")\n || ";
        next->print(os);
     }
 
