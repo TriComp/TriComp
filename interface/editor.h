@@ -24,9 +24,9 @@ public:
 
     bool selected;
 
-    void hoverEnterEvent ( QGraphicsSceneHoverEvent * event);
-    void hoverLeaveEvent ( QGraphicsSceneHoverEvent * event);
-    void mousePressEvent ( QGraphicsSceneMouseEvent * event) override;
+    void hoverEnterEvent (QGraphicsSceneHoverEvent * event);
+    void hoverLeaveEvent (QGraphicsSceneHoverEvent * event);
+    void mousePressEvent (QGraphicsSceneMouseEvent * event) override;
     Element *element() override { return elem; }
 };
 
