@@ -112,14 +112,14 @@ void MainWindow::open()
             auto *split = new Split(l, r, 60);
             auto *e2 = new TrapezoidElem(Trapezoid(120, -13, 180, 240, "endroit"), split);
             auto *e1 = new TrapezoidElem(Trapezoid(100, 30, 200, 180, "endroit" ), e2);
-*/
+*/ /*
             Element *elt = knit_parsed.elements["my_piece"];
             attachItems(elt, scene);
 
             v->setRenderHint(QPainter::HighQualityAntialiasing);
 
 
-            v->update();
+            v->update(); */
         //  v->setUpdatesEnabled(true);
         //  v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 

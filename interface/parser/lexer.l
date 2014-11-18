@@ -62,7 +62,7 @@ extern int line_number;	/* defined in parser.ypp */
 
 <comment>\n		    		line_number++;
 
-[0-9]+                      { 
+-?[0-9]+                      { 
                               yylval.integer = atoi(yytext); 
                               return INT; 
                             }
@@ -79,6 +79,7 @@ extern int line_number;	/* defined in parser.ypp */
                             }
 
 .			    			{ 
+							  fprintf(stderr,"line %d: error: illegal character %s\n", line_number, strdup(yytext)) ;
                               exit(1);
                             }
 

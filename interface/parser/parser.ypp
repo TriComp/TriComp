@@ -97,7 +97,7 @@ main:
 
 body:
 PIECE NAME DEF START SEQ element						{ piece_map.clear(); piece_map.insert(pair<string,Element* >($2,$6)); }   
-| PIECE NAME DEF START SEQ element body 				{ piece_map.insert(pair<string,Element* >($2,$6)); }
+| PIECE NAME DEF START SEQ element body 				{ piece_map.insert(pair<string,Element* >($2,$6)); std::cout << $2 ; }
 ;
 
 element:	
