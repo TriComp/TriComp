@@ -1,5 +1,30 @@
 #include "editor.h"
-TrapezoidItem::TrapezoidItem(TrapezoidElem *e) : elem(e), selected(false) {
+#include "mainwindow.h"
+#include "representation.h"
+
+EditorManager::EditorManager(MainWindow *mw)
+    : mw(mw) {
+    connect(&mw->patternMapper, SIGNAL(mapped(QObject *)), this, SLOT(patternClicked(QObject *)));
+}
+void EditorManager::patternClicked(QObject *o) {
+    auto *p = (Pattern *)o;
+    for (auto *i : selected) {
+        qDebug("patternClicked()");
+        auto *t = (TrapezoidItem*)i;
+        t->brush_normal = p->brush;
+        t->updateBrush();
+    }
+}
+
+void EditorManager::setSelected(EditorItem *it, bool sel) {
+    if (sel) {
+        selected.insert(it);
+    } else {
+        selected.erase(it);
+    }
+}
+
+TrapezoidItem::TrapezoidItem(TrapezoidElem *e, EditorManager *m) : elem(e), selected(false), EditorItem(m) {
     Trapezoid t = e->geom;
     QPointF p2(t.shift, -t.height); // Inverted y axis :-[
     QPointF p3(p2.x() + t.upper_width, p2.y());
@@ -13,39 +38,43 @@ TrapezoidItem::TrapezoidItem(TrapezoidElem *e) : elem(e), selected(false) {
     poly->setAcceptHoverEvents(true);
 
     brush_normal = QBrush("#444");
-    brush_selected = QBrush("#ccc");
 
     poly->setBrush(brush_normal);
 }
 
+void TrapezoidItem::updateBrush() {
+    QBrush c = selected ? brush_selected() : brush_normal;
+    poly->setBrush(c);
+    update();
+}
+
 void TrapezoidItem::hoverEnterEvent (QGraphicsSceneHoverEvent * event) {
-    QBrush c = selected ? brush_selected : brush_normal;
-    QBrush b(c.color().light());
-    poly->setBrush(b);
+    QBrush c = selected ? brush_selected() : brush_normal;
+    poly->setBrush(c);
     update();
 }
 void TrapezoidItem::hoverLeaveEvent (QGraphicsSceneHoverEvent * event) {
-    poly->setBrush(selected ? brush_selected : brush_normal);
+    poly->setBrush(selected ? brush_selected() : brush_normal);
     update();
 }
 
 void TrapezoidItem::mousePressEvent(QGraphicsSceneMouseEvent * event) {
     selected = !selected;
-    poly->setBrush(selected ? brush_selected : brush_normal);
-    update();
+    manager->setSelected(this, selected);
+    updateBrush();
 }
 
-SplitItem::SplitItem(Split *s) : elem(s) {
+SplitItem::SplitItem(Split *s) : elem(s), EditorItem(nullptr) {
     line = new QGraphicsLineItem(0, 0, s->width(), 0);
     addToGroup(line);
 }
 
-StopItem::StopItem(Stop *s) : elem(s) {
+StopItem::StopItem(Stop *s) : elem(s), EditorItem(nullptr)  {
     text = new QGraphicsTextItem("STOP");
     addToGroup(text);
 }
 
-LinkItem::LinkItem(Link *s) : elem(s) {
+LinkItem::LinkItem(Link *s) : elem(s), EditorItem(nullptr)  {
     text = new QGraphicsTextItem("Link");
     addToGroup(text);
 }
@@ -54,8 +83,9 @@ LinkItem::LinkItem(Link *s) : elem(s) {
 class AttachItems : public ElementVisitor<void, QPointF> {
 public:
     QGraphicsScene *scene;
+    EditorManager *manager;
 
-    AttachItems(QGraphicsScene *scene) : scene(scene) {}
+    AttachItems(QGraphicsScene *scene, EditorManager *m) : scene(scene), manager(m) {}
 
     void visitLink(Link *l, QPointF o) override {
         auto *item = new LinkItem(l);
@@ -66,7 +96,7 @@ public:
 
     void visitTrapezoid(TrapezoidElem *e, QPointF o) override {
         visit(e->next, o + QPointF(e->geom.shift, -e->geom.height));
-        auto *item = new TrapezoidItem(e);
+        auto *item = new TrapezoidItem(e, manager);
         item->poly->setPos(o);
         e->gfx = item;
         scene->addItem(item);
@@ -87,12 +117,10 @@ public:
         s->gfx = item;
         scene->addItem(item);
     }
-
-    static void doIt(Element *e, QGraphicsScene *s) {
-        AttachItems(s).visit(e, QPointF(0, 0));
-    }
 };
 
-void attachItems(Element *e, QGraphicsScene *s) {
-        AttachItems(s).visit(e, QPointF(0, 0));
+EditorManager *attachItems(Element *e, QGraphicsScene *s, MainWindow *mw) {
+    auto *m = new EditorManager(mw);
+    AttachItems(s, m).visit(e, QPointF(0, 0));
+    return m;
 }

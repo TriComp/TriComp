@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QSignalMapper>
 #include "newknitdialog.h"
 #include "editor.h"
 
@@ -17,6 +18,7 @@ class MainWindow : public QMainWindow //, public Ui::MainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     static Editor *editor() { return editor(); }
+    QSignalMapper patternMapper;
     ~MainWindow();
 
 private slots:

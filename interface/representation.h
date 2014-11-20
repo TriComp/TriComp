@@ -5,15 +5,21 @@
 #include <functional>
 #include <map>
 #include <iostream>
+#include <QBrush>
 
 class EditorItem;
 
-class Pattern {
+struct Pattern : QObject {
+    Q_OBJECT
 public:
+    Pattern(std::string name, QBrush brush) : name(name), brush(brush) {}
     std::string name;
+    QBrush brush;
     Pattern(std::string name) : name(name) {
     }
 };
+
+static Pattern  garter_stitch("garter", QBrush(QColor("blue")));
 
 class Trapezoid {
 public:
@@ -56,7 +62,7 @@ public:
 
 class TrapezoidElem : public Element {
 public:
-    Trapezoid geom;	
+    Trapezoid geom;
     Element *next;
 
     TrapezoidElem(Trapezoid t, Element *next) :
@@ -172,7 +178,7 @@ public:
     Knit() {}
 };
 
-extern Knit knit_parsed; 
+extern Knit knit_parsed;
 
 // Printers
 

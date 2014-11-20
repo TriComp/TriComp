@@ -6,10 +6,32 @@
 #include <QGraphicsItemGroup>
 #include <functional>
 
+#include <set>
+
 #include "representation.h"
 
+class MainWindow;
+
+class EditorManager : public QObject {
+    Q_OBJECT
+public:
+    MainWindow *mw;
+    std::set<EditorItem *> selected;
+
+    void setSelected(EditorItem *it, bool sel);
+
+    EditorManager(MainWindow *mw);
+
+public slots:
+    void patternClicked(QObject *o);
+};
+
 class EditorItem : public QGraphicsItemGroup {
+public:
     virtual Element *element() = 0;
+    EditorManager *manager;
+
+    EditorItem(EditorManager *m) : manager(m) {}
 };
 
 class TrapezoidItem : public EditorItem {
@@ -17,10 +39,13 @@ public:
     QGraphicsPolygonItem *poly;
     TrapezoidElem *elem;
 
-    TrapezoidItem(TrapezoidElem *e);
+    TrapezoidItem(TrapezoidElem *e, EditorManager *m);
 
     QBrush brush_normal;
-    QBrush brush_selected;
+    QBrush brush_selected() {
+        return QBrush(brush_normal.color().light(150));
+    }
+    void updateBrush();
 
     bool selected;
 
@@ -61,7 +86,7 @@ public:
 };
 
 
-void attachItems(Element *e, QGraphicsScene *s);
+EditorManager *attachItems(Element *e, QGraphicsScene *s, MainWindow *mw);
 
 class Editor : QObject {
     Q_OBJECT

@@ -144,7 +144,7 @@
           </size>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tab">
           <attribute name="title">
@@ -156,7 +156,7 @@
              <item row="0" column="0">
               <widget class="QPushButton" name="pushButton">
                <property name="text">
-                <string>Option 1</string>
+                <string>Mousse</string>
                </property>
                <property name="iconSize">
                 <size>

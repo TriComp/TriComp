@@ -5,10 +5,11 @@
 #include <QGraphicsView>
 #include <QGraphicsTextItem>
 #include <QFileDialog>
+#include <QDebug>
 
 #include <iostream>
 #include <fstream>
-#include <representation.h>
+#include "representation.h"
 
 extern FILE *yyin; 			// from Flex
 extern int yyparse(void);	// from Bison
@@ -16,7 +17,8 @@ extern Knit knit_parsed;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    patternMapper(this)
 {
     ui->setupUi(this);
     newDlg = new newKnitDialog(this);
@@ -38,6 +40,9 @@ MainWindow::MainWindow(QWidget *parent) :
     act = NOTHING;
     path = QDir::homePath(); // set the path to home directory
 
+    // pattern buttons
+    patternMapper.setMapping(ui->pushButton, &garter_stitch);
+    connect(ui->pushButton, SIGNAL(clicked()), &patternMapper, SLOT(map()));
 }
 
 MainWindow::~MainWindow()
@@ -92,8 +97,10 @@ void MainWindow::open()
         QString file = QFileDialog::getOpenFileName (this, "Load a knit", path, "knit (*.tricot)");
         if (file.endsWith(".tricot")) {
             fileName = file;
-            yyin = fopen((fileName.toStdString()).c_str(),"r");
-            int bison_return_code = yyparse();
+            //yyin = fopen((fileName.toStdString()).c_str(),"r");
+            qDebug() << "I'm alive!!!!!\n";
+            //int bison_return_code = yyparse();
+            //qDebug() << "Return code = " << bison_return_code;
             // Something to see it works
             ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));
             // something added to see what the interface do when quit/open...
@@ -104,7 +111,7 @@ void MainWindow::open()
             auto *v = ui->patternView;
             QGraphicsScene *scene = new QGraphicsScene();
             v->setScene(scene);
-/*
+
             auto *stop1 = new Stop();
             auto *stop2 = new Stop();
             auto *l = new TrapezoidElem(Trapezoid(120, -13, 60, 22, "endroit"), stop1);
@@ -112,9 +119,9 @@ void MainWindow::open()
             auto *split = new Split(l, r, 60);
             auto *e2 = new TrapezoidElem(Trapezoid(120, -13, 180, 240, "endroit"), split);
             auto *e1 = new TrapezoidElem(Trapezoid(100, 30, 200, 180, "endroit" ), e2);
-*/
-            Element *elt = knit_parsed.elements["my_piece"];
-            attachItems(elt, scene);
+
+            // Element *elt = knit_parsed.elements["my_piece"];
+            attachItems(e1, scene, this);
 
             v->setRenderHint(QPainter::HighQualityAntialiasing);
 
@@ -174,7 +181,7 @@ void MainWindow::save()
 {
     ui->instrLabel->setHtml(QString::fromStdString("You want to save in the file ")+fileName);
 
-	if (fileName != "") { 
+	if (fileName != "") {
 		std::ofstream save_file ((fileName.toStdString()).c_str()) ;
 		if (save_file.is_open()) {
 			save_file << knit_parsed;
@@ -184,7 +191,7 @@ void MainWindow::save()
 			QMessageBox::warning(this, "Unable to save", "I'm unable to save to file...");
 		}
 	}
-	else { // knit not already saved 
+	else { // knit not already saved
 		saveAs();
 	}
 }
