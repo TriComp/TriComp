@@ -25,7 +25,7 @@ piece devant := start
 				|| link left vide_5
 			} {
 				trapezoid (height : 0, shift : 0, upper_width : 15, lower_width : 15, pattern : envers )
-                || stop
+				|| stop
 			}
 		}
 		
@@ -36,7 +36,7 @@ piece derriere := start
             || stop
 		} {
 			trapezoid ( height : 200, shift : 0, upper_width : 50, lower_width : 50, pattern : envers )
-            || stop
+			|| stop
 		}
 
 piece vide_1 := start
