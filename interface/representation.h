@@ -25,13 +25,13 @@ class Trapezoid {
 public:
     int height;
     int shift;
-    int lower_width;
     int upper_width;
+    int lower_width;
     Pattern *pattern;
 
     Trapezoid(std::map<std::string,std::string> parameters);
-    Trapezoid(int h, int s, int l, int u, std::string name) :
-        height(h), shift(s), lower_width(l), upper_width(u), pattern(new Pattern(name)) {}
+    Trapezoid(int h, int s, int u, int l, std::string name) :
+        height(h), shift(s), upper_width(u), lower_width(l), pattern(new Pattern(name)) {}
 
 };
 
