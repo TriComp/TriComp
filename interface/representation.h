@@ -12,11 +12,11 @@ class EditorItem;
 struct Pattern : QObject {
     Q_OBJECT
 public:
-    Pattern(std::string name, QBrush brush) : name(name), brush(brush) {}
     std::string name;
     QBrush brush;
-    Pattern(std::string name) : name(name) {
-    }
+
+    Pattern(std::string name, QBrush brush) : name(name), brush(brush) {}
+    Pattern(std::string name) : name(name) {}
 };
 
 static Pattern  garter_stitch("garter", QBrush(QColor("blue")));

@@ -79,7 +79,7 @@ void MainWindow::newKnit()
     isSaved = false ;
     QString choice = newDlg->getChoice();
     // Now just put the choice in the instructions window
-    ui->instrLabel->setHtml(newDlg->getChoice());
+    ui->instrLabel->setHtml(newDlg->getChoice()); 
     act = NOTHING ;
 }
 
@@ -97,21 +97,18 @@ void MainWindow::open()
         QString file = QFileDialog::getOpenFileName (this, "Load a knit", path, "knit (*.tricot)");
         if (file.endsWith(".tricot")) {
             fileName = file;
-            //yyin = fopen((fileName.toStdString()).c_str(),"r");
-            qDebug() << "I'm alive!!!!!\n";
-            //int bison_return_code = yyparse();
-            //qDebug() << "Return code = " << bison_return_code;
-            // Something to see it works
-            ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));
-            // something added to see what the interface do when quit/open...
-            isSaved = true;
+            yyin = fopen((fileName.toStdString()).c_str(),"r");
+            //qDebug() << "I'm alive!!!!!\n";
+            int bison_return_code = yyparse();
+            qDebug() << "Return code = " << bison_return_code;
+            ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));            
 
             /* some test for the interface */
 
             auto *v = ui->patternView;
             QGraphicsScene *scene = new QGraphicsScene();
             v->setScene(scene);
-
+/*
             auto *stop1 = new Stop();
             auto *stop2 = new Stop();
             auto *l = new TrapezoidElem(Trapezoid(120, -13, 60, 22, "endroit"), stop1);
@@ -119,8 +116,8 @@ void MainWindow::open()
             auto *split = new Split(l, r, 60);
             auto *e2 = new TrapezoidElem(Trapezoid(120, -13, 180, 240, "endroit"), split);
             auto *e1 = new TrapezoidElem(Trapezoid(100, 30, 200, 180, "endroit" ), e2);
-
-            // Element *elt = knit_parsed.elements["my_piece"];
+*/
+            Element *e1 = knit_parsed.elements["my_piece"];
             attachItems(e1, scene, this);
 
             v->setRenderHint(QPainter::HighQualityAntialiasing);
@@ -130,6 +127,7 @@ void MainWindow::open()
         //  v->setUpdatesEnabled(true);
         //  v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 
+            isSaved = true;
         }
         else if (file != ""){
             QMessageBox::warning(this, "Wrong file format", "The selected file is not of format .tricot");
