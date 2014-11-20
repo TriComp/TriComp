@@ -24,7 +24,7 @@ string get_argument(string arg, map<string,string> param_map) {
             return it->second;
         }
 	else {
-	fprintf(stderr, "Argument not found \n");
+	cerr << "Argument " << arg << " not found" << endl ;
 	exit(1);		
 	}
 }

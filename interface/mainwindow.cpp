@@ -179,8 +179,6 @@ void MainWindow::doSaveDlgAction()
 
 void MainWindow::save()
 {
-    ui->instrLabel->setHtml(QString::fromStdString("You want to save in the file ")+fileName);
-
 	if (fileName != "") {
 		std::ofstream save_file ((fileName.toStdString()).c_str()) ;
 		if (save_file.is_open()) {
@@ -188,7 +186,7 @@ void MainWindow::save()
             save_file.close();
 		}
 		else {
-			QMessageBox::warning(this, "Unable to save", "I'm unable to save to file...");
+            QMessageBox::warning(this, "Unable to save", "I'm unable to save your knit...");
 		}
 	}
 	else { // knit not already saved
@@ -216,7 +214,12 @@ void MainWindow::saveAs()
     }
     fileName = QFileDialog::getSaveFileName(this, "Save your knit", path, "knit (*.tricot)");
     if (fileName != "") {
-        save();
+        if (fileName.endsWith(".tricot")) {
+            save();
+        }
+        else {
+            QMessageBox::warning(this,"Wrong file format","You don't save your tricot to the good format (.tricot)");
+        }
     } else { // nothing to do
         act = NOTHING;
     }

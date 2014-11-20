@@ -76,7 +76,7 @@ void error(char *s){
 /* associate the types */
 
 %type<integer> INT
-%type<integer> trapezoid_params params main // Just a return value
+%type<integer> trapezoid_params params main body // Just a return value
 %type<name> NAME DESCR value
 
 %type<elt> element
@@ -96,8 +96,10 @@ main:
 ;
 
 body:
-PIECE NAME DEF START SEQ element						{ piece_map.clear(); piece_map.insert(pair<string,Element* >($2,$6)); }   
-| PIECE NAME DEF START SEQ element body 				{ piece_map.insert(pair<string,Element* >($2,$6)); std::cout << $2 ; }
+PIECE NAME DEF START SEQ element						{ piece_map.clear(); piece_map.insert(pair<string,Element* >($2,$6)); $$ = 0; }   
+| PIECE NAME DEF START SEQ element body 				{ piece_map.insert(pair<string,Element* >($2,$6));
+														  $$ = $7; 
+														}
 ;
 
 element:	
@@ -106,7 +108,9 @@ element:
 | LINK RIGHT NAME										{ $$ = new Link($3,Slot::Right); }
 | SPLIT INT LBRACE element RBRACE LBRACE element RBRACE	{ $$ = new Split($4,$7,$2); } 
 | TRAPEZOID trapezoid_params SEQ element 				{ int bidon = $2; // generate parameters
-														  $$ = new TrapezoidElem(Trapezoid(local_param),$4);}
+														  Trapezoid trap(local_param);
+														  std::cout << "trapezoid generated\n";
+														  $$ = new TrapezoidElem(trap,$4);}
 ;
 
 trapezoid_params:
@@ -114,12 +118,14 @@ trapezoid_params:
 ;
 
 params:
-NAME COL value                                 			{ local_param.clear();
+NAME COL value                                 			{ local_param.clear(); 
 														  local_param.insert(std::make_pair<string,string>($1,$3));
-								  						  $$ = 0; } // useless return value 
+														  std::cout << $1 << " inserted with value " << $3 << std::endl;
+														  $$ = 0; } // useless return value 
 | NAME COL value SEP params                   			{ int bidon = $5; // generate the other parameters
 								  						  local_param.insert(std::make_pair<string,string>($1,$3));
-								  						  $$ = 0 ; }
+														  std::cout << $1 << " inserted with value " << $3 << std::endl;
+														  $$ = 0; }
 ;
 
 value:

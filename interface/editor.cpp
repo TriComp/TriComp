@@ -6,13 +6,15 @@ EditorManager::EditorManager(MainWindow *mw)
     : mw(mw) {
     connect(&mw->patternMapper, SIGNAL(mapped(QObject *)), this, SLOT(patternClicked(QObject *)));
 }
+
 void EditorManager::patternClicked(QObject *o) {
-    auto *p = (Pattern *)o;
+    auto *p = (Pattern *)o; // o is a pattern
     for (auto *i : selected) {
         qDebug("patternClicked()");
         auto *t = (TrapezoidItem*)i;
-        t->brush_normal = p->brush;
+        t->brush_normal = p->brush; // change the graphical object
         t->updateBrush();
+        t->elem->geom.pattern = p; // change the c++ object
     }
 }
 
@@ -78,7 +80,6 @@ LinkItem::LinkItem(Link *s) : elem(s), EditorItem(nullptr)  {
     text = new QGraphicsTextItem("Link");
     addToGroup(text);
 }
-
 
 class AttachItems : public ElementVisitor<void, QPointF> {
 public:
