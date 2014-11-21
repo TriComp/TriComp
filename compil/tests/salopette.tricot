@@ -4,70 +4,64 @@ Description : "Essai de description de la salopette décrite en réunion"
 piece jambe_1 := start
 		|| trapezoid ( height : 200, shift : 0, upper_width : 50, lower_width : 50, pattern : envers )
 		|| link left devant
-		|| stop
 		
 piece jambe_2 := start
 		|| trapezoid ( height : 200, shift : 0, upper_width : 50, lower_width : 50, pattern : envers )
 		|| link right devant
-		|| stop
 		
 piece devant := start
 		|| trapezoid ( height : 100, shift : 0, upper_width : 100, lower_width : 100, pattern : envers )
 		|| split 50 {
-			|| split 0 {
+			split 0 {
 				trapezoid (height : 0, shift : 0, upper_width : 15, lower_width : 15, pattern : envers )
+                || stop
 			} {
 				trapezoid ( height : 30, shift : 0, upper_width : 10, lower_width : 10, pattern : envers )
 				|| link right vide_4
 			}
 		} {
-			|| split 0 {
+			split 0 {
 				trapezoid ( height : 30, shift : 0, upper_width : 10, lower_width : 10, pattern : envers )
 				|| link left vide_5
 			} {
 				trapezoid (height : 0, shift : 0, upper_width : 15, lower_width : 15, pattern : envers )
+				|| stop
 			}
 		}
-		|| stop
 		
 piece derriere := start
 		|| trapezoid ( height : 100, shift : 0, upper_width : 100, lower_width : 100, pattern : envers )
 		|| split 0 {
-			|| trapezoid ( height : 200, shift : 0, upper_width : 50, lower_width : 50, pattern : envers )
+			trapezoid ( height : 200, shift : 0, upper_width : 50, lower_width : 50, pattern : envers )
+            || stop
 		} {
-			|| trapezoid ( height : 200, shift : 0, upper_width : 50, lower_width : 50, pattern : envers )
+			trapezoid ( height : 200, shift : 0, upper_width : 50, lower_width : 50, pattern : envers )
+			|| stop
 		}
-		|| stop
 
 piece vide_1 := start
 		|| trapezoid (height : 0, shift : 0, upper_width : 15, lower_width : 15, pattern : envers )
 		|| link left vide_4
-		|| stop
 
 piece vide_2 := start
 		|| trapezoid (height : 0, shift : 0, upper_width : 50, lower_width : 50, pattern : envers )
 		|| link right vide_6
-		|| stop
 
 piece vide_3 := start
 		|| trapezoid (height : 0, shift : 0, upper_width : 15, lower_width : 15, pattern : envers )
 		|| link right vide_5
-		|| stop
 
 piece vide_4 := start
 		|| trapezoid (height : 0, shift : 0, upper_width : 25, lower_width : 25, pattern : envers )
 		|| link left vide_6
-		|| stop
 
 piece vide_5 := start
 		|| trapezoid (height : 0, shift : 0, upper_width : 25, lower_width : 25, pattern : envers )
 		|| link right derriere
-		|| stop
 
 piece vide_6 := start
 		|| trapezoid (height : 0, shift : 0, upper_width : 75, lower_width : 75, pattern : envers )
 		|| link left derriere
-		|| stop
 
 
 
