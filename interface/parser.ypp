@@ -1,0 +1,124 @@
+/* ============================================================== */
+/*                             C PRELUDE                          */
+/* ============================================================== */
+
+%{
+
+#include "representation.h" // includes knit_parser
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <iostream>
+#include <cstring>
+
+#include <map>
+#include <vector>
+
+
+using namespace std;
+
+int line_number	= 1;	          /* number of current source line */
+map<string,Element* > piece_map;  /* map of the pieces */
+extern int yylex();	              /* lexical analyzer generated from lex.l */
+extern char *yytext;	          /* last token, defined in lex.l  */
+
+void yyerror(char *s){
+	fprintf(stderr, "line %d: syntax error. Last token was \"%s\"\n", line_number, yytext);
+	exit(1);
+}
+
+void error(char *s){
+	fprintf(stderr, "line %d: error: %s\n", line_number, s);
+	exit(1);
+}
+
+%}
+
+/* ============================================================== */
+/*                     TYPES OF NON-TERMINALS                     */         
+/* ============================================================== */
+
+%union {
+  int integer;
+  char* name;
+  Element* elt;
+  Trapezoid* trapezoid;
+}
+
+
+/* ============================================================== */
+/*                       TOKENS DECLARATION
+/* ============================================================== */
+
+/* Types */
+%token INT
+%token NAME
+%token DESCR
+
+/* Délimiteurs */
+%token LPAREN RPAREN
+%token LBRACE RBRACE
+
+/* Pieces */
+%token  PIECE DEF SEQ SEP COL
+
+/* Entete */
+%token H_NAME H_DESCR
+
+/* Vocabulary */
+%token START STOP TRAPEZOID LINK LEFT RIGHT SPLIT
+
+/* others */
+
+%token END_OF_FILE
+%right SEQ
+
+/* associate the types */
+
+%type<integer> INT
+%type<integer> main body // Just a return value
+%type<name> NAME DESCR
+
+%type<trapezoid> trapezoid_params params
+%type<elt> element
+
+/* Axiom */
+%start main
+
+%%
+
+/* ============================================== */
+/*            The grammar with actions            */
+/* ============================================== */
+
+main:
+  H_NAME NAME H_DESCR DESCR body		 				{ knit_parsed = Knit($2,$4,piece_map); $$ = 0;}
+| H_NAME NAME H_DESCR DESCR body END_OF_FILE			{ knit_parsed = Knit($2,$4,piece_map); $$ = 0;}
+;
+
+body:
+PIECE NAME DEF START SEQ element						{ piece_map.clear(); piece_map.insert(pair<string,Element* >($2,$6)); $$ = 0; }   
+| PIECE NAME DEF START SEQ element body 				{ piece_map.insert(pair<string,Element* >($2,$6));
+														  $$ = $7; 
+														}
+;
+
+element:	
+  STOP                                        			{ $$ = new Stop(); }
+| LINK LEFT NAME                      					{ $$ = new Link($3,Slot::Left); }
+| LINK RIGHT NAME										{ $$ = new Link($3,Slot::Right); }
+| SPLIT INT LBRACE element RBRACE LBRACE element RBRACE	{ $$ = new Split($4,$7,$2); } 
+| TRAPEZOID trapezoid_params SEQ element 				{ $$ = new TrapezoidElem(*($2),$4); }
+;
+
+trapezoid_params:
+  LPAREN params RPAREN                    				{ $$ = $2; }
+;
+
+/* sorry for this ugly rule... */
+
+params:
+NAME COL INT SEP NAME COL INT SEP NAME COL INT SEP NAME COL INT SEP NAME COL NAME { $$ = new Trapezoid($3,$7,$11,$15,$19); }
+;
+
+

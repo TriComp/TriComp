@@ -19,6 +19,8 @@ public:
     Pattern(std::string name) : name(name) {}
 };
 
+// Point mousse
+
 static Pattern  garter_stitch("garter", QBrush(QColor("blue")));
 
 class Trapezoid {
@@ -34,11 +36,6 @@ public:
         height(h), shift(s), upper_width(u), lower_width(l), pattern(new Pattern(name)) {}
 
 };
-
-// Usefull function in the parser
-
-std::string get_argument(std::string arg, std::map<std::string,std::string> param_map);
-int get_argument_int(std::string arg, std::map<std::string,std::string> param_map);
 
 enum class Slot { Left, Right };
 
@@ -99,8 +96,7 @@ public:
     int gap;
 
     Split(Element *l, Element *r, int gap)
-        : Element(ElementType::Split), left(l), right(r), gap(gap) {
-    }
+        : Element(ElementType::Split), left(l), right(r), gap(gap) {}
 
     void print(std::ostream &os) const override {
         os << "split " << gap << " { ";
@@ -127,8 +123,7 @@ class Link : public Element {
 public:
     std::string name;
     Slot slot;
-    Link(std::string name, Slot slot) : Element(ElementType::Link), name(name), slot(slot) {
-    }
+    Link(std::string name, Slot slot) : Element(ElementType::Link), name(name), slot(slot) {}
 
     void print(std::ostream &os) const override {
         os << "link ";
@@ -152,8 +147,7 @@ public:
 
 class Stop : public Element {
 public:
-    Stop() : Element(ElementType::Stop) {
-    }
+    Stop() : Element(ElementType::Stop) {}
 
     void print(std::ostream &os) const override {
         os << "stop";
