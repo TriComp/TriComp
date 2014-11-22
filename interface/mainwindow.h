@@ -55,6 +55,8 @@ private:
                            NOTHING }; // useful with the save dialog and cancel options
     afterSaveAction act;
     static Editor* editor_;
+
+    void setInterface();
 };
 
 #endif // MAINWINDOW_H

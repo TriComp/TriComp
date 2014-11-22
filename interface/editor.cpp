@@ -65,6 +65,7 @@ void TrapezoidItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
     poly->setBrush(c);
     update();
 }
+
 void TrapezoidItem::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
     poly->setBrush(selected ? brush_selected() : brush_normal);

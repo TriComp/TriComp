@@ -23,13 +23,11 @@ extern int yylex();	              /* lexical analyzer generated from lex.l */
 extern char *yytext;	          /* last token, defined in lex.l  */
 
 void yyerror(char *s){
-	fprintf(stderr, "line %d: syntax error. Last token was \"%s\"\n", line_number, yytext);
-	exit(1);
+    fprintf(stderr, "line %d: syntax error. Last token was \"%s\"\n", line_number, yytext);
 }
 
 void error(char *s){
 	fprintf(stderr, "line %d: error: %s\n", line_number, s);
-	exit(1);
 }
 
 %}

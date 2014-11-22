@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui->setupUi(this);
     newDlg = new newKnitDialog(this);
 
-    // Setup a simple save dialog window
+    // Setup the save dialog window
     saveDlg = new QMessageBox(this);
     saveDlg->setText("Are you sure you want to quit without saving your knit ?");
     saveDlg->addButton(QString("Cancel"), QMessageBox::RejectRole);
@@ -49,6 +49,8 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+// QUIT
 
 void MainWindow::on_quitAction_triggered()
 {
@@ -81,6 +83,8 @@ void MainWindow::newKnit()
     act = NOTHING;
 }
 
+// OPEN
+
 void MainWindow::on_openAction_triggered()
 {
     open();
@@ -88,6 +92,7 @@ void MainWindow::on_openAction_triggered()
 
 void MainWindow::open()
 {
+    act = OPEN;
     if (!isSaved) {
         saveDlg->show();
     } else {
@@ -95,41 +100,46 @@ void MainWindow::open()
         if (file.endsWith(".tricot")) {
             fileName = file;
             yyin = fopen((fileName.toStdString()).c_str(), "r");
-            //qDebug() << "I'm alive!!!!!\n";
+            qDebug() << "Ok";
             int bison_return_code = yyparse();
-            qDebug() << "Return code = " << bison_return_code;
-            ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));
-
-            /* some test for the interface */
-
-            auto* v = ui->patternView;
-            QGraphicsScene* scene = new QGraphicsScene();
-            v->setScene(scene);
-            /*
-            auto *stop1 = new Stop();
-            auto *stop2 = new Stop();
-            auto *l = new TrapezoidElem(Trapezoid(120, -13, 60, 22, "endroit"), stop1);
-            auto *r = new TrapezoidElem(Trapezoid(120, 22, 120, 100, "endroit"), stop2);
-            auto *split = new Split(l, r, 60);
-            auto *e2 = new TrapezoidElem(Trapezoid(120, -13, 180, 240, "endroit"), split);
-            auto *e1 = new TrapezoidElem(Trapezoid(100, 30, 200, 180, "endroit" ), e2);
-*/
-            Element* e1 = knit_parsed.elements["my_piece"];
-            attachItems(e1, scene, this);
-
-            v->setRenderHint(QPainter::HighQualityAntialiasing);
-
-            v->update();
-            //  v->setUpdatesEnabled(true);
-            //  v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-
-            isSaved = true;
+            switch (bison_return_code) {
+            case 0: {
+                setInterface();
+                break;
+            }
+            case 1: {
+                QMessageBox::warning(this,"Unable to open","Unable to open the file. Parsing error.");
+                break;
+            }
+            case 2: {
+                QMessageBox::warning(this,"Unable to open","Unable to open the file. Memory exhaustion.");
+                break;
+            }
+            }
         } else if (file != "") {
             QMessageBox::warning(this, "Wrong file format", "The selected file is not of format .tricot");
         }
         act = NOTHING;
     }
 }
+
+void MainWindow::setInterface()
+{
+    ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));
+    auto* v = ui->patternView;
+    QGraphicsScene* scene = new QGraphicsScene();
+    v->setScene(scene);
+    Element* e1 = knit_parsed.elements["my_piece"];
+    attachItems(e1, scene, this);
+
+    v->setRenderHint(QPainter::HighQualityAntialiasing);
+    v->update();
+//  v->setUpdatesEnabled(true);
+//  v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+    isSaved = true;
+}
+
+// SAVE
 
 void MainWindow::saveDlgTreatButton(QAbstractButton* b)
 {
@@ -213,6 +223,8 @@ void MainWindow::saveAs()
     }
 }
 
+// INSTRUCTIONS
+
 void MainWindow::on_instructionsAction_triggered()
 {
     /************************************
@@ -220,6 +232,8 @@ void MainWindow::on_instructionsAction_triggered()
      * Interactions with the Ocaml part *
      * **********************************/
 }
+
+// ABOUT
 
 void MainWindow::on_aboutTricompAction_triggered()
 {
