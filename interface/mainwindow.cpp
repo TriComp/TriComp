@@ -11,14 +11,14 @@
 #include <fstream>
 #include "representation.h"
 
-extern FILE *yyin; 			// from Flex
-extern int yyparse(void);	// from Bison
+extern FILE* yyin; // from Flex
+extern int yyparse(void); // from Bison
 extern Knit knit_parsed;
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    patternMapper(this)
+MainWindow::MainWindow(QWidget* parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+    , patternMapper(this)
 {
     ui->setupUi(this);
     newDlg = new newKnitDialog(this);
@@ -28,12 +28,12 @@ MainWindow::MainWindow(QWidget *parent) :
     saveDlg->setText("Are you sure you want to quit without saving your knit ?");
     saveDlg->addButton(QString("Cancel"), QMessageBox::RejectRole);
     saveDlg->addButton(QString("Save"), QMessageBox::YesRole);
-    saveDlg->addButton(QString("Close without saving"),QMessageBox::NoRole);
-    connect(saveDlg,SIGNAL(buttonClicked(QAbstractButton*)),this,SLOT(saveDlgTreatButton(QAbstractButton*)));
+    saveDlg->addButton(QString("Close without saving"), QMessageBox::NoRole);
+    connect(saveDlg, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(saveDlgTreatButton(QAbstractButton*)));
 
     // Connections
     connect(qApp, SIGNAL(lastWindowClosed()), ui->quitAction, SLOT(trigger()));
-    connect(newDlg,SIGNAL(newKnit()),this,SLOT(newKnit()));
+    connect(newDlg, SIGNAL(newKnit()), this, SLOT(newKnit()));
 
     // Variables
     isSaved = true;
@@ -52,11 +52,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_quitAction_triggered()
 {
-    act = QUIT ;
+    act = QUIT;
     if (!isSaved) {
         saveDlg->show();
-    }
-    else {
+    } else {
         qApp->quit();
     }
 }
@@ -65,22 +64,21 @@ void MainWindow::on_quitAction_triggered()
 
 void MainWindow::on_newAction_triggered()
 {
-    act = NEW ;
+    act = NEW;
     if (!isSaved) {
         saveDlg->show();
-    }
-    else {
+    } else {
         newDlg->show();
     }
 }
 
 void MainWindow::newKnit()
 {
-    isSaved = false ;
+    isSaved = false;
     QString choice = newDlg->getChoice();
     // Now just put the choice in the instructions window
-    ui->instrLabel->setHtml(newDlg->getChoice()); 
-    act = NOTHING ;
+    ui->instrLabel->setHtml(newDlg->getChoice());
+    act = NOTHING;
 }
 
 void MainWindow::on_openAction_triggered()
@@ -90,25 +88,24 @@ void MainWindow::on_openAction_triggered()
 
 void MainWindow::open()
 {
-    if(!isSaved) {
+    if (!isSaved) {
         saveDlg->show();
-    }
-    else {
-        QString file = QFileDialog::getOpenFileName (this, "Load a knit", path, "knit (*.tricot)");
+    } else {
+        QString file = QFileDialog::getOpenFileName(this, "Load a knit", path, "knit (*.tricot)");
         if (file.endsWith(".tricot")) {
             fileName = file;
-            yyin = fopen((fileName.toStdString()).c_str(),"r");
+            yyin = fopen((fileName.toStdString()).c_str(), "r");
             //qDebug() << "I'm alive!!!!!\n";
             int bison_return_code = yyparse();
             qDebug() << "Return code = " << bison_return_code;
-            ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));            
+            ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));
 
             /* some test for the interface */
 
-            auto *v = ui->patternView;
-            QGraphicsScene *scene = new QGraphicsScene();
+            auto* v = ui->patternView;
+            QGraphicsScene* scene = new QGraphicsScene();
             v->setScene(scene);
-/*
+            /*
             auto *stop1 = new Stop();
             auto *stop2 = new Stop();
             auto *l = new TrapezoidElem(Trapezoid(120, -13, 60, 22, "endroit"), stop1);
@@ -117,22 +114,20 @@ void MainWindow::open()
             auto *e2 = new TrapezoidElem(Trapezoid(120, -13, 180, 240, "endroit"), split);
             auto *e1 = new TrapezoidElem(Trapezoid(100, 30, 200, 180, "endroit" ), e2);
 */
-            Element *e1 = knit_parsed.elements["my_piece"];
+            Element* e1 = knit_parsed.elements["my_piece"];
             attachItems(e1, scene, this);
 
             v->setRenderHint(QPainter::HighQualityAntialiasing);
 
-
             v->update();
-        //  v->setUpdatesEnabled(true);
-        //  v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+            //  v->setUpdatesEnabled(true);
+            //  v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 
             isSaved = true;
-        }
-        else if (file != ""){
+        } else if (file != "") {
             QMessageBox::warning(this, "Wrong file format", "The selected file is not of format .tricot");
         }
-    act = NOTHING;
+        act = NOTHING;
     }
 }
 
@@ -140,14 +135,12 @@ void MainWindow::saveDlgTreatButton(QAbstractButton* b)
 {
     QMessageBox::ButtonRole role = saveDlg->buttonRole(b);
     if (role == QMessageBox::RejectRole) { // do nothing, whatever the action asked
-        act = NOTHING ;
-    }
-    else if (role == QMessageBox::YesRole) { // save and continue
+        act = NOTHING;
+    } else if (role == QMessageBox::YesRole) { // save and continue
         save();
-        isSaved = true ;
+        isSaved = true;
         doSaveDlgAction();
-    }
-    else if (role == QMessageBox::NoRole) { // continue
+    } else if (role == QMessageBox::NoRole) { // continue
         doSaveDlgAction();
     }
 }
@@ -155,48 +148,46 @@ void MainWindow::saveDlgTreatButton(QAbstractButton* b)
 void MainWindow::doSaveDlgAction()
 {
     switch (act) {
-        case NEW : {
-            newDlg->show();
-            break;
-        }
-        case OPEN : {
-            open() ;
-            act = NOTHING ;
-            break;
-        }
-        case QUIT : {
-            close();
-            break;
-        }
-        case NOTHING : {
-            // do nothing
-            break;
-        }
+    case NEW: {
+        newDlg->show();
+        break;
+    }
+    case OPEN: {
+        open();
+        act = NOTHING;
+        break;
+    }
+    case QUIT: {
+        close();
+        break;
+    }
+    case NOTHING: {
+        // do nothing
+        break;
+    }
     }
 }
 
 void MainWindow::save()
 {
-	if (fileName != "") {
-		std::ofstream save_file ((fileName.toStdString()).c_str()) ;
-		if (save_file.is_open()) {
-			save_file << knit_parsed;
+    if (fileName != "") {
+        std::ofstream save_file((fileName.toStdString()).c_str());
+        if (save_file.is_open()) {
+            save_file << knit_parsed;
             save_file.close();
-		}
-		else {
+        } else {
             QMessageBox::warning(this, "Unable to save", "I'm unable to save your knit...");
-		}
-	}
-	else { // knit not already saved
-		saveAs();
-	}
+        }
+    } else { // knit not already saved
+        saveAs();
+    }
 }
 
 void MainWindow::on_saveAction_triggered()
 {
     if (!isSaved) {
         save();
-        isSaved = true ;
+        isSaved = true;
     }
 }
 
@@ -207,16 +198,15 @@ void MainWindow::on_saveAsAction_triggered()
 
 void MainWindow::saveAs()
 {
-    if(fileName != "") { // set a smarter path
+    if (fileName != "") { // set a smarter path
         path = fileName;
     }
     fileName = QFileDialog::getSaveFileName(this, "Save your knit", path, "knit (*.tricot)");
     if (fileName != "") {
         if (fileName.endsWith(".tricot")) {
             save();
-        }
-        else {
-            QMessageBox::warning(this,"Wrong file format","You don't save your tricot to the good format (.tricot)");
+        } else {
+            QMessageBox::warning(this, "Wrong file format", "You don't save your tricot to the good format (.tricot)");
         }
     } else { // nothing to do
         act = NOTHING;
@@ -233,6 +223,6 @@ void MainWindow::on_instructionsAction_triggered()
 
 void MainWindow::on_aboutTricompAction_triggered()
 {
-    QMessageBox::information(this,"A propos de TriComp",
-    "TriComp est un assistant pour tricoteur. \n Plus d'informations sur \n https://github.com/TriComp");
+    QMessageBox::information(this, "A propos de TriComp",
+                             "TriComp est un assistant pour tricoteur. \n Plus d'informations sur \n https://github.com/TriComp");
 }

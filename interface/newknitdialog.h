@@ -4,17 +4,15 @@
 #include <QDialog>
 #include <QAbstractButton>
 
-
 namespace Ui {
 class newKnitDialog;
 }
 
-class newKnitDialog : public QDialog
-{
+class newKnitDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit newKnitDialog(QWidget *parent = 0);
+    explicit newKnitDialog(QWidget* parent = 0);
     ~newKnitDialog();
     QString getChoice();
 
@@ -26,7 +24,7 @@ public slots:
     void ok();
 
 private:
-    Ui::newKnitDialog *ui;
+    Ui::newKnitDialog* ui;
     QString knit;
 };
 

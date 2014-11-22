@@ -15,90 +15,91 @@ class MainWindow;
 class EditorManager : public QObject {
     Q_OBJECT
 public:
-    MainWindow *mw;
-    std::set<EditorItem *> selected;
+    MainWindow* mw;
+    std::set<EditorItem*> selected;
 
-    void setSelected(EditorItem *it, bool sel);
+    void setSelected(EditorItem* it, bool sel);
 
-    EditorManager(MainWindow *mw);
+    EditorManager(MainWindow* mw);
 
 public slots:
-    void patternClicked(QObject *o);
+    void patternClicked(QObject* o);
 };
 
 class EditorItem : public QGraphicsItemGroup {
 public:
-    virtual Element *element() = 0;
-    EditorManager *manager;
+    virtual Element* element() = 0;
+    EditorManager* manager;
 
-    EditorItem(EditorManager *m) : manager(m) {}
+    EditorItem(EditorManager* m)
+        : manager(m)
+    {
+    }
 };
 
 class TrapezoidItem : public EditorItem {
 public:
-    QGraphicsPolygonItem *poly;
-    TrapezoidElem *elem;
+    QGraphicsPolygonItem* poly;
+    TrapezoidElem* elem;
 
-    TrapezoidItem(TrapezoidElem *e, EditorManager *m);
+    TrapezoidItem(TrapezoidElem* e, EditorManager* m);
 
     QBrush brush_normal;
-    QBrush brush_selected() {
-        return QBrush(brush_normal.color().light(150));
-    }
+    QBrush brush_selected() { return QBrush(brush_normal.color().light(150)); }
     void updateBrush();
 
     bool selected;
 
-    void hoverEnterEvent (QGraphicsSceneHoverEvent * event);
-    void hoverLeaveEvent (QGraphicsSceneHoverEvent * event);
-    void mousePressEvent (QGraphicsSceneMouseEvent * event) override;
-    Element *element() override { return elem; }
+    void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    Element* element() override { return elem; }
 };
 
 class SplitItem : public EditorItem {
 public:
-    QGraphicsLineItem *line;
-    Split *elem;
+    QGraphicsLineItem* line;
+    Split* elem;
 
-    SplitItem(Split *s);
+    SplitItem(Split* s);
 
-    Element *element() override { return elem; }
+    Element* element() override { return elem; }
 };
 
 class StopItem : public EditorItem {
 public:
-    QGraphicsTextItem *text;
-    Stop *elem;
+    QGraphicsTextItem* text;
+    Stop* elem;
 
-    StopItem(Stop *s);
+    StopItem(Stop* s);
 
-    Element *element() override { return elem; }
+    Element* element() override { return elem; }
 };
 
 class LinkItem : public EditorItem {
 public:
-    QGraphicsTextItem *text;
-    Link *elem;
+    QGraphicsTextItem* text;
+    Link* elem;
 
-    LinkItem(Link *s);
+    LinkItem(Link* s);
 
-    Element *element() override { return elem; }
+    Element* element() override { return elem; }
 };
 
-
-EditorManager *attachItems(Element *e, QGraphicsScene *s, MainWindow *mw);
+EditorManager* attachItems(Element* e, QGraphicsScene* s, MainWindow* mw);
 
 class Editor : QObject {
     Q_OBJECT
 
 public:
+    QGraphicsView* view;
+    QGraphicsScene* scene;
+    Element* base;
 
-    QGraphicsView *view;
-    QGraphicsScene *scene;
-    Element *base;
-
-    Editor(QGraphicsView *view, QGraphicsScene *scene, Element *base)
-        : view(view), scene(scene), base(base) {
-
+    Editor(QGraphicsView* view, QGraphicsScene* scene, Element* base)
+        : view(view)
+        , scene(scene)
+        , base(base)
+    {
     }
 };

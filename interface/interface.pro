@@ -33,7 +33,7 @@ QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 # Hints for flex and bison #
 ############################
 
-LIBS += -lfl -ly
+#LIBS += -lfl -ly
 
 FLEXSOURCES = lexer.l
 BISONSOURCES = parser.ypp

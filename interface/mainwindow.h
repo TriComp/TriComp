@@ -8,16 +8,16 @@
 #include "editor.h"
 
 namespace Ui {
-  class MainWindow /*: public Ui::MainWindow {}*/;
+class MainWindow /*: public Ui::MainWindow {}*/;
 }
 
 class MainWindow : public QMainWindow //, public Ui::MainWindow
-{
+                   {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    static Editor *editor() { return editor(); }
+    explicit MainWindow(QWidget* parent = 0);
+    static Editor* editor() { return editor(); }
     QSignalMapper patternMapper;
     ~MainWindow();
 
@@ -42,17 +42,19 @@ private slots:
     // others
     void on_aboutTricompAction_triggered();
 
-
 private:
-    Ui::MainWindow *ui;
-    newKnitDialog *newDlg;
-    QMessageBox *saveDlg;
+    Ui::MainWindow* ui;
+    newKnitDialog* newDlg;
+    QMessageBox* saveDlg;
     bool isSaved;
     QString path;
     QString fileName;
-    enum afterSaveAction {NEW, OPEN, QUIT, NOTHING}; // useful with the save dialog and cancel options
+    enum afterSaveAction { NEW,
+                           OPEN,
+                           QUIT,
+                           NOTHING }; // useful with the save dialog and cancel options
     afterSaveAction act;
-    static Editor *editor_;
+    static Editor* editor_;
 };
 
 #endif // MAINWINDOW_H
