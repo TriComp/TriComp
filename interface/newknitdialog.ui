@@ -58,12 +58,12 @@
    </item>
    <item>
     <property name="text">
-     <string>Scarf</string>
+     <string>scarf</string>
     </property>
    </item>
    <item>
     <property name="text">
-     <string>Poncho</string>
+     <string>poncho</string>
     </property>
    </item>
   </widget>

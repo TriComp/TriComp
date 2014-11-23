@@ -76,11 +76,19 @@ void MainWindow::on_newAction_triggered()
 
 void MainWindow::newKnit()
 {
-    isSaved = false;
     QString choice = newDlg->getChoice();
-    // Now just put the choice in the instructions window
-    ui->instrLabel->setHtml(newDlg->getChoice());
+    yyin = fopen(("../compil/tests/"+choice.toStdString()+".tricot").c_str(), "r");
+    int bison_return_code = yyparse();
+    if (bison_return_code != 0) { // This case mustn't happen
+        QMessageBox::warning(this, "Warning", "Incorrect given file...");
+    }
+    else {
+        fileName = "";
+        setInterface();
+        isSaved = false;
+    }
     act = NOTHING;
+
 }
 
 // OPEN
