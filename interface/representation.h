@@ -25,6 +25,10 @@ public:
         , brush(QBrush("#444")) // default
     {
     }
+
+    ~Pattern()
+    {
+    }
 };
 
 // Point mousse
@@ -47,6 +51,11 @@ public:
         , lower_width(l)
         , pattern(new Pattern(name))
     {
+    }
+
+    ~Trapezoid()
+    {
+        delete pattern;
     }
 };
 
@@ -71,6 +80,8 @@ public:
     }
     // In subclasses, delegate to QGraphicsPolygonItem
     EditorItem* gfx;
+    virtual ~Element() {}
+
     virtual void print(std::ostream& os) const = 0;
     virtual std::vector<Element*> children() const = 0;
     virtual int width() const = 0;
@@ -87,6 +98,12 @@ public:
         , geom(t)
         , next(next)
     {
+    }
+
+    ~TrapezoidElem()
+    {
+        std::cout << "Delete next...\n";
+        delete next;
     }
 
     void print(std::ostream& os) const override
@@ -127,6 +144,14 @@ public:
     {
     }
 
+    ~Split()
+    {
+        std::cout << "Delete left...\n";
+        delete left;
+        std::cout << "Delete right...\n";
+        delete right;
+    }
+
     void print(std::ostream& os) const override
     {
         os << "split " << gap << " { ";
@@ -161,6 +186,10 @@ public:
     {
     }
 
+    ~Link()
+    {
+    }
+
     void print(std::ostream& os) const override
     {
         os << "link ";
@@ -186,6 +215,10 @@ class Stop : public Element {
 public:
     Stop()
         : Element(ElementType::Stop)
+    {
+    }
+
+    ~Stop()
     {
     }
 
@@ -216,6 +249,13 @@ public:
     {
     }
     Knit() {}
+    void destruct()
+    {
+        for (std::map<std::string, Element*>::const_iterator it = elements.begin(); it != elements.end(); ++it) {
+            std::cout << "Delete " << it->first << "...\n";
+            delete it->second;
+        }
+    }
 };
 
 extern Knit knit_parsed;

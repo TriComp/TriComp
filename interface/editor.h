@@ -22,6 +22,9 @@ public:
 
     EditorManager(MainWindow* mw);
 
+signals:
+    void isModified();
+
 public slots:
     void patternClicked(QObject* o);
 };

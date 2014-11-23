@@ -8,6 +8,7 @@ EditorManager::EditorManager(MainWindow* mw)
 {
     connect(&mw->patternMapper, SIGNAL(mapped(QObject*)), this,
             SLOT(patternClicked(QObject*)));
+    connect(this, SIGNAL(isModified()), mw, SLOT(modify()));
 }
 
 void EditorManager::patternClicked(QObject* o)
@@ -20,6 +21,7 @@ void EditorManager::patternClicked(QObject* o)
         t->updateBrush();
         t->elem->geom.pattern = p; // change the c++ object
     }
+    isModified();
 }
 
 void EditorManager::setSelected(EditorItem* it, bool sel)

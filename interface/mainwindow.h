@@ -37,6 +37,8 @@ private slots:
     void on_saveAction_triggered();
     void saveAs();
     void on_saveAsAction_triggered();
+    // modifications
+    void modify();
     // instructions
     void on_instructionsAction_triggered();
     // others

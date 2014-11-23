@@ -151,8 +151,9 @@ void MainWindow::saveDlgTreatButton(QAbstractButton* b)
         isSaved = true;
         doSaveDlgAction();
     } else if (role == QMessageBox::NoRole) { // continue
-	// TODO: We should destruct the current knit
-	isSaved = true; 
+        // TODO: We should destruct the current knit
+        knit_parsed.destruct();
+        isSaved = true;
         doSaveDlgAction();
     }
 }
@@ -223,6 +224,12 @@ void MainWindow::saveAs()
     } else { // nothing to do
         act = NOTHING;
     }
+}
+
+// RECEIVE MODIFICATION SIGNAL
+
+void MainWindow::modify() {
+    isSaved = false;
 }
 
 // INSTRUCTIONS
