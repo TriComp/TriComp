@@ -6,6 +6,15 @@ using namespace std;
 
 Knit knit_parsed;
 
+QBrush setFirstBrush(string name) {
+    if (name.compare("garter") == 0) {
+        return QBrush(garter_stitch.brush);
+    }
+    else {
+        return QBrush("#444"); // default
+    }
+}
+
 // Printers
 
 ostream& operator<<(ostream& os, Element* element)

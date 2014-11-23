@@ -10,6 +10,8 @@
 
 class EditorItem;
 
+QBrush setFirstBrush(std::string name);
+
 struct Pattern : QObject {
     Q_OBJECT
 public:
@@ -23,8 +25,8 @@ public:
     }
     Pattern(std::string name)
         : name(name)
-        , brush(QBrush("#444")) // default
     {
+        brush = setFirstBrush(name);
     }
 
     ~Pattern()
