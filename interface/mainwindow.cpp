@@ -100,7 +100,6 @@ void MainWindow::open()
         if (file.endsWith(".tricot")) {
             fileName = file;
             yyin = fopen((fileName.toStdString()).c_str(), "r");
-            qDebug() << "Ok";
             int bison_return_code = yyparse();
             switch (bison_return_code) {
             case 0: {

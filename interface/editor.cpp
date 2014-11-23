@@ -1,6 +1,7 @@
 #include "editor.h"
 #include "mainwindow.h"
 #include "representation.h"
+#include <QDebug>
 
 EditorManager::EditorManager(MainWindow* mw)
     : mw(mw)
@@ -47,7 +48,7 @@ TrapezoidItem::TrapezoidItem(TrapezoidElem* e, EditorManager* m)
     setAcceptHoverEvents(true);
     poly->setAcceptHoverEvents(true);
 
-    brush_normal = QBrush("#444");
+    brush_normal = (e->geom).pattern->brush;
 
     poly->setBrush(brush_normal);
 }
@@ -117,7 +118,7 @@ public:
     void visitLink(Link* l, QPointF o) override
     {
         auto* item = new LinkItem(l);
-        item->text->setPos(o);
+        item->text->setPos(o + QPointF(0,-20));
         l->gfx = item;
         scene->addItem(item);
     }
@@ -134,7 +135,7 @@ public:
     void visitStop(Stop* s, QPointF o) override
     {
         auto* item = new StopItem(s);
-        item->text->setPos(o);
+        item->text->setPos(o + QPointF(0,-20));
         s->gfx = item;
         scene->addItem(item);
     }

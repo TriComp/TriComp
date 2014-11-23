@@ -22,6 +22,7 @@ public:
     }
     Pattern(std::string name)
         : name(name)
+        , brush(QBrush("#444")) // default
     {
     }
 };

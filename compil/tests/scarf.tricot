@@ -1,10 +1,6 @@
 Name : scarf_test
-Description : "A modified scarf composed by a lot of trapezoids (used to debug the parser)"
+Description : "The easiest knit you can make"
 
 piece my_piece := start || 
-					 trapezoid ( height : 10, shift : 100, upper_width : 20, lower_width : 20, pattern : endroit ) ||
-					 trapezoid ( height : 10, shift : 100, upper_width : 20, lower_width : 20, pattern : endroit ) ||
-					 trapezoid ( height : 10, shift : 100, upper_width : 20, lower_width : 20, pattern : endroit ) ||
-					 trapezoid ( height : 10, shift : 100, upper_width : 20, lower_width : 20, pattern : endroit ) ||
-					 trapezoid ( height : 40, shift : 0, upper_width : 20, lower_width : 20, pattern : endroit ) ||
+					 trapezoid ( height : 150, shift : 0, upper_width : 25, lower_width : 25, pattern : endroit ) ||
 					 stop
