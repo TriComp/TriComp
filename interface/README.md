@@ -1,15 +1,11 @@
 User Interface
 ===============
 
+The graphical interface of the TriComp project.
+
 How to compile :
 ----------------
 
-$ cd parser
-$ make
-
-Note : don't take care about the error, we will fix it later. This really works...
-
-$ cd ..
 $ qmake
 $ make
 

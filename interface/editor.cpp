@@ -14,7 +14,7 @@ void EditorManager::patternClicked(QObject* o)
 {
     auto* p = (Pattern*)o; // o is a pattern
     for (auto* i : selected) {
-        qDebug("patternClicked()");
+        // qDebug("patternClicked()");
         auto* t = (TrapezoidItem*)i;
         t->brush_normal = p->brush; // change the graphical object
         t->updateBrush();

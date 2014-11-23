@@ -10,5 +10,5 @@ piece my_piece := start
 											  || trapezoid ( height : 30, shift : -15, upper_width : 30, lower_width : 15, pattern : envers ) 
                                                   || link right next }
 
-piece next := start || trapezoid ( height : 150, shift : 0, upper_width : 60, lower_width : 60, pattern : envers ) 
+piece next := start || trapezoid ( height : 100, shift : 0, upper_width : 60, lower_width : 60, pattern : envers ) 
 				    || stop
