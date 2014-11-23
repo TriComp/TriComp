@@ -45,7 +45,9 @@ public:
     TrapezoidItem(TrapezoidElem* e, EditorManager* m);
 
     QBrush brush_normal;
-    QBrush brush_selected() { return QBrush(brush_normal.color().light(150)); }
+    QPen pen_normal;
+    QBrush brush_selected() const;
+    QPen pen_selected() const;
     void updateBrush();
 
     bool selected;
