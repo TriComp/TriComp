@@ -105,7 +105,10 @@ public:
     {
         qDebug() << "Delete next...\n";
         Q_ASSERT(next);
-        delete next;
+	if (next)
+	    delete next;
+        qDebug() << "Deleted next...\n";
+	
     }
 
     void print(std::ostream& os) const override
@@ -153,6 +156,7 @@ public:
         delete left;
         qDebug() << "Delete right...\n";
         delete right;
+        qDebug() << "Deleted both...\n";
     }
 
     void print(std::ostream& os) const override
@@ -257,8 +261,9 @@ public:
     {
         for (std::map<std::string, Element*>::const_iterator it = elements.begin(); it != elements.end(); ++it) {
             qDebug() << "Delete ...\n";
-            if (it->second)
+            if (it->second) {
                 delete it->second;
+	    }
         }
         name = "DELETED";
         description = "DELETED";
