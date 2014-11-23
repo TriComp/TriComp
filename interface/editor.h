@@ -86,7 +86,7 @@ public:
     Element* element() override { return elem; }
 };
 
-EditorManager* attachItems(Element* e, QGraphicsScene* s, MainWindow* mw);
+EditorManager* attachItems(Element* e, QGraphicsScene* s, MainWindow* mw, Knit* knit);
 
 class Editor : QObject {
     Q_OBJECT

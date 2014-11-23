@@ -109,19 +109,25 @@ class AttachItems : public ElementVisitor<void, QPointF> {
 public:
     QGraphicsScene* scene;
     EditorManager* manager;
+    Knit* knit;
 
-    AttachItems(QGraphicsScene* scene, EditorManager* m)
+    AttachItems(QGraphicsScene* scene, EditorManager* m, Knit* knit)
         : scene(scene)
         , manager(m)
+        , knit(knit)
     {
     }
 
     void visitLink(Link* l, QPointF o) override
     {
-        auto* item = new LinkItem(l);
-        item->text->setPos(o);
-        l->gfx = item;
-        scene->addItem(item);
+        if (l->slot == Slot::Right)
+            return;
+        if (knit->elements.count(l->name) > 0) {
+            auto* elt = knit->elements[l->name];
+            visit(elt, o);
+        } else {
+            qErrnoWarning("Unknown piece %s", l->name.c_str());
+        }
     }
 
     void visitTrapezoid(TrapezoidElem* e, QPointF o) override
@@ -152,9 +158,9 @@ public:
     }
 };
 
-EditorManager* attachItems(Element* e, QGraphicsScene* s, MainWindow* mw)
+EditorManager* attachItems(Element* e, QGraphicsScene* s, MainWindow* mw, Knit* knit)
 {
     auto* m = new EditorManager(mw);
-    AttachItems(s, m).visit(e, QPointF(0, 0));
+    AttachItems(s, m, knit).visit(e, QPointF(0, 0));
     return m;
 }
