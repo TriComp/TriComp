@@ -56,7 +56,7 @@ public:
 
     ~Trapezoid()
     {
-	// Do not delete the pattern, for it is unique
+        // Do not delete the pattern, for it is unique
     }
 };
 
@@ -104,7 +104,7 @@ public:
     ~TrapezoidElem()
     {
         qDebug() << "Delete next...\n";
-	Q_ASSERT(next);
+        Q_ASSERT(next);
         delete next;
     }
 
@@ -148,7 +148,7 @@ public:
 
     ~Split()
     {
-	Q_ASSERT(left && right);
+        Q_ASSERT(left && right);
         qDebug() << "Delete left...\n";
         delete left;
         qDebug() << "Delete right...\n";
@@ -257,12 +257,12 @@ public:
     {
         for (std::map<std::string, Element*>::const_iterator it = elements.begin(); it != elements.end(); ++it) {
             qDebug() << "Delete ...\n";
-	    if (it->second)
-		delete it->second;
-	    name = "DELETED";
-	    description = "DELETED";
-	    elements.clear();
+            if (it->second)
+                delete it->second;
         }
+        name = "DELETED";
+        description = "DELETED";
+        elements.clear();
     }
 };
 

@@ -228,7 +228,8 @@ void MainWindow::saveAs()
 
 // RECEIVE MODIFICATION SIGNAL
 
-void MainWindow::modify() {
+void MainWindow::modify()
+{
     isSaved = false;
 }
 
