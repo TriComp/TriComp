@@ -49,11 +49,11 @@ private:
     bool isSaved;
     QString path;
     QString fileName;
-    enum afterSaveAction { NEW,
+    enum AfterSaveAction { NEW,
                            OPEN,
                            QUIT,
                            NOTHING }; // useful with the save dialog and cancel options
-    afterSaveAction act;
+    AfterSaveAction act;
     static Editor* editor_;
 
     void setInterface();
