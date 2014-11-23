@@ -105,10 +105,9 @@ public:
     {
         qDebug() << "Delete next...\n";
         Q_ASSERT(next);
-	if (next)
-	    delete next;
+        if (next)
+            delete next;
         qDebug() << "Deleted next...\n";
-	
     }
 
     void print(std::ostream& os) const override
@@ -263,7 +262,7 @@ public:
             qDebug() << "Delete ...\n";
             if (it->second) {
                 delete it->second;
-	    }
+            }
         }
         name = "DELETED";
         description = "DELETED";
