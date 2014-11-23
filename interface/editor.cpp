@@ -48,7 +48,8 @@ TrapezoidItem::TrapezoidItem(TrapezoidElem* e, EditorManager* m)
     setAcceptHoverEvents(false);
     poly->setAcceptHoverEvents(true);
 
-    brush_normal = (e->geom).pattern->brush;
+    Q_ASSERT(e->geom.pattern);
+    brush_normal = e->geom.pattern->brush;
 
     poly->setBrush(brush_normal);
 }
@@ -164,7 +165,7 @@ public:
         // qDebug("visitStop");
         Q_ASSERT(s);
         auto* item = new StopItem(s);
-        item->text->setPos(o + QPointF(0,-20));
+        item->text->setPos(o + QPointF(0, -20));
         s->gfx = item;
         scene->addItem(item);
     }

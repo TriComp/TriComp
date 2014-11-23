@@ -151,6 +151,8 @@ void MainWindow::saveDlgTreatButton(QAbstractButton* b)
         isSaved = true;
         doSaveDlgAction();
     } else if (role == QMessageBox::NoRole) { // continue
+	// TODO: We should destruct the current knit
+	isSaved = true; 
         doSaveDlgAction();
     }
 }
