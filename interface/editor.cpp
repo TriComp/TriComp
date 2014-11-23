@@ -44,7 +44,7 @@ TrapezoidItem::TrapezoidItem(TrapezoidElem* e, EditorManager* m)
     poly->setPolygon(QPolygonF(points));
     addToGroup(poly);
 
-    setAcceptHoverEvents(true);
+    setAcceptHoverEvents(false);
     poly->setAcceptHoverEvents(true);
 
     brush_normal = QBrush("#444");
@@ -61,14 +61,16 @@ void TrapezoidItem::updateBrush()
 
 void TrapezoidItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
-    QBrush c = selected ? brush_selected() : brush_normal;
-    poly->setBrush(c);
+    auto b = selected ? brush_selected() : brush_normal;
+    b.setColor(b.color().light(120));
+    poly->setBrush(b);
     update();
 }
 
 void TrapezoidItem::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
-    poly->setBrush(selected ? brush_selected() : brush_normal);
+    auto b = selected ? brush_selected() : brush_normal;
+    poly->setBrush(b);
     update();
 }
 

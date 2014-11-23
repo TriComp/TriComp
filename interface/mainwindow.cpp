@@ -133,8 +133,9 @@ void MainWindow::setInterface()
     attachItems(e1, scene, this);
 
     v->setRenderHint(QPainter::HighQualityAntialiasing);
+    v->scale(2, 2);
     v->update();
-//  v->setUpdatesEnabled(true);
+    v->setUpdatesEnabled(true);
 //  v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
     isSaved = true;
 }
