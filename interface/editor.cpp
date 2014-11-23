@@ -130,10 +130,13 @@ public:
         , manager(m)
         , knit(knit)
     {
+        // qDebug("AttachItems");
     }
 
     void visitLink(Link* l, QPointF o) override
     {
+        // qDebug("visitLink");
+        Q_ASSERT(l);
         if (l->slot == Slot::Right)
             return;
         if (knit->elements.count(l->name) > 0) {
@@ -146,6 +149,8 @@ public:
 
     void visitTrapezoid(TrapezoidElem* e, QPointF o) override
     {
+        // qDebug("visitTrap");
+        Q_ASSERT(e && e->next);
         visit(e->next, o + QPointF(e->geom.shift, -e->geom.height));
         auto* item = new TrapezoidItem(e, manager);
         item->poly->setPos(o);
@@ -155,6 +160,8 @@ public:
 
     void visitStop(Stop* s, QPointF o) override
     {
+        // qDebug("visitStop");
+        Q_ASSERT(s);
         auto* item = new StopItem(s);
         item->text->setPos(o);
         s->gfx = item;
@@ -163,6 +170,8 @@ public:
 
     void visitSplit(Split* s, QPointF o) override
     {
+        // qDebug("visitSplit");
+        Q_ASSERT(s && s->left && s->right);
         visit(s->left, o);
         visit(s->right, o + QPointF(s->left->width() + s->gap, 0));
         auto* item = new SplitItem(s);
@@ -174,7 +183,9 @@ public:
 
 EditorManager* attachItems(Element* e, QGraphicsScene* s, MainWindow* mw, Knit* knit)
 {
+    Q_ASSERT(e && s && mw && knit);
     auto* m = new EditorManager(mw);
-    AttachItems(s, m, knit).visit(e, QPointF(0, 0));
+    auto a = AttachItems(s, m, knit);
+    a.visit(e, QPointF(0, 0));
     return m;
 }
