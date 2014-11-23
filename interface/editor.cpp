@@ -174,7 +174,7 @@ public:
 
     void visitSplit(Split* s, QPointF o) override
     {
-        // qDebug("visitSplit");
+	// qDebug("visitSplit");
         Q_ASSERT(s && s->left && s->right);
         visit(s->left, o);
         visit(s->right, o + QPointF(s->left->width() + s->gap, 0));

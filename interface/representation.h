@@ -6,6 +6,7 @@
 #include <map>
 #include <iostream>
 #include <QBrush>
+#include <QDebug>
 
 class EditorItem;
 
@@ -55,7 +56,7 @@ public:
 
     ~Trapezoid()
     {
-        delete pattern;
+	// Do not delete the pattern, for it is unique
     }
 };
 
@@ -102,7 +103,8 @@ public:
 
     ~TrapezoidElem()
     {
-        std::cout << "Delete next...\n";
+        qDebug() << "Delete next...\n";
+	Q_ASSERT(next);
         delete next;
     }
 
@@ -146,9 +148,10 @@ public:
 
     ~Split()
     {
-        std::cout << "Delete left...\n";
+	Q_ASSERT(left && right);
+        qDebug() << "Delete left...\n";
         delete left;
-        std::cout << "Delete right...\n";
+        qDebug() << "Delete right...\n";
         delete right;
     }
 
@@ -249,11 +252,16 @@ public:
     {
     }
     Knit() {}
+
     void destruct()
     {
         for (std::map<std::string, Element*>::const_iterator it = elements.begin(); it != elements.end(); ++it) {
-            std::cout << "Delete " << it->first << "...\n";
-            delete it->second;
+            qDebug() << "Delete ...\n";
+	    if (it->second)
+		delete it->second;
+	    name = "DELETED";
+	    description = "DELETED";
+	    elements.clear();
         }
     }
 };
