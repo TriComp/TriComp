@@ -1,7 +1,7 @@
 Name : salopette_test
 Description : "Essai de description de la salopette décrite en réunion"
 
-piece jambe_1 := start
+piece my_piece := start
 		|| trapezoid ( height : 200, shift : 0, upper_width : 50, lower_width : 50, pattern : envers )
 		|| link left devant
 		

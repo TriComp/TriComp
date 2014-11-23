@@ -107,11 +107,11 @@ void MainWindow::open()
                 break;
             }
             case 1: {
-                QMessageBox::warning(this,"Unable to open","Unable to open the file. Parsing error.");
+                QMessageBox::warning(this, "Unable to open", "Unable to open the file. Parsing error.");
                 break;
             }
             case 2: {
-                QMessageBox::warning(this,"Unable to open","Unable to open the file. Memory exhaustion.");
+                QMessageBox::warning(this, "Unable to open", "Unable to open the file. Memory exhaustion.");
                 break;
             }
             }
@@ -129,12 +129,13 @@ void MainWindow::setInterface()
     QGraphicsScene* scene = new QGraphicsScene();
     v->setScene(scene);
     Element* e1 = knit_parsed.elements["my_piece"];
-    attachItems(e1, scene, this);
+    attachItems(e1, scene, this, &knit_parsed);
 
     v->setRenderHint(QPainter::HighQualityAntialiasing);
+    v->scale(2, 2);
     v->update();
-//  v->setUpdatesEnabled(true);
-//  v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+    v->setUpdatesEnabled(true);
+    //  v->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
     isSaved = true;
 }
 
