@@ -38,12 +38,19 @@ public:
         : manager(m)
     {
     }
+
+    virtual ~EditorItem()
+    {
+        qDebug("Destruct EditorItem");
+    }
 };
 
 class TrapezoidItem : public EditorItem {
 public:
     QGraphicsPolygonItem* poly;
     TrapezoidElem* elem;
+
+    ~TrapezoidItem() { if (elem) delete elem; }
 
     TrapezoidItem(TrapezoidElem* e, EditorManager* m);
 
@@ -68,6 +75,8 @@ public:
 
     SplitItem(Split* s);
 
+    ~SplitItem() { delete elem; }
+    
     Element* element() override { return elem; }
 };
 
@@ -78,6 +87,8 @@ public:
 
     StopItem(Stop* s);
 
+    ~StopItem() { delete elem; }
+    
     Element* element() override { return elem; }
 };
 
@@ -87,6 +98,9 @@ public:
     Link* elem;
 
     LinkItem(Link* s);
+
+    ~LinkItem() { delete elem; }
+
 
     Element* element() override { return elem; }
 };

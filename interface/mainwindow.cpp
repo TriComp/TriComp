@@ -77,18 +77,16 @@ void MainWindow::on_newAction_triggered()
 void MainWindow::newKnit()
 {
     QString choice = newDlg->getChoice();
-    yyin = fopen(("../compil/tests/"+choice.toStdString()+".tricot").c_str(), "r");
+    yyin = fopen(("../compil/tests/" + choice.toStdString() + ".tricot").c_str(), "r");
     int bison_return_code = yyparse();
     if (bison_return_code != 0) { // This case mustn't happen
         QMessageBox::warning(this, "Warning", "Incorrect given file...");
-    }
-    else {
+    } else {
         fileName = "";
         setInterface();
         isSaved = false;
     }
     act = NOTHING;
-
 }
 
 // OPEN
@@ -134,6 +132,10 @@ void MainWindow::setInterface()
 {
     ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));
     auto* v = ui->patternView;
+    auto oldScene = v->scene();
+    if (oldScene) delete oldScene;
+
+    
     QGraphicsScene* scene = new QGraphicsScene();
     v->setScene(scene);
     Element* e1 = knit_parsed.elements["my_piece"];
@@ -160,7 +162,7 @@ void MainWindow::saveDlgTreatButton(QAbstractButton* b)
         doSaveDlgAction();
     } else if (role == QMessageBox::NoRole) { // continue
         // TODO: What should we do when the user cancels the open dialog ?
-        knit_parsed.destruct();
+        // knit_parsed.destruct();
         isSaved = true;
         doSaveDlgAction();
     }

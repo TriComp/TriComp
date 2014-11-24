@@ -107,8 +107,8 @@ public:
     {
         qDebug() << "Delete next...\n";
         Q_ASSERT(next);
-        if (next)
-            delete next;
+        //       if (next)
+        //    delete next;
         qDebug() << "Deleted next...\n";
     }
 
@@ -154,9 +154,9 @@ public:
     {
         Q_ASSERT(left && right);
         qDebug() << "Delete left...\n";
-        delete left;
+        //delete left;
         qDebug() << "Delete right...\n";
-        delete right;
+        //delete right;
         qDebug() << "Deleted both...\n";
     }
 
