@@ -6,29 +6,30 @@ type name = string
 
 (* Atoms*)
 
-type pattern = string (* Description of a minimal pattern, maybe we can start with Endroit | Envers |... (knit/purl stitches?) *)
+type pattern = string(* Description of a minimal pattern, maybe we can start with Endroit | Envers |... (knit/purl stitches?) *)
 
 type trapezoid = { height : int
                  ; shift : int
-                 ; lower_width : int
                  ; upper_width : int
                  ; pattern : pattern
                  }
 
-type join_slot = Left | Right
-
 (* Elements *)
 
 (* Note : how do we want to specify width/height? On each piece? On trapezoids? *)
-type element = (* Bottom of element *)
-             | Trapezoid of trapezoid * element
-             | Split of element * int * element (* Left, gap width, right *)
-             | Link of name * join_slot
-             | Stop
+
+type element = Trapezoid of trapezoid * element
+             | Split of (int*int*element) list (* pos, width, element *)
+             | Link of name * int
+
+module Element : sig
+  type t = element
+  include Comparable.S with type t := t
+end
 
 (* Garment *)
 
-type garment = { elements : element String.Map.t
+type garment = { elements : (int*element) String.Map.t
                ; name : string
                ; descr : string
                }

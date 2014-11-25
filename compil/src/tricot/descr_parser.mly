@@ -33,7 +33,6 @@ let get_arg_name arg map =
 let make_trapezoid args =
   { height = get_arg_int "height" args
   ; shift = get_arg_int "shift" args
-  ; lower_width = get_arg_int "lower_width" args
   ; upper_width = get_arg_int "upper_width" args
   ; pattern = get_arg_name "pattern" args
   }
@@ -45,7 +44,7 @@ let make_trapezoid args =
 %token H_NAME H_DESCR
 %token LPAREN RPAREN LBRACE RBRACE
 %token PIECE DEF SEQ SEP COL
-%token START STOP TRAPEZOID LINK LEFT RIGHT SPLIT
+%token START STOP TRAPEZOID LINK SPLIT
 %token EOF
 
 %start <Descr.garment> main
@@ -63,27 +62,25 @@ main:
 
 body:
   (* Empty *)                                   { Map.empty }
-| PIECE; n = NAME; DEF; START; SEQ; e = element; b = body
-                                                { Map.add b n e }
+| PIECE; n = NAME; DEF; START; w = INT; SEQ; e = element; b = body
+                                                { Map.add b n (w,e) }
 ;
 
 element:
-  STOP                                          { Stop }
-| LINK; s = slot; n = NAME                      { Link (n,s) }
-| SPLIT; i = INT; LBRACE l = element; RBRACE; LBRACE; r = element; RBRACE
-                                                { Split (l,i,r) }
+  STOP                                          { Split [] }
+| LINK; n = NAME; pos = INT                     { Link (n, pos) }
+| SPLIT; l = split_body                         { Split l }
 | TRAPEZOID; p = trapezoid_params; SEQ; e = element
                                                 { Trapezoid (p,e) }
-
 ;
 
-slot:
-  LEFT                                          { Left }
-| RIGHT                                         { Right }
-;
+split_body:
+                                                { [] }
+| pos = INT; w = INT; LBRACE; e = element; RBRACE; b = split_body
+                                                { (pos, w, e)::b }
 
 trapezoid_params:
-  LPAREN; ps = params; RPAREN                    { (make_trapezoid ps) }
+  LPAREN; ps = params; RPAREN                   { (make_trapezoid ps) }
 
 params:
   (* Empty *)                                   { Map.empty }

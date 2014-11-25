@@ -1,20 +1,12 @@
+open Core.Std
 open Descr
 
-let uniq l =
-  let rec aux acc = function
-    | [] -> List.rev acc
-    | x::y::zs when x=y -> aux acc (y::zs)
-    | x::xs -> aux (x::acc) xs in
-  aux [] (List.sort compare l)
+type dep_graph = Element.Set.t * Element.Set.t String.Map.t
 
-let out_edges elt =
-  let rec aux acc = function
-  | Trapezoid (_, next) -> aux acc next
-  | Split (left, _, right) ->
-    let acc' = aux acc left in
-    aux acc' right
-  | Link (name, _) -> name::acc
-  | Stop -> acc in
-  uniq (aux [] elt)
-
-let topo_sort elts = ()
+(* Builds a graph on the set of elements with vertices between e1 and e2 if e1 depends on e2 *)
+(*let make_dep_graph garment =
+  let children acc = function
+    |
+  let f ~key:name ~data:(_,element) s
+*)
+let check garment : [>`Ok of dep_graph | `Error] = `Error

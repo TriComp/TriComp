@@ -28,8 +28,6 @@ rule token = parse
   | "stop"                                      { STOP }
   | "trapezoid"                                 { TRAPEZOID }
   | "link"                                      { LINK }
-  | "left"                                      { LEFT }
-  | "right"                                     { RIGHT }
   | "split"                                     { SPLIT }
 
   | '-'?['0'-'9']+ as n                         { INT (int_of_string n) }
