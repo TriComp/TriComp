@@ -111,7 +111,8 @@ StopItem::StopItem(Stop* s)
     : elem(s)
     , EditorItem(nullptr)
 {
-    text = new QGraphicsTextItem("STOP");
+    //text = new QGraphicsTextItem("STOP");
+    text = new QGraphicsTextItem("");
     addToGroup(text);
 }
 

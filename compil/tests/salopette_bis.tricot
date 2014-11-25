@@ -1,0 +1,44 @@
+Name : salopette_test
+Description : "Essai de description de la salopette décrite en réunion"
+
+piece my_piece := start
+		|| trapezoid ( height : 200, shift : 0, upper_width : 50, lower_width : 50, pattern : envers )
+		|| link left devant
+		
+piece jambe_2 := start
+		|| trapezoid ( height : 200, shift : 0, upper_width : 50, lower_width : 50, pattern : envers )
+		|| link right devant
+		
+piece devant := start
+		|| trapezoid ( height : 100, shift : 0, upper_width : 100, lower_width : 100, pattern : envers )
+		|| split 50 {
+			split 0 {
+				trapezoid (height : 0, shift : 0, upper_width : 15, lower_width : 15, pattern : envers )
+                || stop
+			} {
+				trapezoid ( height : 30, shift : 0, upper_width : 10, lower_width : 10, pattern : envers )
+				|| link left derriere
+			}
+		} {
+			split 0 {
+				trapezoid ( height : 30, shift : 0, upper_width : 10, lower_width : 10, pattern : envers )
+				|| link right derriere
+			} {
+				trapezoid (height : 0, shift : 0, upper_width : 15, lower_width : 15, pattern : envers )
+				|| stop
+			}
+		}
+		
+piece derriere := start
+		|| trapezoid (height : 0, shift : -15, upper_width : 70, lower_width : 100, pattern : envers )
+		|| trapezoid ( height : 100, shift : 0, upper_width : 100, lower_width : 100, pattern : envers )
+		|| split 0 {
+			trapezoid ( height : 200, shift : 0, upper_width : 50, lower_width : 50, pattern : envers )
+            || stop
+		} {
+			trapezoid ( height : 200, shift : 0, upper_width : 50, lower_width : 50, pattern : envers )
+			|| stop
+		}
+
+
+
