@@ -3,12 +3,13 @@
 }
 
 rule token = parse
-  | [' ' '\t' '\n' '\r'] 			{ token lexbuf }
+  | '\n'                                        { Lexing.new_line lexbuf; token lexbuf }
+  | [' ' '\t' '\r'] 			        { token lexbuf }
 
   | "//"                                        { line_comment lexbuf }
   | "/*"                                        { comment lexbuf }
 
-  | '"'                                         { descr lexbuf }
+  | '"'                                         { descr "" lexbuf }
 
   | '('						{ LPAREN }
   | ')'						{ RPAREN }
@@ -36,14 +37,18 @@ rule token = parse
   | eof                                         { EOF }
 
 and line_comment = parse
-  | '\n'                                        { token lexbuf }
+  | '\n'                                        { Lexing.new_line lexbuf; token lexbuf }
   | eof                                         { EOF }
   | _                                           { line_comment lexbuf }
 
 and comment = parse
+  | '\n'                                        { Lexing.new_line lexbuf; comment lexbuf }
   | "*/"                                        { token lexbuf }
   | eof                                         { EOF }
   | _                                           { comment lexbuf }
 
-and descr = parse
-  | (_* as d)'"'                                { DESCR d }
+and descr s = parse
+  | '\n'                                        { Lexing.new_line lexbuf; descr (s^"\n") lexbuf }
+  | '\r'                                        { descr s lexbuf }
+  | '"'                                         { DESCR s }
+  | [^'\n' '\r' '"']* as s'                     { descr (s^s') lexbuf }
