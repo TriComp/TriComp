@@ -1,6 +1,14 @@
 open Core.Std
 
-let parse input () =
+let print garment =
+  printf "%s%!" (Descr.print_garment garment)
+
+let compute_deps garment =
+  let (free,deps) = Compil.make_dep_graph garment in
+  printf "deps:%s\n%!" (String.Map.sexp_of_t String.Set.sexp_of_t deps |> Sexp.to_string)
+
+
+let parse action input () =
     ( match input with
         `Stdin -> stdin
       | `File f ->
@@ -12,8 +20,6 @@ let parse input () =
     |> Descr_parser.main Descr_lexer.token
     |> Descr.print_garment
     |> printf "%s%!"
-
-
 
 let input =
   Command.Spec.Arg_type.create
@@ -27,11 +33,11 @@ let input =
           exit 1
     )
 
-let command = Command.basic
+let command action = Command.basic
     ~summary:"Generates a sequence of instructions from a .tricot file"
     ~readme:(const "")
     Command.Spec.(empty +> anon ("input" %: input))
-    parse
+    (parse action)
 
 let _ =
-  Command.run command
+  Command.run (command compute_deps)
