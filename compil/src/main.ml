@@ -18,8 +18,7 @@ let parse action input () =
           exit 1 )
     |> Lexing.from_channel
     |> Descr_parser.main Descr_lexer.token
-    |> Descr.print_garment
-    |> printf "%s%!"
+    |> action
 
 let input =
   Command.Spec.Arg_type.create
