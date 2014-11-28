@@ -1,8 +1,8 @@
 # OASIS_START
-# DO NOT EDIT (digest: 3100e13a410041f549a0e00b5630569b)
+# DO NOT EDIT (digest: 70d63c65e20f00fad9b3d7c83922006f)
 version = "0"
 description = "Synopsis"
-requires = "utils"
+requires = "utils sexplib.syntax comparelib.syntax"
 archive(byte) = "tricot.cma"
 archive(byte, plugin) = "tricot.cma"
 archive(native) = "tricot.cmxa"

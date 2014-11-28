@@ -2,13 +2,20 @@
 open Descr
 
 let eprintf = Core.Std.eprintf (* It had to be done *)
+let sprintf = Core.Std.sprintf
+
+module Map = Core.Std.String.Map
 
 type param = Int of int | Name of string
 
-exception Parse_error of string (* TODO : Add position in file *)
+exception Parse_error of string
+
+let print_pos (pos : Lexing.position) = Lexing.(sprintf "Line %d, Symbol %d" pos.pos_lnum (pos.pos_cnum - pos.pos_bol))
+
+let sort_split = Core.Std.List.sort ~cmp:compare
 
 let get_arg arg map =
-  match Core.Std.String.Map.find map arg with
+  match Map.find map arg with
     Some arg -> arg
   | None ->
     eprintf "Arg missing : %s\n%!" arg;
@@ -31,7 +38,6 @@ let get_arg_name arg map =
 let make_trapezoid args =
   { height = get_arg_int "height" args
   ; shift = get_arg_int "shift" args
-  ; lower_width = get_arg_int "lower_width" args
   ; upper_width = get_arg_int "upper_width" args
   ; pattern = get_arg_name "pattern" args
   }
@@ -43,7 +49,7 @@ let make_trapezoid args =
 %token H_NAME H_DESCR
 %token LPAREN RPAREN LBRACE RBRACE
 %token PIECE DEF SEQ SEP COL
-%token START STOP TRAPEZOID LINK LEFT RIGHT SPLIT
+%token START STOP TRAPEZOID LINK SPLIT
 %token EOF
 
 %start <Descr.garment> main
@@ -57,38 +63,39 @@ main:
                                                   ; name = n
                                                   ; descr = d }
                                                 }
+| error                                         { raise (Parse_error "Invalid header") }
 ;
 
 body:
-  (* Empty *)                                   { Core.Std.String.Map.empty }
-| PIECE; n = NAME; DEF; START; SEQ; e = element; b = body
-                                                { Core.Std.String.Map.add b n e }
+  (* Empty *)                                   { Map.empty }
+| b = body; PIECE; n = NAME; DEF; START; w = INT; SEQ; e = element
+                                                { Map.add b n (w,e) }
+| body; PIECE; n = NAME; error                  { raise (Parse_error (sprintf "Error while parsing piece %s" n)) }
+| body; error                                   { raise (Parse_error (sprintf "Syntax error at %s" (print_pos $startpos($1)))) }
 ;
 
 element:
-  STOP                                          { Stop }
-| LINK; s = slot; n = NAME                      { Link (n,s) }
-| SPLIT; i = INT; LBRACE l = element; RBRACE; LBRACE; r = element; RBRACE
-                                                { Split (l,i,r) }
+  STOP                                          { Split [] }
+| LINK; n = NAME; pos = INT                     { Link (n, pos) }
+| SPLIT; l = split_body                         { Split (sort_split l) }
 | TRAPEZOID; p = trapezoid_params; SEQ; e = element
                                                 { Trapezoid (p,e) }
-
 ;
 
-slot:
-  LEFT                                          { Left }
-| RIGHT                                         { Right }
-;
+split_body:
+                                                { [] }
+| b = split_body; pos = INT; w = INT; LBRACE; e = element; RBRACE
+                                                { (pos, w, e)::b }
 
 trapezoid_params:
-  LPAREN; ps = params; RPAREN                    { (make_trapezoid ps) }
+  LPAREN; ps = params; RPAREN                   { (make_trapezoid ps) }
 
 params:
-  (* Empty *)                                   { Core.Std.String.Map.empty }
+  (* Empty *)                                   { Map.empty }
 | p = param                                     { let (k,v) = p in
-                                                  Core.Std.String.Map.singleton k v }
-| p = param; SEP; ps = params                   { let (k,v) = p in
-                                                  Core.Std.String.Map.add ps k v }
+                                                  Map.singleton k v }
+| ps = params; SEP; p = param                   { let (k,v) = p in
+                                                  Map.add ps k v }
 ;
 
 param:

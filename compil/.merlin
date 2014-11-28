@@ -1,11 +1,11 @@
 S src
-S src/frontend
-S src/backend
-S src/graph
+S src/tricot
+S src/compil
+S src/utils
 
 B _build/src
-B _build/src/frontend
-B _build/src/backend
-B _build/src/graph
+B _build/src/tricot
+B _build/src/compil
+B _build/src/utils
 
 PKG core threads

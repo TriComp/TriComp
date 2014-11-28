@@ -4,11 +4,11 @@ Description : "Essai de description de la salopette décrite en réunion : versi
 piece my_piece := start 50
 		|| trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : envers )
 		|| link devant 0
-		
+
 piece jambe_2 := start 50
 		|| trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : envers )
 		|| link devant 50
-		
+
 piece devant := start 100
 		|| trapezoid ( height : 100, shift : 0, upper_width : 100, pattern : envers )
 		|| split
@@ -16,11 +16,11 @@ piece devant := start 100
 				|| link derriere 15 }
 			75 10 { trapezoid ( height : 30, shift : 0, upper_width : 10, lower_width : 10, pattern : envers )
 				|| link derriere 75 }
-		
-piece derriere := start
+
+piece derriere := start 10
 		|| trapezoid ( height : 100, shift : 0, upper_width : 100, lower_width : 100, pattern : envers )
-		|| split 
-			0  50 { trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : envers ) 
+		|| split
+			0  50 { trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : envers )
 				|| stop }
-			50 50 { trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : envers ) 
+			50 50 { trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : envers )
 				|| stop }

@@ -1,7 +1,7 @@
 Name : test
 Description : "JGF"
 
-piece a := start || stop
+psiece a := start || stop
 
 piece b := start || split 10 {stop}{stop}
 
