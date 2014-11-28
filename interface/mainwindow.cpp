@@ -161,8 +161,6 @@ void MainWindow::saveDlgTreatButton(QAbstractButton* b)
         isSaved = true;
         doSaveDlgAction();
     } else if (role == QMessageBox::NoRole) { // continue
-        // TODO: What should we do when the user cancels the open dialog ?
-        // knit_parsed.destruct();
         isSaved = true;
         doSaveDlgAction();
     }
@@ -248,8 +246,9 @@ void MainWindow::modify()
 void MainWindow::on_instructionsAction_triggered()
 {
     /************************************
-     * The building instructions code   *
+     *  The building instructions code  *
      * Interactions with the Ocaml part *
+     *  Must be a simple system() call  *
      * **********************************/
 }
 

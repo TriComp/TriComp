@@ -1,4 +1,7 @@
 main.native
 setup.data
 setup.log
+myocamlbuild.ml
+_oasis
+setup.ml
 _build/
