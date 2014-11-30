@@ -34,9 +34,9 @@ void EditorManager::setSelected(EditorItem* it, bool sel)
 }
 
 TrapezoidItem::TrapezoidItem(TrapezoidElem* e, EditorManager* m)
-    : elem(e)
+    : EditorItem(m)
+    , elem(e)
     , selected(false)
-    , EditorItem(m)
 {
     Trapezoid t = e->geom;
     QPointF p2(t.shift, -t.height); // Inverted y axis :-[
@@ -100,16 +100,17 @@ void TrapezoidItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
 }
 
 SplitItem::SplitItem(Split* s)
-    : elem(s)
-    , EditorItem(nullptr)
+    : EditorItem(nullptr)
+    , elem(s)
+
 {
     line = new QGraphicsLineItem(0, 0, s->width(), 0);
     addToGroup(line);
 }
 
 StopItem::StopItem(Stop* s)
-    : elem(s)
-    , EditorItem(nullptr)
+    : EditorItem(nullptr)
+    , elem(s)
 {
     //text = new QGraphicsTextItem("STOP");
     text = new QGraphicsTextItem("");
@@ -117,8 +118,8 @@ StopItem::StopItem(Stop* s)
 }
 
 LinkItem::LinkItem(Link* s)
-    : elem(s)
-    , EditorItem(nullptr)
+    : EditorItem(nullptr)
+    , elem(s)
 {
     text = new QGraphicsTextItem("Link");
     addToGroup(text);
