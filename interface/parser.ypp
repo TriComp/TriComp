@@ -43,7 +43,7 @@ void error(char *s){
 /* ============================================================== */
 /*                     TYPES OF NON-TERMINALS                     */         
 /* ============================================================== */
-%define parse.error verbose
+
 
 %union {
   int integer;
