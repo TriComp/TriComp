@@ -2,7 +2,7 @@ true: bin_annot
 true: use_menhir
 
 # OASIS_START
-# DO NOT EDIT (digest: 83045f5bb266e8b9ad4a4cd05963c71b)
+# DO NOT EDIT (digest: 4a3d23915e61c76c68ca2733768ecf52)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -23,22 +23,30 @@ true: annot, bin_annot
 <src/utils/*.ml{,i,y}>: package(threads)
 # Library tricot
 "src/tricot/tricot.cmxs": use_tricot
+<src/tricot/*.ml{,i,y}>: package(comparelib.syntax)
 <src/tricot/*.ml{,i,y}>: package(core)
+<src/tricot/*.ml{,i,y}>: package(sexplib.syntax)
 <src/tricot/*.ml{,i,y}>: package(threads)
 <src/tricot/*.ml{,i,y}>: use_utils
 # Library compil
 "src/compil/compil.cmxs": use_compil
+<src/compil/*.ml{,i,y}>: package(comparelib.syntax)
 <src/compil/*.ml{,i,y}>: package(core)
+<src/compil/*.ml{,i,y}>: package(sexplib.syntax)
 <src/compil/*.ml{,i,y}>: package(threads)
 <src/compil/*.ml{,i,y}>: use_tricot
 <src/compil/*.ml{,i,y}>: use_utils
 # Executable tricomp
+<src/main.{native,byte}>: package(comparelib.syntax)
 <src/main.{native,byte}>: package(core)
+<src/main.{native,byte}>: package(sexplib.syntax)
 <src/main.{native,byte}>: package(threads)
 <src/main.{native,byte}>: use_compil
 <src/main.{native,byte}>: use_tricot
 <src/main.{native,byte}>: use_utils
+<src/*.ml{,i,y}>: package(comparelib.syntax)
 <src/*.ml{,i,y}>: package(core)
+<src/*.ml{,i,y}>: package(sexplib.syntax)
 <src/*.ml{,i,y}>: package(threads)
 <src/*.ml{,i,y}>: use_compil
 <src/*.ml{,i,y}>: use_tricot

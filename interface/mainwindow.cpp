@@ -13,13 +13,13 @@
 
 extern FILE* yyin; // from Flex
 extern int yyparse(void); // from Bison
+extern void yyrestart(FILE *f); // To reset the buffer used by the parser
 extern Knit knit_parsed;
 extern std::string parseError;
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , patternMapper(this)
 {
     ui->setupUi(this);
     newDlg = new newKnitDialog(this);
@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget* parent)
     path = QDir::homePath(); // set the path to home directory
 
     // pattern buttons
+    QSignalMapper patternMapper(this);
     patternMapper.setMapping(ui->pushButton, &garter_stitch);
     connect(ui->pushButton, SIGNAL(clicked()), &patternMapper, SLOT(map()));
 }
@@ -79,6 +80,7 @@ void MainWindow::newKnit()
 {
     QString choice = newDlg->getChoice();
     yyin = fopen(("../compil/tests/" + choice.toStdString() + ".tricot").c_str(), "r");
+    yyrestart(yyin);
     int bison_return_code = yyparse();
     if (bison_return_code != 0) { // This case mustn't happen
         QMessageBox::warning(this, "Warning", "Incorrect given file...");
@@ -106,7 +108,9 @@ void MainWindow::open()
         QString file = QFileDialog::getOpenFileName(this, "Load a knit", path, "knit (*.tricot)");
         if (file.endsWith(".tricot")) {
             fileName = file;
+            path = QFileInfo(fileName).path();
             yyin = fopen((fileName.toStdString()).c_str(), "r");
+            yyrestart(yyin);
             int bison_return_code = yyparse();
             switch (bison_return_code) {
             case 0: {
@@ -162,8 +166,6 @@ void MainWindow::saveDlgTreatButton(QAbstractButton* b)
         isSaved = true;
         doSaveDlgAction();
     } else if (role == QMessageBox::NoRole) { // continue
-        // TODO: What should we do when the user cancels the open dialog ?
-        // knit_parsed.destruct();
         isSaved = true;
         doSaveDlgAction();
     }
@@ -229,6 +231,7 @@ void MainWindow::saveAs()
     if (fileName != "") {
         if (fileName.endsWith(".tricot")) {
             save();
+            path = QFileInfo(fileName).path();
         } else {
             QMessageBox::warning(this, "Wrong file format", "You don't save your tricot to the good format (.tricot)");
         }
@@ -249,8 +252,9 @@ void MainWindow::modify()
 void MainWindow::on_instructionsAction_triggered()
 {
     /************************************
-     * The building instructions code   *
+     *  The building instructions code  *
      * Interactions with the Ocaml part *
+     *  Must be a simple system() call  *
      * **********************************/
 }
 

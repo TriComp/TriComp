@@ -1,14 +1,19 @@
 Name : poncho_test
 Description : "The poncho given in the midterm"
 
-piece my_piece := start 
-					|| trapezoid ( height : 100, shift : 0, upper_width : 60, lower_width : 60, pattern : garter ) 
-								  || split 0 { trapezoid ( height : 30, shift : 0, upper_width : 15, lower_width : 30, pattern : envers )
-											  || trapezoid ( height : 30, shift : 0, upper_width : 30, lower_width : 15, pattern : envers ) 
-                                                  || link left next }
-											 { trapezoid ( height : 30, shift : 15, upper_width : 15, lower_width : 30, pattern : envers )
-											  || trapezoid ( height : 30, shift : -15, upper_width : 30, lower_width : 15, pattern : envers ) 
-                                                  || link right next }
 
-piece next := start || trapezoid ( height : 100, shift : 0, upper_width : 60, lower_width : 60, pattern : envers ) 
-				    || stop
+piece my_piece := start 60
+      	       || trapezoid ( height : 100, shift : 0, upper_width : 60, pattern : garter )
+	       || split 0 30 { trapezoid ( height : 30, shift : 0, upper_width : 15, pattern : envers )
+			    || trapezoid ( height : 30, shift : 0, upper_width : 30, pattern : envers )
+                            || link next 0
+			    }
+			30 30 { trapezoid ( height : 30, shift : 15, upper_width : 15, pattern : envers )
+			 || trapezoid ( height : 30, shift : -15, upper_width : 30, pattern : envers )
+                         || link next 30
+			 }
+
+
+piece next := start 60
+           || trapezoid ( height : 100, shift : 0, upper_width : 60, pattern : envers )
+           || stop

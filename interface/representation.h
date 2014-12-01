@@ -65,10 +65,6 @@ public:
 enum class Slot { Left,
                   Right };
 
-/*
- * TODO: destructors, investigate hierachy features of GraphicsScene
- */
-
 enum class ElementType { Trapezoid,
                          Split,
                          Stop,

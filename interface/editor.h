@@ -49,6 +49,7 @@ class TrapezoidItem : public EditorItem {
 public:
     QGraphicsPolygonItem* poly;
     TrapezoidElem* elem;
+    bool selected;
 
     ~TrapezoidItem() { if (elem) delete elem; }
 
@@ -59,8 +60,6 @@ public:
     QBrush brush_selected() const;
     QPen pen_selected() const;
     void updateBrush();
-
-    bool selected;
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
