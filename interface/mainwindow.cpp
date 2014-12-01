@@ -14,6 +14,7 @@
 extern FILE* yyin; // from Flex
 extern int yyparse(void); // from Bison
 extern Knit knit_parsed;
+extern std::string parseError;
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -113,7 +114,7 @@ void MainWindow::open()
                 break;
             }
             case 1: {
-                QMessageBox::warning(this, "Unable to open", "Unable to open the file. Parsing error.");
+                QMessageBox::warning(this, "Unable to open", "Parse error : "+QString::fromStdString(parseError));
                 break;
             }
             case 2: {
