@@ -2,6 +2,9 @@
 #include "mainwindow.h"
 #include "representation.h"
 #include <QDebug>
+#include <list>
+
+using namespace std;
 
 EditorManager::EditorManager(MainWindow* mw)
     : mw(mw)
@@ -41,7 +44,7 @@ TrapezoidItem::TrapezoidItem(TrapezoidElem* e, EditorManager* m)
     Trapezoid t = e->geom;
     QPointF p2(t.shift, -t.height); // Inverted y axis :-[
     QPointF p3(p2.x() + t.upper_width, p2.y());
-    QPointF p4(t.lower_width, 0);
+    QPointF p4(0, 0); /* TODO : x coordinate */
     QVector<QPointF> points{ QPointF(0, 0), p2, p3, p4 };
     poly = new QGraphicsPolygonItem();
     poly->setPolygon(QPolygonF(points));
@@ -107,15 +110,6 @@ SplitItem::SplitItem(Split* s)
     addToGroup(line);
 }
 
-StopItem::StopItem(Stop* s)
-    : elem(s)
-    , EditorItem(nullptr)
-{
-    //text = new QGraphicsTextItem("STOP");
-    text = new QGraphicsTextItem("");
-    addToGroup(text);
-}
-
 LinkItem::LinkItem(Link* s)
     : elem(s)
     , EditorItem(nullptr)
@@ -142,8 +136,6 @@ public:
     {
         // qDebug("visitLink");
         Q_ASSERT(l);
-        if (l->slot == Slot::Right)
-            return;
         if (knit->elements.count(l->name) > 0) {
             auto* elt = knit->elements[l->name];
             visit(elt, o);
@@ -163,22 +155,12 @@ public:
         scene->addItem(item);
     }
 
-    void visitStop(Stop* s, QPointF o) override
-    {
-        // qDebug("visitStop");
-        Q_ASSERT(s);
-        auto* item = new StopItem(s);
-        item->text->setPos(o + QPointF(0, -20));
-        s->gfx = item;
-        scene->addItem(item);
-    }
-
-    void visitSplit(Split* s, QPointF o) override
+    void visitSplit(Split* s, QPointF o) override /* TODO */
     {
         // qDebug("visitSplit");
-        Q_ASSERT(s && s->left && s->right);
-        visit(s->left, o);
-        visit(s->right, o + QPointF(s->left->width() + s->gap, 0));
+        for (list<splitData>::const_iterator it = s->elements->begin(); it != s->elements->end(); ++it) {
+            visit(it->next, o + QPointF(0,it->position));
+        }
         auto* item = new SplitItem(s);
         item->line->setPos(o);
         s->gfx = item;

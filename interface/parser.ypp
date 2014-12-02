@@ -12,6 +12,7 @@
 #include <cstring>
 
 #include <map>
+#include <list>
 #include <vector>
 
 
@@ -21,9 +22,16 @@ int line_number	= 1;	          /* number of current source line */
 map<string,Element* > piece_map;  /* map of the pieces */
 extern int yylex();	              /* lexical analyzer generated from lex.l */
 extern char *yytext;	          /* last token, defined in lex.l  */
+string parseError;
 
 void yyerror(char *s){
+    string resume;
+    const string yytb= yytext; //to concatenate next
     fprintf(stderr, "line %d: syntax error. Last token was \"%s\"\n", line_number, yytext);
+    resume = "line " + to_string(line_number);
+    resume += ": syntax error. Last token was " + yytb;
+    resume += "\n" + to_string(*s);
+    parseError = resume;
 }
 
 void error(char *s){
@@ -41,6 +49,7 @@ void error(char *s){
   char* name;
   Element* elt;
   Trapezoid* trapezoid;
+  std::list<splitData>* pointer;
 }
 
 
@@ -64,7 +73,7 @@ void error(char *s){
 %token H_NAME H_DESCR
 
 /* Vocabulary */
-%token START STOP TRAPEZOID LINK LEFT RIGHT SPLIT
+%token START STOP TRAPEZOID LINK SPLIT
 
 /* others */
 
@@ -79,6 +88,7 @@ void error(char *s){
 
 %type<trapezoid> trapezoid_params params
 %type<elt> element
+%type<pointer> split_body
 
 /* Axiom */
 %start main
@@ -95,18 +105,32 @@ main:
 ;
 
 body:
-PIECE NAME DEF START SEQ INT element					{ piece_map.clear(); piece_map.insert(pair<string,Element* >($2,$6)); $$ = 0; }   
-| PIECE NAME DEF START SEQ INT element body 			{ piece_map.insert(pair<string,Element* >($2,$6));
-														  $$ = $7; 
+  PIECE NAME DEF START INT SEQ element					{ piece_map.clear(); piece_map.insert(pair<string,Element* >($2,$7)); $$ = 0; }
+| PIECE NAME DEF START INT SEQ element body             { piece_map.insert(pair<string,Element* >($2,$7));
+                                                          $$ = $8;
 														}
 ;
 
 element:	
-  STOP                                        			{ $$ = new Stop(); }
-| LINK NAME	INT											{ $$ = new Link($3,Slot::Right); }
-| SPLIT INT LBRACE element RBRACE LBRACE element RBRACE	{ /* TODO */ } 
-| TRAPEZOID trapezoid_params SEQ element 				{ $$ = new TrapezoidElem(*($2),$4); }
+  STOP                                        			{ fprintf(stderr,"make stop... \n");
+                                                          list<splitData>* ptr; /* null pointer */
+                                                          $$ = new Split(ptr); }
+| LINK NAME	INT											{ fprintf(stderr,"make link... \n");
+                                                          $$ = new Link($2,$3);}
+| SPLIT split_body                                  	{ fprintf(stderr,"make split... \n");
+                                                          $$ = new Split($2); }
+| TRAPEZOID trapezoid_params SEQ element 				{ fprintf(stderr,"make trapezoid... \n");
+                                                          $$ = new TrapezoidElem(*($2),$4);
+                                                        }
 ;
+
+split_body:
+  /* Empty */                                           { fprintf(stderr,"make null pointer... \n");
+                                                          list<splitData>* ptr = new list<splitData>;
+                                                          $$ = ptr; }
+| split_body INT INT LBRACE element RBRACE               { fprintf(stderr,"insert element... \n");
+                                                          (*$1).insert($1->begin(),splitData($2,$3,$5));
+                                                          $$ = $1; }
 
 trapezoid_params:
   LPAREN params RPAREN                    				{ $$ = $2; }

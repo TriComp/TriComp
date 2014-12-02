@@ -13,7 +13,9 @@
 
 extern FILE* yyin; // from Flex
 extern int yyparse(void); // from Bison
+extern void yyrestart(FILE *f); // To reset the buffer used by the parser
 extern Knit knit_parsed;
+extern std::string parseError;
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -78,6 +80,7 @@ void MainWindow::newKnit()
 {
     QString choice = newDlg->getChoice();
     yyin = fopen(("../compil/tests/" + choice.toStdString() + ".tricot").c_str(), "r");
+    yyrestart(yyin);
     int bison_return_code = yyparse();
     if (bison_return_code != 0) { // This case mustn't happen
         QMessageBox::warning(this, "Warning", "Incorrect given file...");
@@ -105,15 +108,18 @@ void MainWindow::open()
         QString file = QFileDialog::getOpenFileName(this, "Load a knit", path, "knit (*.tricot)");
         if (file.endsWith(".tricot")) {
             fileName = file;
+            path = QFileInfo(fileName).path();
             yyin = fopen((fileName.toStdString()).c_str(), "r");
+            yyrestart(yyin);
             int bison_return_code = yyparse();
             switch (bison_return_code) {
             case 0: {
-                setInterface();
+                // setInterface();
+                saveAs();
                 break;
             }
             case 1: {
-                QMessageBox::warning(this, "Unable to open", "Unable to open the file. Parsing error.");
+                QMessageBox::warning(this, "Unable to open", "Parse error : "+QString::fromStdString(parseError));
                 break;
             }
             case 2: {
@@ -226,6 +232,7 @@ void MainWindow::saveAs()
     if (fileName != "") {
         if (fileName.endsWith(".tricot")) {
             save();
+            path = QFileInfo(fileName).path();
         } else {
             QMessageBox::warning(this, "Wrong file format", "You don't save your tricot to the good format (.tricot)");
         }

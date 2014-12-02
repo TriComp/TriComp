@@ -49,6 +49,7 @@ class TrapezoidItem : public EditorItem {
 public:
     QGraphicsPolygonItem* poly;
     TrapezoidElem* elem;
+    bool selected;
 
     ~TrapezoidItem() { if (elem) delete elem; }
 
@@ -60,8 +61,6 @@ public:
     QPen pen_selected() const;
     void updateBrush();
 
-    bool selected;
-
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
@@ -70,8 +69,9 @@ public:
 
 class SplitItem : public EditorItem {
 public:
-    QGraphicsLineItem* line;
     Split* elem;
+    QGraphicsLineItem* line;
+
 
     SplitItem(Split* s);
 
@@ -80,17 +80,6 @@ public:
     Element* element() override { return elem; }
 };
 
-class StopItem : public EditorItem {
-public:
-    QGraphicsTextItem* text;
-    Stop* elem;
-
-    StopItem(Stop* s);
-
-    ~StopItem() { delete elem; }
-    
-    Element* element() override { return elem; }
-};
 
 class LinkItem : public EditorItem {
 public:
