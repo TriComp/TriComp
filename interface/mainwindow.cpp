@@ -43,7 +43,11 @@ MainWindow::MainWindow(QWidget* parent)
     path = QCoreApplication::applicationDirPath(); // set the path to home directory
 
     // pattern buttons
+<<<<<<< HEAD
     patternMapper.setMapping(ui->pushButton, &jersey_stitch);
+=======
+    patternMapper.setMapping(ui->pushButton, &garter_stitch);
+>>>>>>> aa7ace070625d2fd478ec88a0cd953225d22d8ce
     connect(ui->pushButton, SIGNAL(clicked()), &patternMapper, SLOT(map()));
     patternMapper.setMapping(ui->pushButton_2, &garter_stitch);
     connect(ui->pushButton_2, SIGNAL(clicked()), &patternMapper, SLOT(map()));
