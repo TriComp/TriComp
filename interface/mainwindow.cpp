@@ -20,6 +20,7 @@ extern std::string parseError;
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , patternMapper(this)
 {
     ui->setupUi(this);
     newDlg = new newKnitDialog(this);
@@ -42,7 +43,6 @@ MainWindow::MainWindow(QWidget* parent)
     path = QDir::homePath(); // set the path to home directory
 
     // pattern buttons
-    QSignalMapper patternMapper(this);
     patternMapper.setMapping(ui->pushButton, &garter_stitch);
     connect(ui->pushButton, SIGNAL(clicked()), &patternMapper, SLOT(map()));
 }
