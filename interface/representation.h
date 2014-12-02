@@ -37,6 +37,7 @@ public:
 // Point mousse
 
 static Pattern garter_stitch("garter", QBrush(QColor("blue")));
+static Pattern jersey_stitch("jersey", QBrush(QColor("blue"), Qt::Dense6Pattern));
 
 class Trapezoid {
 public:
