@@ -95,17 +95,16 @@ main:
 ;
 
 body:
-PIECE NAME DEF START SEQ element						{ piece_map.clear(); piece_map.insert(pair<string,Element* >($2,$6)); $$ = 0; }   
-| PIECE NAME DEF START SEQ element body 				{ piece_map.insert(pair<string,Element* >($2,$6));
+PIECE NAME DEF START SEQ INT element					{ piece_map.clear(); piece_map.insert(pair<string,Element* >($2,$6)); $$ = 0; }   
+| PIECE NAME DEF START SEQ INT element body 			{ piece_map.insert(pair<string,Element* >($2,$6));
 														  $$ = $7; 
 														}
 ;
 
 element:	
   STOP                                        			{ $$ = new Stop(); }
-| LINK LEFT NAME                      					{ $$ = new Link($3,Slot::Left); }
-| LINK RIGHT NAME										{ $$ = new Link($3,Slot::Right); }
-| SPLIT INT LBRACE element RBRACE LBRACE element RBRACE	{ $$ = new Split($4,$7,$2); } 
+| LINK NAME	INT											{ $$ = new Link($3,Slot::Right); }
+| SPLIT INT LBRACE element RBRACE LBRACE element RBRACE	{ /* TODO */ } 
 | TRAPEZOID trapezoid_params SEQ element 				{ $$ = new TrapezoidElem(*($2),$4); }
 ;
 
@@ -116,7 +115,7 @@ trapezoid_params:
 /* sorry for this ugly rule... */
 
 params:
-NAME COL INT SEP NAME COL INT SEP NAME COL INT SEP NAME COL INT SEP NAME COL NAME { $$ = new Trapezoid($3,$7,$11,$15,$19); }
+NAME COL INT SEP NAME COL INT SEP NAME COL INT SEP NAME COL NAME { $$ = new Trapezoid($3,$7,$11,$15); }
 ;
 
 

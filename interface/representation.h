@@ -51,7 +51,6 @@ public:
         : height(h)
         , shift(s)
         , upper_width(u)
-        , lower_width(l)
         , pattern(new Pattern(name))
     {
     }
@@ -61,9 +60,6 @@ public:
         // Do not delete the pattern, for it is unique
     }
 };
-
-enum class Slot { Left,
-                  Right };
 
 enum class ElementType { Trapezoid,
                          Split,
@@ -113,7 +109,6 @@ public:
         os << "trapezoid ( height : " << geom.height
            << ", shift : " << geom.shift
            << ", upper_width : " << geom.upper_width
-           << ", lower_width : " << geom.lower_width
            << ", pattern : " << (geom.pattern)->name
            << ")\n || ";
         next->print(os);
@@ -182,11 +177,11 @@ public:
 class Link : public Element {
 public:
     std::string name;
-    Slot slot;
-    Link(std::string name, Slot slot)
+    int position;
+    Link(std::string name, int position)
         : Element(ElementType::Link)
         , name(name)
-        , slot(slot)
+        , position(position)
     {
     }
 
@@ -197,12 +192,9 @@ public:
     void print(std::ostream& os) const override
     {
         os << "link ";
-        if (slot == Slot::Right) {
-            os << "right";
-        } else {
-            os << "left";
-        }
-        os << " " << name;
+        os << name;
+        os << " ";
+        os << position;
     }
 
     std::vector<Element*> children() const override { return {}; }
