@@ -40,7 +40,11 @@ MainWindow::MainWindow(QWidget* parent)
     // Variables
     isSaved = true;
     act = NOTHING;
-    path = QCoreApplication::applicationDirPath(); // set the path to home directory
+    QDir dirPath = QDir(QCoreApplication::applicationDirPath()); // to get the path of application directory
+    dirPath.cdUp();
+    dirPath.cdUp();
+    dirPath.cd(QString::fromStdString("compil/"));
+    path = dirPath.absolutePath();
 
     // pattern buttons
     patternMapper.setMapping(ui->pushButton, &jersey_stitch);
