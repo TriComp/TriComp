@@ -15,16 +15,39 @@ end =
     include Comparable.Make(T)
   end
 
+module SSet = String.Set
 module DSet = Dep.Set
 module SMap = String.Map
 
-type dep_graph = element SMap.t * DSet.t SMap.t (* free, deps *)
+type dep_graph = SSet.t * DSet.t SMap.t * int SMap.t (* free, deps, widths *)
 
 type compil_settings = { min_width : int
 		       ; min_height : int (* May not be useful *)
 		       }
 
 let fail f = ksprintf (fun s -> Failure s |> raise) f (* Used like printf *)
+
+(* Builds a graph on the set of elements with vertices between e1 and e2 if e1 depends on e2 *)
+let make_dep_graph garment : dep_graph =
+  let add_dep name pos w = function
+    | None -> Some (DSet.singleton (pos, w, name))
+    | Some deps -> Some (DSet.add deps (pos, w, name)) in
+  let rec depends curr_name curr_width acc = function
+    | Split l ->
+       List.fold ~init:acc
+		 ~f:(fun acc' (_, w, elt) -> depends curr_name w acc' elt) l
+    | Trapezoid (t, e) -> depends curr_name t.upper_width acc e
+    | Link (target_name, pos) ->
+       let (free, deps) = acc in
+       (SMap.remove free target_name,
+	SMap.change deps target_name (add_dep curr_name pos curr_width))
+  in
+  let free = SMap.fold garment.elements
+      ~init:SSet.empty
+      ~f:(fun ~key:n ~data:_ acc -> SSet.add acc n) in
+  SMap.fold garment.elements
+    ~init:(free, SMap.empty)
+    ~f:(fun ~key:name ~data:(w,elt) acc -> depends name w acc elt) in
 
 (* Checks for collisions in split/links + basic errors (negative lengths etc.) *)
 let sanity_check settings garment deps : unit =
@@ -56,44 +79,23 @@ let sanity_check settings garment deps : unit =
   in
   SMap.iter garment.elements
 	    ~f:(fun ~key:name ~data:(w,elt) -> aux name w elt);
-  let dep_check ~key:curr_name ~data:(curr_width, _) =
+  (* We now check for collisions in links *)
+  let dep_check ~key:curr_name ~data:(curr_width, curr_deps) =
     let f intervals (pos, w, source) =
       if w < settings.min_width then
-	fail "Narrow join from piece \"%s\" to piece \"%s\"." source curr_name;
+        fail "Narrow join from piece \"%s\" to piece \"%s\"." source curr_name;
       if pos + w < settings.min_width
-	 || pos > curr_width - settings.min_width then
+      || pos > curr_width - settings.min_width then
 	fail "Stray branch in split in piece \"%s\"." curr_name;
       Interval.Int.create pos (pos + w) :: intervals
     in
-    let curr_deps = match Map.find deps curr_name with
-      | Some x -> x
-      | None -> assert false in (* Dependencies not computed? *)
     let intervals =
       DSet.fold curr_deps ~init:[] ~f:f
     in
     if not (Interval.Int.are_disjoint intervals) then
-      fail "Branch collision in split in piece \"%s\"." curr_name in
-  SMap.iter deps ~f:dep_check
-
-(* Builds a graph on the set of elements with vertices between e1 and e2 if e1 depends on e2 *)
-let make_dep_graph garment =
-  let add_dep name pos w = function
-    | None -> Some (DSet.singleton (pos, w, name))
-    | Some deps -> Some (DSet.add deps (pos, w, name)) in
-  let rec depends curr_name curr_width acc = function
-    | Split l ->
-       List.fold ~init:acc
-		 ~f:(fun acc' (_, w, elt) -> depends curr_name w acc' elt) l
-    | Trapezoid (t, e) -> depends curr_name t.upper_width acc e
-    | Link (target_name, pos) ->
-       let (free, deps) = acc in
-       (SMap.remove free target_name,
-	SMap.change deps target_name (add_dep curr_name pos curr_width))
+      fail "Branch collision in split in piece \"%s\"." curr_name
   in
-  let free = SMap.map garment.elements ~f:(fun (_,e) -> e) in
-  SMap.fold garment.elements
-	    ~init:(free, SMap.empty)
-	    ~f:(fun ~key:name ~data:(w,elt) acc -> depends name w acc elt)
+  SMap.iter deps ~f:dep_check
 
 
 let x = 2
