@@ -58,7 +58,8 @@ TrapezoidItem::TrapezoidItem(TrapezoidElem* e, EditorManager* m)
 
 QBrush TrapezoidItem::brush_selected() const
 {
-    QBrush b(brush_normal.color().light(140));
+    QBrush b = brush_normal;
+    b.setColor(brush_normal.color().light(140));
     return b;
 }
 QPen TrapezoidItem::pen_selected() const
