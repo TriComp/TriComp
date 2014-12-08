@@ -22,14 +22,14 @@ type element = Trapezoid of trapezoid * element
              | Split of (int*int*element) list (* pos, width, element *)
              | Link of name * int
 
-module Element : sig
-  type t = element
+module Piece : sig
+  type t = int*element with sexp
   include Comparable.S with type t := t
 end
 
 (* Garment *)
 
-type garment = { elements : (int*element) String.Map.t
+type garment = { elements : Piece.t String.Map.t
                ; name : string
                ; descr : string
                }

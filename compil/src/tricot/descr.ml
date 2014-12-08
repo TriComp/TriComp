@@ -21,9 +21,20 @@ type element = Trapezoid of trapezoid * element
              | Split of (int*int*element) list (* pos, width, element *)
              | Link of name * int with sexp, compare
 
+module Piece : sig
+  type t = int*element with sexp
+  include Comparable.S with type t := t
+end = struct
+  module T = struct
+    type t = int*element with sexp, compare
+  end
+  include T
+  include Comparable.Make(T)
+end
+
 (* Garment *)
 
-type garment = { elements : (int*element) String.Map.t
+type garment = { elements : Piece.t String.Map.t
                ; name : string
                ; descr : string
                }
@@ -58,15 +69,3 @@ let print_elements ~key:name ~data:(w,element) s =
 
 let print_garment g =
   sprintf "Name : %s\nDescription : \"%s\"%s\n%!" g.name g.descr (String.Map.fold g.elements ~init:"" ~f:print_elements)
-
-
-module Element : sig
-  type t = element
-  include Comparable.S with type t := t
-end = struct
-  module T = struct
-    type t = element with sexp, compare
-  end
-  include T
-  include Comparable.Make(T)
-end

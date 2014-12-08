@@ -4,8 +4,11 @@ let print garment =
   printf "%s%!" (Descr.print_garment garment)
 
 let compute_deps garment =
-  let (free,deps) = Compil.make_dep_graph garment in
-  printf "deps:%s\n%!" (String.Map.sexp_of_t String.Set.sexp_of_t deps |> Sexp.to_string)
+  let (free, deps) = Compil.make_dep_graph garment in
+  deps
+  |> Compil.sexp_of_deps
+  |> Sexp.to_string
+  |> printf "deps:%s\n%!"
 
 
 let parse action input () =

@@ -19,11 +19,15 @@ module SSet = String.Set
 module DSet = Dep.Set
 module SMap = String.Map
 
-type dep_graph = SSet.t * DSet.t SMap.t * int SMap.t (* free, deps, widths *)
+type free = Piece.t SMap.t with sexp
+type deps = DSet.t SMap.t with sexp
+
+type dep_graph = (Piece.t SMap.t * DSet.t SMap.t)  with sexp(* free (with base width), deps *)
 
 type compil_settings = { min_width : int
 		       ; min_height : int (* May not be useful *)
 		       }
+
 
 let fail f = ksprintf (fun s -> Failure s |> raise) f (* Used like printf *)
 
@@ -42,12 +46,10 @@ let make_dep_graph garment : dep_graph =
        (SMap.remove free target_name,
 	SMap.change deps target_name (add_dep curr_name pos curr_width))
   in
-  let free = SMap.fold garment.elements
-      ~init:SSet.empty
-      ~f:(fun ~key:n ~data:_ acc -> SSet.add acc n) in
+  let all = garment.elements in
   SMap.fold garment.elements
-    ~init:(free, SMap.empty)
-    ~f:(fun ~key:name ~data:(w,elt) acc -> depends name w acc elt) in
+    ~init:(all, SMap.empty)
+    ~f:(fun ~key:name ~data:(w,elt) acc -> depends name w acc elt)
 
 (* Checks for collisions in split/links + basic errors (negative lengths etc.) *)
 let sanity_check settings garment deps : unit =
@@ -96,6 +98,5 @@ let sanity_check settings garment deps : unit =
       fail "Branch collision in split in piece \"%s\"." curr_name
   in
   SMap.iter deps ~f:dep_check
-
 
 let x = 2
