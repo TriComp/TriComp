@@ -1,6 +1,6 @@
 Name : scarf_test
 Description : "The easiest knit you can make"
 
-piece my_piece := start 25 || 
-					 trapezoid ( height : 150, shift : 0, upper_width : 25, pattern : endroit ) ||
-					 stop
+piece my_piece := start 25
+               || trapezoid ( height : 150, shift : 0, upper_width : 25, pattern : endroit )
+	       || stop

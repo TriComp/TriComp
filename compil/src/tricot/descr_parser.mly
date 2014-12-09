@@ -39,7 +39,7 @@ let make_trapezoid args =
   { height = get_arg_int "height" args
   ; shift = get_arg_int "shift" args
   ; upper_width = get_arg_int "upper_width" args
-  ; pattern = get_arg_name "pattern" args
+  ; pattern = (get_arg_name "pattern" args, Core.Std.Array.empty ())
   }
 
 %}
