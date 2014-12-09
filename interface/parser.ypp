@@ -19,7 +19,7 @@
 using namespace std;
 
 int line_number	= 1;	          /* number of current source line */
-map<string,Element* > piece_map;  /* map of the pieces */
+map<string,pair< int,Element*> > piece_map;  /* map of the pieces */
 extern int yylex();	              /* lexical analyzer generated from lex.l */
 extern char *yytext;	          /* last token, defined in lex.l  */
 string parseError;
@@ -105,8 +105,10 @@ main:
 ;
 
 body:
-  PIECE NAME DEF START INT SEQ element					{ piece_map.clear(); piece_map.insert(pair<string,Element* >($2,$7)); $$ = 0; }
-| PIECE NAME DEF START INT SEQ element body             { piece_map.insert(pair<string,Element* >($2,$7));
+  PIECE NAME DEF START INT SEQ element					{ piece_map.clear();
+                                                          piece_map.insert(pair<string,pair<int, Element*> >($2,pair<int, Element*> ($5,$7)));
+                                                          $$ = 0; }
+| PIECE NAME DEF START INT SEQ element body             { piece_map.insert(pair<string,pair<int, Element*> >($2,pair<int, Element*> ($5,$7)));
                                                           $$ = $8;
 														}
 ;

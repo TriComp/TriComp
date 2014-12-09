@@ -5,6 +5,7 @@
 #include <functional>
 #include <map>
 #include <list>
+#include <utility>
 #include <iostream>
 #include <QBrush>
 #include <QDebug>
@@ -246,8 +247,8 @@ class Knit {
 public:
     std::string name;
     std::string description;
-    std::map<std::string, Element*> elements;
-    Knit(std::string name, std::string description, std::map<std::string, Element*> elements)
+    std::map<std::string, std::pair< int, Element* > > elements;
+    Knit(std::string name, std::string description, std::map<std::string, std::pair< int, Element*> > elements)
         : name(name)
         , description(description)
         , elements(elements)
@@ -257,10 +258,10 @@ public:
 
     void destruct()
     {
-        for (std::map<std::string, Element*>::const_iterator it = elements.begin(); it != elements.end(); ++it) {
+        for (std::map< std::string, std::pair<int, Element*> >::const_iterator it = elements.begin(); it != elements.end(); ++it) {
             qDebug() << "Delete ...\n";
-            if (it->second) {
-                delete it->second;
+            if ((it->second).second) {
+                delete (it->second).second;
             }
         }
         name = "DELETED";
@@ -274,7 +275,7 @@ extern Knit knit_parsed;
 // Printers
 
 std::ostream& operator<<(std::ostream& os, Element const& element);
-std::ostream& operator<<(std::ostream& os, std::map<std::string, Element*> const& elements);
+std::ostream& operator<<(std::ostream& os, std::map<std::string, std::pair <int, Element*> > const& elements);
 std::ostream& operator<<(std::ostream& os, Knit knit);
 
 template <typename T, typename A>

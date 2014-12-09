@@ -137,7 +137,7 @@ public:
         // qDebug("visitLink");
         Q_ASSERT(l);
         if (knit->elements.count(l->name) > 0) {
-            auto* elt = knit->elements[l->name];
+            auto* elt = (knit->elements[l->name]).second;
             visit(elt, o);
         } else {
             qErrnoWarning("Unknown piece %s", l->name.c_str());
@@ -158,13 +158,15 @@ public:
     void visitSplit(Split* s, QPointF o) override /* TODO */
     {
         // qDebug("visitSplit");
-        for (list<splitData>::const_iterator it = s->elements->begin(); it != s->elements->end(); ++it) {
-            visit(it->next, o + QPointF(0,it->position));
+        if (s->elements != NULL) {
+            for (list<splitData>::const_iterator it = s->elements->begin(); it != s->elements->end(); ++it) {
+                visit(it->next, o + QPointF(it->position,0));
+            }
+            auto* item = new SplitItem(s);
+            item->line->setPos(o);
+            s->gfx = item;
+            scene->addItem(item);
         }
-        auto* item = new SplitItem(s);
-        item->line->setPos(o);
-        s->gfx = item;
-        scene->addItem(item);
     }
 };
 
