@@ -89,16 +89,19 @@ let cotes11 =
 let riz = 
   let res = [|[|true; false|];
 	      [|false; true|]|]
+    in
   ("Point de riz", res)
 
 let cotes22 = 
   let res = [|[|true; true; false; false|];
 	      [|true; true; false; false|]|]
+  in
   ("Cotes 2/2", res)
 
 let fausses_anglaises = 
   let res = [|[|false; true; true|];
 	      [|false; true; true|]|]
+  in
   ("Fausses cotes anglaises", res)
   
 let jersey_raye = 
@@ -106,5 +109,46 @@ let jersey_raye =
 	      [|true|];
 	      [|false|];
 	      [|true|]|]
-("Jersey rayé", res)
+  in
+  ("Jersey rayé", res)
 
+let cotes_plates =
+  let res = [|[|false; false; false; false; false; true;  true;  true |];
+	      [|true;  true;  true;  true;  true; false; false; false|]|]
+  in
+  ("Côtes plates", res)
+
+let cotes_piquees =
+  let res = [|[|true; true; true; false; true; true; true; false; false; false|];
+	      [|true; true; true; false; true; true; true; false; false; false|];
+	      [|true; true; true; false; true; true; true; false; false; false|];
+	      [|true; true; true;  true; true; true; true;  true;  true; true|]|]
+  in 
+  ("Côtes piquées", res)
+
+let losanges =
+  let res = [|[|false; false; false; true; false; false; false|];
+	      [|false; false;  true; true;  true; false; false|];
+	      [|false;  true;  true; true;  true;  true; false|];
+	      [| true;  true;  true; true;  true;  true; true|];
+	      [|false;  true;  true; true;  true;  true; false|];
+	      [|false; false;  true; true;  true; false; false|];
+	      [|false; false; false; true; false; false; false|]|]
+  in 
+  ("Losanges", res)
+
+let cotes_pdr =
+  let res = [|[|false; true; false; true; false; true; false; false; false; false; false|];
+	      [| true; false; true; false; true; false; true;  true;  true;  true; true|]|]
+  in 
+  ("Côtes point de riz", res)
+
+let damier33 = 
+  let res = [|[|0; 0; 0; 1; 1; 1|];
+	      [|0; 0; 0; 1; 1; 1|];
+	      [|0; 0; 0; 1; 1; 1|];
+	      [|1; 1; 1; 0; 0; 0|];
+	      [|1; 1; 1; 0; 0; 0|];
+	      [|1; 1; 1; 0; 0; 0|]|]
+  in
+  ("Damier 3x3", res)
