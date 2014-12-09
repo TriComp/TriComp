@@ -77,10 +77,29 @@ let print_garment g =
 (* Exemples de patterns *)
 
 let cotes11 =
-  let res = Array.make  2 (Array.make 2 true) in
-  let r1 = Array.make 2 true in
-  r1 = [|true; false|];
-  res = [|r1; r1|];
-  ("cotes 1-1", res);;
+  let res = [|[|true; false|]; 
+	      [|true; false|]|]
+  in
+  ("Cotes 1/1", res)
   
 let riz = 
+  let res = [|[|true; false|];
+	      [|false; true|]|]
+  ("Point de riz", res)
+
+let cotes22 = 
+  let res = [|[|true; true; false; false|];
+	      [|true; true; false; false|]|]
+  ("Cotes 2/2", res)
+
+let fausses_anglaises = 
+  let res = [|[|false; true; true|];
+	      [|false; true; true|]|]
+  ("Fausses cotes anglaises", res)
+  
+let jersey_raye = 
+  let res = [|[|true|];
+	      [|true|];
+	      [|false|];
+	      [|true|]|]
+("Jersey rayé", res)
