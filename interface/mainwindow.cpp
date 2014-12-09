@@ -42,8 +42,7 @@ MainWindow::MainWindow(QWidget* parent)
     act = NOTHING;
     QDir dirPath = QDir(QCoreApplication::applicationDirPath()); // to get the path of application directory
     dirPath.cdUp();
-    dirPath.cdUp();
-    dirPath.cd(QString::fromStdString("compil/"));
+    dirPath.cd(QString::fromStdString("compil/tests"));
     path = dirPath.absolutePath();
 
     // pattern buttons
