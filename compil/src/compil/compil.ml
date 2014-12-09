@@ -34,7 +34,7 @@ let fail f = ksprintf (fun s -> Failure s |> raise) f (* Used like printf *)
 (* Builds a graph on the set of elements with vertices between e1 and e2 if e1 depends on e2 *)
 let make_dep_graph garment : dep_graph =
   let add_dep name pos w = function
- -> Some (DSet.singleton (pos, w, name))
+    | None -> Some (DSet.singleton (pos, w, name))
     | Some deps -> Some (DSet.add deps (pos, w, name)) in
   let rec depends curr_name curr_width acc = function
     | Split l ->
@@ -51,22 +51,21 @@ let make_dep_graph garment : dep_graph =
     ~init:(all, SMap.empty)
     ~f:(fun ~key:name ~data:(w,elt) acc -> depends name w acc elt)
 
-<<<<<<< HEAD
-let check_trapezoid (t :trapezoid) : unit = 
-  match t.shift with
-    0 -> 
-      match t.pattern with
-      | (a,b) -> match (t.height mod b.length) with
-	| 0 -> match (t.upper_width mod b.(0).length) with
-	  | 0 -> ()
-	  | _ -> fail "La largeur n'est pas un multiple de celle du pattern."
-	| _ -> fail "La hauteur n'est pas un multiple de celle du pattern."
-  | _ -> fail "Le trapèze n'est pas un rectangle."
 
-    ()(* Echoue en utilisant fail *)
-=======
-let check_trapezoid curr_width trapezoid : unit = ()(* Echoue en utilisant fail *)
->>>>>>> bce47d84a9817873b527fba83a0266a62fa9214c
+let check_trapezoid curr_width (t :trapezoid) : unit =
+  if t.shift <> 0 then
+    fail "Only rectangles are supported at the moment. (shift %d is non-null)"
+      t.shift;
+  if t.upper_width <> curr_width then
+    fail "Only rectangles are supported at the moment. (upper_width %d is different from base width %d)"
+      t.upper_width curr_width;
+  let (name, pattern) = t.pattern in
+  if t.height mod (Array.length pattern) <> 0 then
+    fail "Trapezoid height %d is not a multiple of pattern %s height (%d)."
+      t.height name (Array.length pattern);
+  if t.upper_width mod (Array.length pattern.(0)) <> 0 then
+    fail "Trapezoid width %d is not a multiple of pattern %s width (%d)."
+      t.upper_width name (Array.length pattern.(0))
 
 (* Checks for collisions in split/links + basic errors (negative lengths etc.) *)
 let sanity_check settings garment (deps:deps) : unit =
