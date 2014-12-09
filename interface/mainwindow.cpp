@@ -115,6 +115,11 @@ void MainWindow::open()
             switch (bison_return_code) {
             case 0: {
                 // setInterface();
+                qDebug() << "The elements are : ";
+                for (std::map<std::string, Element*>::const_iterator it = knit_parsed.elements.begin(); it != knit_parsed.elements.end(); ++it) {
+                    qDebug() << QString((it->first).c_str()) << " " ;
+                }
+                qDebug() << "\n";
                 saveAs();
                 break;
             }

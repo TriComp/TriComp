@@ -173,14 +173,20 @@ public:
 
     void print(std::ostream& os) const override
     {
-        os << "split ";
-        for (std::list<splitData>::const_iterator it = elements->begin(); it != elements->end(); ++it) {
-            os << it->position;
-            os << " ";
-            os << it->width;
-            os << " {   ";
-            (it->next)->print(os);
-            os << " } ";
+        if (elements == NULL) {
+            os << "stop";
+        }
+        else {
+            os << "split ";
+            for (std::list<splitData>::const_iterator it = elements->begin(); it != elements->end(); ++it) {
+                qDebug() << "Print Split";
+                os << it->position;
+                os << " ";
+                os << it->width;
+                os << " {   ";
+                (it->next)->print(os);
+                os << " } ";
+            }
         }
     }
 
