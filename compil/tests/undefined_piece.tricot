@@ -1,0 +1,4 @@
+Name : undefined_piece
+Description : ""
+
+piece a := start 0 || link b 0
