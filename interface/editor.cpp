@@ -36,7 +36,7 @@ void EditorManager::setSelected(EditorItem* it, bool sel)
     }
 }
 
-TrapezoidItem::TrapezoidItem(TrapezoidElem* e, EditorManager* m)
+TrapezoidItem::TrapezoidItem(TrapezoidElem* e, EditorManager* m, int lower_width)
     : elem(e)
     , selected(false)
     , EditorItem(m)
@@ -44,7 +44,7 @@ TrapezoidItem::TrapezoidItem(TrapezoidElem* e, EditorManager* m)
     Trapezoid t = e->geom;
     QPointF p2(t.shift, -t.height); // Inverted y axis :-[
     QPointF p3(p2.x() + t.upper_width, p2.y());
-    QPointF p4(0, 0); /* TODO : x coordinate */
+    QPointF p4(lower_width, 0);
     QVector<QPointF> points{ QPointF(0, 0), p2, p3, p4 };
     poly = new QGraphicsPolygonItem();
     poly->setPolygon(QPolygonF(points));
@@ -118,7 +118,7 @@ LinkItem::LinkItem(Link* s)
     addToGroup(text);
 }
 
-class AttachItems : public ElementVisitor<void, QPointF> {
+class AttachItems : public ElementVisitor<void, QPointF, int> {
 public:
     QGraphicsScene* scene;
     EditorManager* manager;
@@ -132,49 +132,59 @@ public:
         // qDebug("AttachItems");
     }
 
-    void visitLink(Link* l, QPointF o) override
+    void visitLink(Link* l, QPointF o, int start) override
     {
         // qDebug("visitLink");
         Q_ASSERT(l);
-        if (knit->elements.count(l->name) > 0) {
-            auto* elt = (knit->elements[l->name]).second;
-            visit(elt, o);
-        } else {
-            qErrnoWarning("Unknown piece %s", l->name.c_str());
+        if (!(l->visited)) {
+            l->visited = true;
+            if (knit->elements.count(l->name) > 0) {
+                auto* elt = (knit->elements[l->name]).second;
+                int new_start = (knit->elements[l->name]).first;
+                visit(elt, o + QPoint(-l->position,0), new_start);
+            } else {
+                qErrnoWarning("Unknown piece %s", l->name.c_str());
+            }
         }
     }
 
-    void visitTrapezoid(TrapezoidElem* e, QPointF o) override
+    void visitTrapezoid(TrapezoidElem* e, QPointF o, int start) override
     {
         // qDebug("visitTrap");
         Q_ASSERT(e && e->next);
-        visit(e->next, o + QPointF(e->geom.shift, -e->geom.height));
-        auto* item = new TrapezoidItem(e, manager);
-        item->poly->setPos(o);
-        e->gfx = item;
-        scene->addItem(item);
+        if (!(e->visited)) {
+            e->visited = true;
+            visit(e->next, o + QPointF(e->geom.shift, -e->geom.height), e->geom.upper_width);
+            auto* item = new TrapezoidItem(e, manager, start);
+            item->poly->setPos(o);
+            e->gfx = item;
+            scene->addItem(item);
+        }
     }
 
-    void visitSplit(Split* s, QPointF o) override /* TODO */
+    void visitSplit(Split* s, QPointF o, int start) override
     {
         // qDebug("visitSplit");
-        if (s->elements != NULL) {
-            for (list<splitData>::const_iterator it = s->elements->begin(); it != s->elements->end(); ++it) {
-                visit(it->next, o + QPointF(it->position,0));
+        if (!(s->visited)) {
+            s->visited = true;
+            if (s->elements != NULL) {
+                for (list<splitData>::const_iterator it = s->elements->begin(); it != s->elements->end(); ++it) {
+                    visit(it->next, o + QPointF(it->position,0), it->width);
+                }
+                auto* item = new SplitItem(s);
+                item->line->setPos(o);
+                s->gfx = item;
+                scene->addItem(item);
             }
-            auto* item = new SplitItem(s);
-            item->line->setPos(o);
-            s->gfx = item;
-            scene->addItem(item);
         }
     }
 };
 
-EditorManager* attachItems(Element* e, QGraphicsScene* s, MainWindow* mw, Knit* knit)
+EditorManager* attachItems(Element* e, QGraphicsScene* s, MainWindow* mw, Knit* knit, int start)
 {
     Q_ASSERT(e && s && mw && knit);
     auto* m = new EditorManager(mw);
     auto a = AttachItems(s, m, knit);
-    a.visit(e, QPointF(0, 0));
+    a.visit(e, QPointF(0, 0), start);
     return m;
 }

@@ -69,8 +69,10 @@ enum class ElementType { Trapezoid,
 class Element {
 public:
     const ElementType kind;
+    bool visited;
     Element(ElementType k)
         : kind(k)
+        , visited(false)
     {
     }
     // In subclasses, delegate to QGraphicsPolygonItem
@@ -278,24 +280,24 @@ std::ostream& operator<<(std::ostream& os, Element const& element);
 std::ostream& operator<<(std::ostream& os, std::map<std::string, std::pair <int, Element*> > const& elements);
 std::ostream& operator<<(std::ostream& os, Knit knit);
 
-template <typename T, typename A>
+template <typename T, typename A, typename B>
 class ElementVisitor {
 public:
-    virtual T visitLink(Link* s, A a) = 0;
-    virtual T visitTrapezoid(TrapezoidElem* s, A a) = 0;
-    virtual T visitSplit(Split* s, A a) = 0;
+    virtual T visitLink(Link* s, A a, B b) = 0;
+    virtual T visitTrapezoid(TrapezoidElem* s, A a, B b) = 0;
+    virtual T visitSplit(Split* s, A a, B b) = 0;
 
-    T visit(Element* e, A a)
+    T visit(Element* e, A a, B b)
     {
         switch (e->kind) {
         case ElementType::Link:
-            visitLink(dynamic_cast<Link*>(e), a);
+            visitLink(dynamic_cast<Link*>(e), a, b);
             break;
         case ElementType::Trapezoid:
-            visitTrapezoid(dynamic_cast<TrapezoidElem*>(e), a);
+            visitTrapezoid(dynamic_cast<TrapezoidElem*>(e), a, b);
             break;
         case ElementType::Split:
-            visitSplit(dynamic_cast<Split*>(e), a);
+            visitSplit(dynamic_cast<Split*>(e), a, b);
         }
     }
 };

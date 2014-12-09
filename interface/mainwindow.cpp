@@ -114,8 +114,7 @@ void MainWindow::open()
             int bison_return_code = yyparse();
             switch (bison_return_code) {
             case 0: {
-                // setInterface();
-                saveAs();
+                setInterface();
                 break;
             }
             case 1: {
@@ -145,7 +144,8 @@ void MainWindow::setInterface()
     QGraphicsScene* scene = new QGraphicsScene();
     v->setScene(scene);
     Element* e1 = (knit_parsed.elements["my_piece"]).second;
-    attachItems(e1, scene, this, &knit_parsed);
+    int start = (knit_parsed.elements["my_piece"]).first;
+    attachItems(e1, scene, this, &knit_parsed, start);
 
     v->setRenderHint(QPainter::HighQualityAntialiasing);
     v->scale(2, 2);
