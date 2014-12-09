@@ -6,6 +6,7 @@ type name = string with sexp, compare
 
 (* Atoms*)
 
+(* Convention de représentation : True = endroit, False = envers, et on représente les points tels que vus sur le tricot final *)
 type pattern = (string, bool Array.t Array.t) with sexp, compare(* Description of a minimal pattern *)
 
 type trapezoid = { height : int
@@ -72,3 +73,14 @@ let print_elements ~key:name ~data:(w,element) s =
 
 let print_garment g =
   sprintf "Name : %s\nDescription : \"%s\"%s\n%!" g.name g.descr (String.Map.fold g.elements ~init:"" ~f:print_elements)
+
+(* Exemples de patterns *)
+
+let cotes11 =
+  let res = Array.make  2 (Array.make 2 true) in
+  let r1 = Array.make 2 true in
+  r1 = [|true; false|];
+  res = [|r1; r1|];
+  ("cotes 1-1", res);;
+  
+let riz = 
