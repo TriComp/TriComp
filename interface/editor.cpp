@@ -20,7 +20,6 @@ void EditorManager::patternClicked(QObject* o)
 {
     auto* p = (Pattern*)o; // o is a pattern
     for (auto* i : selected) {
-        // qDebug("patternClicked()");
         auto* t = (TrapezoidItem*)i;
         t->brush_normal = p->brush; // change the graphical object
         t->updateBrush();
@@ -136,12 +135,10 @@ public:
         , manager(m)
         , knit(knit)
     {
-        // qDebug("AttachItems");
     }
 
     void visitLink(Link* l, QPointF o, int start) override
     {
-        // qDebug("visitLink");
         UNUSED(start);
         Q_ASSERT(l);
         if (!(l->visited)) {
@@ -158,7 +155,6 @@ public:
 
     void visitTrapezoid(TrapezoidElem* e, QPointF o, int start) override
     {
-        // qDebug("visitTrap");
         Q_ASSERT(e && e->next);
         if (!(e->visited)) {
             e->visited = true;
@@ -172,7 +168,6 @@ public:
 
     void visitSplit(Split* s, QPointF o, int start) override
     {
-        // qDebug("visitSplit");
         UNUSED(start);
         if (!(s->visited)) {
             s->visited = true;

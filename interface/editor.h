@@ -41,7 +41,6 @@ public:
 
     virtual ~EditorItem()
     {
-        qDebug("Destruct EditorItem");
     }
 };
 
