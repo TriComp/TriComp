@@ -6,6 +6,8 @@
 #include <map>
 #include <iostream>
 #include <QBrush>
+#include <QPainter>
+#include <QPixmap>
 #include <QDebug>
 
 class EditorItem;
@@ -34,10 +36,13 @@ public:
     }
 };
 
-// Point mousse
+Pattern* constructMyBrush();
+
+// Representations graphiques des différents points
 
 static Pattern garter_stitch("garter", QBrush(QColor("blue")));
 static Pattern jersey_stitch("jersey", QBrush(QColor("blue"), Qt::Dense6Pattern));
+
 
 class Trapezoid {
 public:

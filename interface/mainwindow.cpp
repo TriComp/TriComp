@@ -43,7 +43,8 @@ MainWindow::MainWindow(QWidget* parent)
     QDir dirPath = QDir(QCoreApplication::applicationDirPath()); // to get the path of application directory
     dirPath.cdUp();
     dirPath.cdUp();
-    dirPath.cd(QString::fromStdString("compil/"));
+    dirPath.cdUp();
+    dirPath.cd(QString::fromStdString("./compil/")); // DO NOT WORK
     path = dirPath.absolutePath();
 
     // pattern buttons
@@ -51,6 +52,9 @@ MainWindow::MainWindow(QWidget* parent)
     connect(ui->pushButton, SIGNAL(clicked()), &patternMapper, SLOT(map()));
     patternMapper.setMapping(ui->pushButton_2, &garter_stitch);
     connect(ui->pushButton_2, SIGNAL(clicked()), &patternMapper, SLOT(map()));
+    Pattern* mine = constructMyBrush();
+    patternMapper.setMapping(ui->pushButton_3, mine);
+    connect(ui->pushButton_3, SIGNAL(clicked()), &patternMapper, SLOT(map()));
 }
 
 MainWindow::~MainWindow()
