@@ -11,9 +11,13 @@ Knit knit_parsed;
 
 QBrush setFirstBrush(string name)
 {
-    if (name.compare("garter") == 0) {
+    if (name == "garter") {
         return QBrush(garter_stitch.brush);
-    } else {
+    }
+    else if (name == "jersey") {
+        return QBrush(jersey_stitch.brush);
+    }
+    else {
         return QBrush("#444"); // default
     }
 }
