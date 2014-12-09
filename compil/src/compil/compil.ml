@@ -106,5 +106,3 @@ let sanity_check settings garment (deps:deps) : unit =
       fail "Branch collision in split in piece \"%s\"." curr_name
   in
   SMap.iter deps ~f:dep_check
-
-let x = 2
