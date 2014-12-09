@@ -87,7 +87,10 @@ let sanity_check settings garment (deps:deps) : unit =
   SMap.iter garment.elements
 	    ~f:(fun ~key:name ~data:(w,elt) -> aux name w elt);
   (* We now check for collisions in links *)
-  let dep_check ~key:curr_name ~data:(curr_width, curr_deps) =
+  let dep_check ~key:curr_name ~data:curr_deps =
+    let curr_width = match SMap.find garment.elements curr_name with
+      | Some (w, _) -> w
+      | None -> assert false in (* Undefined link, should have been detected earlier *)
     let f intervals (pos, w, source) =
       if w < settings.min_width then
         fail "Narrow join from piece \"%s\" to piece \"%s\"." source curr_name;
