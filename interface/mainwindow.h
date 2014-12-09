@@ -18,7 +18,6 @@ class MainWindow : public QMainWindow //, public Ui::MainWindow
 public:
     explicit MainWindow(QWidget* parent = 0);
     static Editor* editor() { return editor(); }
-    QSignalMapper patternMapper;
     ~MainWindow();
 
 private slots:
@@ -57,8 +56,10 @@ private:
                            NOTHING }; // useful with the save dialog and cancel options
     AfterSaveAction act;
     static Editor* editor_;
-
     void setInterface();
+
+public:
+    QSignalMapper patternMapper;
 };
 
 #endif // MAINWINDOW_H

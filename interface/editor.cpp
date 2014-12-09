@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <list>
 
+#define UNUSED(expr) do { (void)(expr); } while (0)
+
 using namespace std;
 
 EditorManager::EditorManager(MainWindow* mw)
@@ -83,6 +85,7 @@ void TrapezoidItem::updateBrush()
 
 void TrapezoidItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
+    UNUSED(event);
     auto b = selected ? brush_selected() : brush_normal;
     b.setColor(b.color().light(120));
     poly->setBrush(b);
@@ -91,6 +94,7 @@ void TrapezoidItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 
 void TrapezoidItem::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
+    UNUSED(event);
     auto b = selected ? brush_selected() : brush_normal;
     poly->setBrush(b);
     update();
@@ -98,6 +102,7 @@ void TrapezoidItem::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 
 void TrapezoidItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
+    UNUSED(event);
     selected = !selected;
     manager->setSelected(this, selected);
     updateBrush();
@@ -137,6 +142,7 @@ public:
     void visitLink(Link* l, QPointF o, int start) override
     {
         // qDebug("visitLink");
+        UNUSED(start);
         Q_ASSERT(l);
         if (!(l->visited)) {
             l->visited = true;
@@ -167,6 +173,7 @@ public:
     void visitSplit(Split* s, QPointF o, int start) override
     {
         // qDebug("visitSplit");
+        UNUSED(start);
         if (!(s->visited)) {
             s->visited = true;
             if (s->elements != NULL) {
