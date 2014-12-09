@@ -178,7 +178,7 @@
                 <string>Option 4</string>
                </property>
                <property name="checkable">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
                <property name="autoExclusive">
                 <bool>true</bool>
@@ -188,10 +188,10 @@
              <item row="0" column="1">
               <widget class="QPushButton" name="pushButton_3">
                <property name="text">
-                <string>Option 2</string>
+                <string>Random</string>
                </property>
                <property name="checkable">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
                <property name="autoExclusive">
                 <bool>true</bool>
@@ -204,7 +204,7 @@
                 <string>Option 6</string>
                </property>
                <property name="checkable">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
                <property name="autoExclusive">
                 <bool>true</bool>
@@ -217,7 +217,7 @@
                 <string>Jersey</string>
                </property>
                <property name="checkable">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
                <property name="autoExclusive">
                 <bool>true</bool>
@@ -230,7 +230,7 @@
                 <string>Option 5</string>
                </property>
                <property name="checkable">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
                <property name="autoExclusive">
                 <bool>true</bool>

@@ -15,6 +15,7 @@ extern int line_number;	/* defined in parser.ypp */
 %x comment
 
 %option noyywrap
+%option nounput
 
 %%
 [ \t\r]		    	    	break;		/* ignore white space */ 
@@ -38,8 +39,6 @@ extern int line_number;	/* defined in parser.ypp */
 "stop"                      return STOP;
 "trapezoid"                 return TRAPEZOID;
 "link"                      return LINK;
-"left"                      return LEFT;
-"right"                     return RIGHT;
 "split"                     return SPLIT;
 
 "eof"                       return END_OF_FILE;

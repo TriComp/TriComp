@@ -4,8 +4,12 @@
 #include <vector>
 #include <functional>
 #include <map>
+#include <list>
+#include <utility>
 #include <iostream>
 #include <QBrush>
+#include <QPainter>
+#include <QPixmap>
 #include <QDebug>
 
 class EditorItem;
@@ -34,25 +38,26 @@ public:
     }
 };
 
-// Point mousse
+Pattern* constructMyBrush();
+
+// Graphical representation of different patterns
 
 static Pattern garter_stitch("garter", QBrush(QColor("blue")));
 static Pattern jersey_stitch("jersey", QBrush(QColor("blue"), Qt::Dense6Pattern));
+
 
 class Trapezoid {
 public:
     int height;
     int shift;
     int upper_width;
-    int lower_width;
     Pattern* pattern;
 
     Trapezoid(std::map<std::string, std::string> parameters);
-    Trapezoid(int h, int s, int u, int l, std::string name)
+    Trapezoid(int h, int s, int u, std::string name)
         : height(h)
         , shift(s)
         , upper_width(u)
-        , lower_width(l)
         , pattern(new Pattern(name))
     {
     }
@@ -63,19 +68,17 @@ public:
     }
 };
 
-enum class Slot { Left,
-                  Right };
-
 enum class ElementType { Trapezoid,
                          Split,
-                         Stop,
                          Link };
 
 class Element {
 public:
     const ElementType kind;
+    bool visited;
     Element(ElementType k)
         : kind(k)
+        , visited(false)
     {
     }
     // In subclasses, delegate to QGraphicsPolygonItem
@@ -114,7 +117,6 @@ public:
         os << "trapezoid ( height : " << geom.height
            << ", shift : " << geom.shift
            << ", upper_width : " << geom.upper_width
-           << ", lower_width : " << geom.lower_width
            << ", pattern : " << (geom.pattern)->name
            << ")\n || ";
         next->print(os);
@@ -122,7 +124,7 @@ public:
 
     std::vector<Element*> children() const override { return { next }; }
 
-    int width() const override { return geom.lower_width; }
+    int width() const override { return geom.upper_width; } /* lower_width before */
 
     void forEach(std::function<void(Element*)> f) override
     {
@@ -132,62 +134,97 @@ public:
     }
 };
 
+class splitData {
+public:
+    int position;
+    int width;
+    Element* next;
+
+    splitData()
+        : position(0),
+          width(0),
+          next(0)
+    {
+    }
+
+    splitData(int position, int width, Element* next)
+        : position(position),
+          width(width),
+          next(next)
+        {
+        }
+
+    ~splitData()
+    {
+    }
+};
+
 class Split : public Element {
 public:
     // Invariant: left != nullprt & right != nullptr
-    Element* left;
-    Element* right;
-    int gap;
+    std::list<splitData>* elements;
 
-    Split(Element* l, Element* r, int gap)
+    Split(std::list<splitData>* elements)
         : Element(ElementType::Split)
-        , left(l)
-        , right(r)
-        , gap(gap)
+        , elements(elements)
     {
     }
 
     ~Split()
     {
-        Q_ASSERT(left && right);
+        /* Q_ASSERT(left && right);
         qDebug() << "Delete left...\n";
         //delete left;
         qDebug() << "Delete right...\n";
         //delete right;
-        qDebug() << "Deleted both...\n";
+        qDebug() << "Deleted both...\n"; */
     }
 
     void print(std::ostream& os) const override
     {
-        os << "split " << gap << " { ";
-        left->print(os);
-        os << " }{ ";
-        right->print(os);
-        os << " }";
+        if (elements == nullptr) {
+            os << "stop";
+        }
+        else {
+            os << "split ";
+            for (std::list<splitData>::const_iterator it = elements->begin(); it != elements->end(); ++it) {
+                qDebug() << "Print Split";
+                os << it->position;
+                os << " ";
+                os << it->width;
+                os << " {   ";
+                (it->next)->print(os);
+                os << " } ";
+            }
+        }
     }
 
-    int width() const override { return left->width() + gap + right->width(); }
+    int width() const override { return 0 ; } /* TODO */
 
-    std::vector<Element*> children() const override { return { left, right }; }
+    std::vector<Element*> children() const override {
+        std::vector<Element*> v;
+        for (std::list<splitData>::const_iterator it = elements->begin(); it != elements->end(); ++it) {
+            v.insert(v.begin(),it->next);
+        }
+        return v;
+    }
 
     void forEach(std::function<void(Element*)> f) override
     {
-        f(this);
-        if (left)
-            left->forEach(f);
-        if (right)
-            right->forEach(f);
+        for (std::list<splitData>::const_iterator it = elements->begin(); it != elements->end(); ++it) {
+            f(it->next);
+        }
     }
 };
 
 class Link : public Element {
 public:
     std::string name;
-    Slot slot;
-    Link(std::string name, Slot slot)
+    int position;
+    Link(std::string name, int position)
         : Element(ElementType::Link)
         , name(name)
-        , slot(slot)
+        , position(position)
     {
     }
 
@@ -198,12 +235,9 @@ public:
     void print(std::ostream& os) const override
     {
         os << "link ";
-        if (slot == Slot::Right) {
-            os << "right";
-        } else {
-            os << "left";
-        }
-        os << " " << name;
+        os << name;
+        os << " ";
+        os << position;
     }
 
     std::vector<Element*> children() const override { return {}; }
@@ -216,38 +250,13 @@ public:
     }
 };
 
-class Stop : public Element {
-public:
-    Stop()
-        : Element(ElementType::Stop)
-    {
-    }
-
-    ~Stop()
-    {
-    }
-
-    void print(std::ostream& os) const override
-    {
-        os << "stop";
-    }
-
-    std::vector<Element*> children() const override { return {}; }
-
-    int width() const override { return 100; } // hack
-
-    void forEach(std::function<void(Element*)> f) override
-    {
-        f(this);
-    }
-};
 
 class Knit {
 public:
     std::string name;
     std::string description;
-    std::map<std::string, Element*> elements;
-    Knit(std::string name, std::string description, std::map<std::string, Element*> elements)
+    std::map<std::string, std::pair< int, Element* > > elements;
+    Knit(std::string name, std::string description, std::map<std::string, std::pair< int, Element*> > elements)
         : name(name)
         , description(description)
         , elements(elements)
@@ -257,10 +266,10 @@ public:
 
     void destruct()
     {
-        for (std::map<std::string, Element*>::const_iterator it = elements.begin(); it != elements.end(); ++it) {
+        for (std::map< std::string, std::pair<int, Element*> >::const_iterator it = elements.begin(); it != elements.end(); ++it) {
             qDebug() << "Delete ...\n";
-            if (it->second) {
-                delete it->second;
+            if ((it->second).second) {
+                delete (it->second).second;
             }
         }
         name = "DELETED";
@@ -274,31 +283,27 @@ extern Knit knit_parsed;
 // Printers
 
 std::ostream& operator<<(std::ostream& os, Element const& element);
-std::ostream& operator<<(std::ostream& os, std::map<std::string, Element*> const& elements);
+std::ostream& operator<<(std::ostream& os, std::map<std::string, std::pair <int, Element*> > const& elements);
 std::ostream& operator<<(std::ostream& os, Knit knit);
 
-template <typename T, typename A>
+template <typename T, typename A, typename B>
 class ElementVisitor {
 public:
-    virtual T visitLink(Link* s, A a) = 0;
-    virtual T visitTrapezoid(TrapezoidElem* s, A a) = 0;
-    virtual T visitStop(Stop* s, A a) = 0;
-    virtual T visitSplit(Split* s, A a) = 0;
+    virtual T visitLink(Link* s, A a, B b) = 0;
+    virtual T visitTrapezoid(TrapezoidElem* s, A a, B b) = 0;
+    virtual T visitSplit(Split* s, A a, B b) = 0;
 
-    T visit(Element* e, A a)
+    T visit(Element* e, A a, B b)
     {
         switch (e->kind) {
         case ElementType::Link:
-            visitLink(dynamic_cast<Link*>(e), a);
-            break;
-        case ElementType::Stop:
-            visitStop(dynamic_cast<Stop*>(e), a);
+            visitLink(dynamic_cast<Link*>(e), a, b);
             break;
         case ElementType::Trapezoid:
-            visitTrapezoid(dynamic_cast<TrapezoidElem*>(e), a);
+            visitTrapezoid(dynamic_cast<TrapezoidElem*>(e), a, b);
             break;
         case ElementType::Split:
-            visitSplit(dynamic_cast<Split*>(e), a);
+            visitSplit(dynamic_cast<Split*>(e), a, b);
         }
     }
 };

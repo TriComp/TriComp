@@ -24,7 +24,7 @@ RESOURCES += ressources.qrc
 QT += widgets
 
 CONFIG += C++11
-QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++11 -Wno-write-strings
 
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
@@ -32,8 +32,6 @@ QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 ############################
 # Hints for flex and bison #
 ############################
-
-#LIBS += -lfl -ly
 
 FLEXSOURCES = lexer.l
 BISONSOURCES = parser.ypp

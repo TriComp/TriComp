@@ -1,4 +1,4 @@
-#pragma once
+    #pragma once
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -41,7 +41,6 @@ public:
 
     virtual ~EditorItem()
     {
-        qDebug("Destruct EditorItem");
     }
 };
 
@@ -53,7 +52,7 @@ public:
 
     ~TrapezoidItem() { if (elem) delete elem; }
 
-    TrapezoidItem(TrapezoidElem* e, EditorManager* m);
+    TrapezoidItem(TrapezoidElem* e, EditorManager* m, int lower_width);
 
     QBrush brush_normal;
     QPen pen_normal;
@@ -69,8 +68,9 @@ public:
 
 class SplitItem : public EditorItem {
 public:
-    QGraphicsLineItem* line;
     Split* elem;
+    QGraphicsLineItem* line;
+
 
     SplitItem(Split* s);
 
@@ -79,17 +79,6 @@ public:
     Element* element() override { return elem; }
 };
 
-class StopItem : public EditorItem {
-public:
-    QGraphicsTextItem* text;
-    Stop* elem;
-
-    StopItem(Stop* s);
-
-    ~StopItem() { delete elem; }
-    
-    Element* element() override { return elem; }
-};
 
 class LinkItem : public EditorItem {
 public:
@@ -104,7 +93,7 @@ public:
     Element* element() override { return elem; }
 };
 
-EditorManager* attachItems(Element* e, QGraphicsScene* s, MainWindow* mw, Knit* knit);
+EditorManager* attachItems(Element* e, QGraphicsScene* s, MainWindow* mw, Knit* knit, int start);
 
 class Editor : QObject {
     Q_OBJECT

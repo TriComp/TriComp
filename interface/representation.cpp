@@ -1,6 +1,7 @@
 #include "representation.h"
 #include <map>
 #include <iostream>
+#include <utility>
 
 #include "editor.h"
 
@@ -10,11 +11,21 @@ Knit knit_parsed;
 
 QBrush setFirstBrush(string name)
 {
-    if (name.compare("garter") == 0) {
+    if (name == "garter") {
         return QBrush(garter_stitch.brush);
-    } else {
+    }
+    else if (name == "jersey") {
+        return QBrush(jersey_stitch.brush);
+    }
+    else {
         return QBrush("#444"); // default
     }
+}
+
+Pattern* constructMyBrush()
+{
+    QPixmap pix(3,4);
+    return new Pattern("my_stitch", QBrush(pix));
 }
 
 // Printers
@@ -25,11 +36,13 @@ ostream& operator<<(ostream& os, Element* element)
     return os;
 }
 
-ostream& operator<<(ostream& os, map<string, Element*> const& elements)
+ostream& operator<<(ostream& os, map< string, pair< int, Element*> > const& elements)
 {
-    for (map<string, Element*>::const_iterator it = elements.begin(); it != elements.end(); ++it) {
-        os << "piece " << it->first << " := start || ";
-        (it->second)->print(os);
+    for (map<string, pair<int, Element*> >::const_iterator it = elements.begin(); it != elements.end(); ++it) {
+        os << "piece " << it->first << " := start ";
+        os << (it->second).first;
+        os << " || ";
+        ((it->second).second)->print(os);
         os << endl << endl;
     }
     return os;

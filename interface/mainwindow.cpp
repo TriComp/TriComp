@@ -42,8 +42,7 @@ MainWindow::MainWindow(QWidget* parent)
     act = NOTHING;
     QDir dirPath = QDir(QCoreApplication::applicationDirPath()); // to get the path of application directory
     dirPath.cdUp();
-    dirPath.cdUp();
-    dirPath.cd(QString::fromStdString("compil/"));
+    dirPath.cd(QString::fromStdString("compil/tests"));
     path = dirPath.absolutePath();
 
     // pattern buttons
@@ -51,6 +50,9 @@ MainWindow::MainWindow(QWidget* parent)
     connect(ui->pushButton, SIGNAL(clicked()), &patternMapper, SLOT(map()));
     patternMapper.setMapping(ui->pushButton_2, &garter_stitch);
     connect(ui->pushButton_2, SIGNAL(clicked()), &patternMapper, SLOT(map()));
+    Pattern* mine = constructMyBrush();
+    patternMapper.setMapping(ui->pushButton_3, mine);
+    connect(ui->pushButton_3, SIGNAL(clicked()), &patternMapper, SLOT(map()));
 }
 
 MainWindow::~MainWindow()
@@ -149,8 +151,9 @@ void MainWindow::setInterface()
     
     QGraphicsScene* scene = new QGraphicsScene();
     v->setScene(scene);
-    Element* e1 = knit_parsed.elements["my_piece"];
-    attachItems(e1, scene, this, &knit_parsed);
+    Element* e1 = (knit_parsed.elements["my_piece"]).second;
+    int start = (knit_parsed.elements["my_piece"]).first;
+    attachItems(e1, scene, this, &knit_parsed, start);
 
     v->setRenderHint(QPainter::HighQualityAntialiasing);
     v->scale(2, 2);

@@ -51,6 +51,7 @@ let make_dep_graph garment : dep_graph =
     ~init:(all, SMap.empty)
     ~f:(fun ~key:name ~data:(w,elt) acc -> depends name w acc elt)
 
+<<<<<<< HEAD
 let check_trapezoid (t :trapezoid) : unit = 
   match t.shift with
     0 -> 
@@ -63,6 +64,9 @@ let check_trapezoid (t :trapezoid) : unit =
   | _ -> fail "Le trapèze n'est pas un rectangle."
 
     ()(* Echoue en utilisant fail *)
+=======
+let check_trapezoid curr_width trapezoid : unit = ()(* Echoue en utilisant fail *)
+>>>>>>> bce47d84a9817873b527fba83a0266a62fa9214c
 
 (* Checks for collisions in split/links + basic errors (negative lengths etc.) *)
 let sanity_check settings garment (deps:deps) : unit =
@@ -87,7 +91,7 @@ let sanity_check settings garment (deps:deps) : unit =
 	 fail "Narrow trapezoid in piece \"%s\"." curr_name;
        if t.height < settings.min_height then
 	 fail "Flat trapezoid in piece \"%s\"." curr_name;
-       check_trapezoid t;
+       check_trapezoid curr_width t;
     (* <0 should be checked during parsing *)
     (* Pattern constraints go here *)
        aux curr_name t.upper_width e
@@ -117,5 +121,3 @@ let sanity_check settings garment (deps:deps) : unit =
       fail "Branch collision in split in piece \"%s\"." curr_name
   in
   SMap.iter deps ~f:dep_check
-
-let x = 2

@@ -13,15 +13,16 @@
 #include <cstring>
 
 #include <map>
+#include <list>
 #include <vector>
 
 
 using namespace std;
 
-int line_number	= 1;	          /* number of current source line */
-map<string,Element* > piece_map;  /* map of the pieces */
-extern int yylex();	              /* lexical analyzer generated from lex.l */
-extern char *yytext;	          /* last token, defined in lex.l  */
+int line_number	= 1;                         /* number of current source line */
+map<string,pair< int,Element*> > piece_map;  /* map of the pieces */
+extern int yylex();                          /* lexical analyzer generated from lex.l */
+extern char *yytext;                         /* last token, defined in lex.l  */
 string parseError;
 
 void yyerror(char *s){
@@ -50,6 +51,7 @@ void error(char *s){
   char* name;
   Element* elt;
   Trapezoid* trapezoid;
+  std::list<splitData>* pointer;
 }
 
 
@@ -73,7 +75,7 @@ void error(char *s){
 %token H_NAME H_DESCR
 
 /* Vocabulary */
-%token START STOP TRAPEZOID LINK LEFT RIGHT SPLIT
+%token START STOP TRAPEZOID LINK SPLIT
 
 /* others */
 
@@ -88,6 +90,7 @@ void error(char *s){
 
 %type<trapezoid> trapezoid_params params
 %type<elt> element
+%type<pointer> split_body
 
 /* Axiom */
 %start main
@@ -104,28 +107,34 @@ main:
 ;
 
 body:
-PIECE NAME DEF START SEQ element						{ piece_map.clear(); piece_map.insert(pair<string,Element* >($2,$6)); $$ = 0; }   
-| PIECE NAME DEF START SEQ element body 				{ piece_map.insert(pair<string,Element* >($2,$6));
-														  $$ = $7; 
-														}
+  PIECE NAME DEF START INT SEQ element					{ piece_map.clear();
+                                                          piece_map.insert(pair<string,pair<int, Element*> >($2,pair<int, Element*> ($5,$7)));
+                                                          $$ = 0;}
+| PIECE NAME DEF START INT SEQ element body             { piece_map.insert(pair<string,pair<int, Element*> >($2,pair<int, Element*> ($5,$7)));
+                                                          $$ = $8;}
 ;
 
 element:	
-  STOP                                        			{ $$ = new Stop(); }
-| LINK LEFT NAME                      					{ $$ = new Link($3,Slot::Left); }
-| LINK RIGHT NAME										{ $$ = new Link($3,Slot::Right); }
-| SPLIT INT LBRACE element RBRACE LBRACE element RBRACE	{ $$ = new Split($4,$7,$2); } 
-| TRAPEZOID trapezoid_params SEQ element 				{ $$ = new TrapezoidElem(*($2),$4); }
+  STOP                                        			{ list<splitData>* ptr = nullptr; // null pointer
+                                                          $$ = new Split(ptr);}
+| LINK NAME	INT											{ $$ = new Link($2,$3);}
+| SPLIT split_body                                  	{ $$ = new Split($2);}
+| TRAPEZOID trapezoid_params SEQ element 				{ $$ = new TrapezoidElem(*($2),$4);}
 ;
 
+split_body:
+  /* Empty */                                           { list<splitData>* ptr = new list<splitData>; $$ = ptr;}
+| split_body INT INT LBRACE element RBRACE              { (*$1).insert($1->begin(),splitData($2,$3,$5));
+                                                          $$ = $1;}
+
 trapezoid_params:
-  LPAREN params RPAREN                    				{ $$ = $2; }
+  LPAREN params RPAREN                    				{ $$ = $2;}
 ;
 
 /* sorry for this ugly rule... */
 
 params:
-NAME COL INT SEP NAME COL INT SEP NAME COL INT SEP NAME COL INT SEP NAME COL NAME { $$ = new Trapezoid($3,$7,$11,$15,$19); }
+NAME COL INT SEP NAME COL INT SEP NAME COL INT SEP NAME COL NAME { $$ = new Trapezoid($3,$7,$11,$15);}
 ;
 
 
