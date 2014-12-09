@@ -34,7 +34,7 @@ let fail f = ksprintf (fun s -> Failure s |> raise) f (* Used like printf *)
 (* Builds a graph on the set of elements with vertices between e1 and e2 if e1 depends on e2 *)
 let make_dep_graph garment : dep_graph =
   let add_dep name pos w = function
-    | None -> Some (DSet.singleton (pos, w, name))
+ -> Some (DSet.singleton (pos, w, name))
     | Some deps -> Some (DSet.add deps (pos, w, name)) in
   let rec depends curr_name curr_width acc = function
     | Split l ->
@@ -51,7 +51,18 @@ let make_dep_graph garment : dep_graph =
     ~init:(all, SMap.empty)
     ~f:(fun ~key:name ~data:(w,elt) acc -> depends name w acc elt)
 
-let check_trapezoid trapezoid : unit = ()(* Echoue en utilisant fail *)
+let check_trapezoid (t :trapezoid) : unit = 
+  match t.shift with
+    0 -> 
+      match t.pattern with
+      | (a,b) -> match (t.height mod b.length) with
+	| 0 -> match (t.upper_width mod b.(0).length) with
+	  | 0 -> ()
+	  | _ -> fail "La largeur n'est pas un multiple de celle du pattern."
+	| _ -> fail "La hauteur n'est pas un multiple de celle du pattern."
+  | _ -> fail "Le trapèze n'est pas un rectangle."
+
+    ()(* Echoue en utilisant fail *)
 
 (* Checks for collisions in split/links + basic errors (negative lengths etc.) *)
 let sanity_check settings garment (deps:deps) : unit =
