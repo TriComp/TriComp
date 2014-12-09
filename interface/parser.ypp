@@ -117,7 +117,7 @@ body:
 
 element:	
   STOP                                        			{ fprintf(stderr,"make stop... \n");
-                                                          list<splitData>* ptr; /* null pointer */
+                                                          list<splitData>* ptr = nullptr; /* null pointer */
                                                           $$ = new Split(ptr); }
 | LINK NAME	INT											{ fprintf(stderr,"make link... \n");
                                                           $$ = new Link($2,$3);}

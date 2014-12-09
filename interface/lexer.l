@@ -15,6 +15,7 @@ extern int line_number;	/* defined in parser.ypp */
 %x comment
 
 %option noyywrap
+%option nounput
 
 %%
 [ \t\r]		    	    	break;		/* ignore white space */ 

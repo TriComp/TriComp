@@ -176,7 +176,7 @@ public:
         UNUSED(start);
         if (!(s->visited)) {
             s->visited = true;
-            if (s->elements != NULL) {
+            if (s->elements != nullptr) {
                 for (list<splitData>::const_iterator it = s->elements->begin(); it != s->elements->end(); ++it) {
                     visit(it->next, o + QPointF(it->position,0), it->width);
                 }

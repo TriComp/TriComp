@@ -182,7 +182,7 @@ public:
 
     void print(std::ostream& os) const override
     {
-        if (elements == NULL) {
+        if (elements == nullptr) {
             os << "stop";
         }
         else {
