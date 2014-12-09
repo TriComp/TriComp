@@ -21,9 +21,6 @@ QBrush setFirstBrush(string name)
 Pattern* constructMyBrush()
 {
     QPixmap pix(3,4);
-    QPainter paint;
-    paint.setPen(*(new QColor(255,34,255,255)));
-    paint.drawPixmap(1, 1, pix);
     return new Pattern("my_stitch", QBrush(pix));
 }
 
