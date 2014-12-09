@@ -40,7 +40,7 @@ public:
 
 Pattern* constructMyBrush();
 
-// Graphical representation of differents patterns
+// Graphical representation of different patterns
 
 static Pattern garter_stitch("garter", QBrush(QColor("blue")));
 static Pattern jersey_stitch("jersey", QBrush(QColor("blue"), Qt::Dense6Pattern));
