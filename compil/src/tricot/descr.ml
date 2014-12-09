@@ -7,7 +7,9 @@ type name = string with sexp, compare
 (* Atoms*)
 
 (* Convention de représentation : True = endroit, False = envers, et on représente les points tels que vus sur le tricot final *)
-type pattern = (string, bool Array.t Array.t) with sexp, compare(* Description of a minimal pattern *)
+type pattern = string * bool Array.t Array.t with sexp (* Description of a minimal pattern *)
+
+let compare_pattern = compare
 
 type trapezoid = { height : int
                  ; shift : int
@@ -29,7 +31,8 @@ module Piece : sig
   include Comparable.S with type t := t
 end = struct
   module T = struct
-    type t = int*element with sexp, compare
+    type t = int*element with sexp
+    let compare = compare
   end
   include T
   include Comparable.Make(T)
@@ -64,7 +67,7 @@ and print_element padding = function
     let head = sprintf "split " in
     let new_padding = tab padding (String.length head) in
     List.fold l ~init:head
-                ~f:(fun acc (pos,w,e) -> sprintf "%s %d %d %s" acc pos w (print_block new_padding e)) (***)
+                ~f:(fun acc (pos,w,e) -> sprintf "%s %d %d %s" acc pos w (print_block new_padding e))
 
 let print_elements ~key:name ~data:(w,element) s =
   let head = sprintf "piece %s " name in
@@ -73,6 +76,7 @@ let print_elements ~key:name ~data:(w,element) s =
 
 let print_garment g =
   sprintf "Name : %s\nDescription : \"%s\"%s\n%!" g.name g.descr (String.Map.fold g.elements ~init:"" ~f:print_elements)
+
 
 (* Exemples de patterns *)
 
@@ -103,3 +107,4 @@ let jersey_raye =
 	      [|false|];
 	      [|true|]|]
 ("Jersey rayé", res)
+
