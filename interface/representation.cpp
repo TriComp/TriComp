@@ -1,6 +1,7 @@
 #include "representation.h"
 #include <map>
 #include <iostream>
+#include <utility>
 
 #include "editor.h"
 
@@ -34,11 +35,13 @@ ostream& operator<<(ostream& os, Element* element)
     return os;
 }
 
-ostream& operator<<(ostream& os, map<string, Element*> const& elements)
+ostream& operator<<(ostream& os, map< string, pair< int, Element*> > const& elements)
 {
-    for (map<string, Element*>::const_iterator it = elements.begin(); it != elements.end(); ++it) {
-        os << "piece " << it->first << " := start || ";
-        (it->second)->print(os);
+    for (map<string, pair<int, Element*> >::const_iterator it = elements.begin(); it != elements.end(); ++it) {
+        os << "piece " << it->first << " := start ";
+        os << (it->second).first;
+        os << " || ";
+        ((it->second).second)->print(os);
         os << endl << endl;
     }
     return os;

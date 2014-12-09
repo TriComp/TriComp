@@ -6,13 +6,18 @@ type name = string with sexp, compare
 
 (* Atoms*)
 
-type pattern = string with sexp, compare(* Description of a minimal pattern, maybe we can start with Endroit | Envers |... (knit/purl stitches?) *)
+(* Convention de représentation : True = endroit, False = envers, et on représente les points tels que vus sur le tricot final *)
+type pattern = string * bool Array.t Array.t with sexp (* Description of a minimal pattern *)
+
+let compare_pattern = compare
 
 type trapezoid = { height : int
                  ; shift : int
                  ; upper_width : int
                  ; pattern : pattern
                  } with sexp, compare
+
+let trad_trapezoid ~width:int trapezoid : string = "toto"
 
 (* Elements *)
 
@@ -26,7 +31,8 @@ module Piece : sig
   include Comparable.S with type t := t
 end = struct
   module T = struct
-    type t = int*element with sexp, compare
+    type t = int*element with sexp
+    let compare = compare
   end
   include T
   include Comparable.Make(T)
@@ -42,8 +48,9 @@ type garment = { elements : Piece.t String.Map.t
 (* Constructeurs *)
 
 let print_trapezoid t =
+  let (name, _) = t.pattern in
   sprintf "trapezoid ( height : %d, shift : %d, upper_width : %d, pattern : %s )"
-    t.height t.shift t.upper_width t.pattern
+    t.height t.shift t.upper_width name
 
 let tab s shift = (String.make shift ' ')^s
 
@@ -60,7 +67,7 @@ and print_element padding = function
     let head = sprintf "split " in
     let new_padding = tab padding (String.length head) in
     List.fold l ~init:head
-                ~f:(fun acc (pos,w,e) -> sprintf "%s %d %d %s" acc pos w (print_block new_padding e)) (***)
+                ~f:(fun acc (pos,w,e) -> sprintf "%s %d %d %s" acc pos w (print_block new_padding e))
 
 let print_elements ~key:name ~data:(w,element) s =
   let head = sprintf "piece %s " name in

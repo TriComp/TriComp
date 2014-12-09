@@ -38,8 +38,6 @@ extern int line_number;	/* defined in parser.ypp */
 "stop"                      return STOP;
 "trapezoid"                 return TRAPEZOID;
 "link"                      return LINK;
-"left"                      return LEFT;
-"right"                     return RIGHT;
 "split"                     return SPLIT;
 
 "eof"                       return END_OF_FILE;

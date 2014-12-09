@@ -51,8 +51,10 @@ let make_dep_graph garment : dep_graph =
     ~init:(all, SMap.empty)
     ~f:(fun ~key:name ~data:(w,elt) acc -> depends name w acc elt)
 
+let check_trapezoid curr_width trapezoid : unit = ()(* Echoue en utilisant fail *)
+
 (* Checks for collisions in split/links + basic errors (negative lengths etc.) *)
-let sanity_check settings garment deps : unit =
+let sanity_check settings garment (deps:deps) : unit =
   let rec aux curr_name curr_width = function
     | Split l ->
        let f intervals (pos, w, _) =
@@ -74,15 +76,21 @@ let sanity_check settings garment deps : unit =
 	 fail "Narrow trapezoid in piece \"%s\"." curr_name;
        if t.height < settings.min_height then
 	 fail "Flat trapezoid in piece \"%s\"." curr_name;
+       check_trapezoid curr_width t;
     (* <0 should be checked during parsing *)
     (* Pattern constraints go here *)
        aux curr_name t.upper_width e
-    | Link (_, _) -> ()
+    | Link (n, _) ->
+      if not (SMap.mem garment.elements n) then
+        fail "Undefined link : \"%s\" in piece \"%s\"." n curr_name
   in
   SMap.iter garment.elements
 	    ~f:(fun ~key:name ~data:(w,elt) -> aux name w elt);
   (* We now check for collisions in links *)
-  let dep_check ~key:curr_name ~data:(curr_width, curr_deps) =
+  let dep_check ~key:curr_name ~data:curr_deps =
+    let curr_width = match SMap.find garment.elements curr_name with
+      | Some (w, _) -> w
+      | None -> assert false in (* Undefined link, should have been detected earlier *)
     let f intervals (pos, w, source) =
       if w < settings.min_width then
         fail "Narrow join from piece \"%s\" to piece \"%s\"." source curr_name;
@@ -98,5 +106,3 @@ let sanity_check settings garment deps : unit =
       fail "Branch collision in split in piece \"%s\"." curr_name
   in
   SMap.iter deps ~f:dep_check
-
-let x = 2
