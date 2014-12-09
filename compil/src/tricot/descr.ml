@@ -6,13 +6,15 @@ type name = string with sexp, compare
 
 (* Atoms*)
 
-type pattern = string with sexp, compare(* Description of a minimal pattern, maybe we can start with Endroit | Envers |... (knit/purl stitches?) *)
+type pattern = (string, bool Array.t Array.t) with sexp, compare(* Description of a minimal pattern *)
 
 type trapezoid = { height : int
                  ; shift : int
                  ; upper_width : int
                  ; pattern : pattern
                  } with sexp, compare
+
+let trad_trapezoid ~width:int trapezoid : string = "toto"
 
 (* Elements *)
 
@@ -42,8 +44,9 @@ type garment = { elements : Piece.t String.Map.t
 (* Constructeurs *)
 
 let print_trapezoid t =
+  let (name, _) = t.pattern in
   sprintf "trapezoid ( height : %d, shift : %d, upper_width : %d, pattern : %s )"
-    t.height t.shift t.upper_width t.pattern
+    t.height t.shift t.upper_width name
 
 let tab s shift = (String.make shift ' ')^s
 

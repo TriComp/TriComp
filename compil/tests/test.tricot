@@ -1,13 +1,10 @@
 Name : test
-Description : "JGF"
+Description : "Should be accepted"
 
-psiece a := start || stop
+piece a := start 0 || stop
 
-piece b := start || split 10 {stop}{stop}
+piece b := start 0 || split 0 0 {stop}
 
-piece c := start || link right a
+piece c := start 0 || trapezoid ( height : 0, shift : 0, upper_width : 0, pattern : foo ) || stop
 
-piece my_piece := start
-               || split 10 { trapezoid ( height : 12, shift : 5, upper_width : 2, lower_width : 1, pattern : youhou )
-                          || link left next
-                          }{ link right next }
+piece d := start 0 || link c

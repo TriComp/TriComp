@@ -6,13 +6,15 @@ type name = string
 
 (* Atoms*)
 
-type pattern = string(* Description of a minimal pattern, maybe we can start with Endroit | Envers |... (knit/purl stitches?) *)
+type pattern = (string, bool Array.t Array.t) with sexp, compare(* Description of a minimal pattern *)
 
 type trapezoid = { height : int
                  ; shift : int
                  ; upper_width : int
                  ; pattern : pattern
                  }
+
+let trad_trapezoid : ~width:int -> trapezoid -> string
 
 (* Elements *)
 
