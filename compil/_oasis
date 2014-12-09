@@ -26,7 +26,7 @@ Library utils # Trucs pour le runtime
 
 Library tricot # Le langage descriptif et ses fonctions de manipulation:
   Path: src/tricot
-  Modules: Tricot, Descr, Descr_lexer, Descr_parser
+  Modules: Tricot, Descr, Descr_lexer, Descr_parser, Patterns
   CompiledObject: Best
   BuildDepends: utils, sexplib.syntax, comparelib.syntax
   BuildTools+: ocamllex, menhir
