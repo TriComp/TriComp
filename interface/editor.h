@@ -1,4 +1,4 @@
-    #pragma once
+#pragma once
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -52,7 +52,7 @@ public:
 
     ~TrapezoidItem() { if (elem) delete elem; }
 
-    TrapezoidItem(TrapezoidElem* e, EditorManager* m, int lower_width);
+    TrapezoidItem(TrapezoidElem* e, EditorManager* m, int lower_width, double zoom);
 
     QBrush brush_normal;
     QPen pen_normal;
@@ -93,7 +93,7 @@ public:
     Element* element() override { return elem; }
 };
 
-EditorManager* attachItems(Element* e, QGraphicsScene* s, MainWindow* mw, Knit* knit, int start);
+EditorManager* attachItems(Element* e, QGraphicsScene* s, MainWindow* mw, Knit* knit, int start, double zoom);
 
 class Editor : QObject {
     Q_OBJECT

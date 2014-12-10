@@ -286,24 +286,24 @@ std::ostream& operator<<(std::ostream& os, Element const& element);
 std::ostream& operator<<(std::ostream& os, std::map<std::string, std::pair <int, Element*> > const& elements);
 std::ostream& operator<<(std::ostream& os, Knit knit);
 
-template <typename T, typename A, typename B>
+template <typename T, typename A, typename B, typename C>
 class ElementVisitor {
 public:
-    virtual T visitLink(Link* s, A a, B b) = 0;
-    virtual T visitTrapezoid(TrapezoidElem* s, A a, B b) = 0;
-    virtual T visitSplit(Split* s, A a, B b) = 0;
+    virtual T visitLink(Link* s, A a, B b, C c) = 0;
+    virtual T visitTrapezoid(TrapezoidElem* s, A a, B b, C c) = 0;
+    virtual T visitSplit(Split* s, A a, B b, C c) = 0;
 
-    T visit(Element* e, A a, B b)
+    T visit(Element* e, A a, B b, C c)
     {
         switch (e->kind) {
         case ElementType::Link:
-            visitLink(dynamic_cast<Link*>(e), a, b);
+            visitLink(dynamic_cast<Link*>(e), a, b, c);
             break;
         case ElementType::Trapezoid:
-            visitTrapezoid(dynamic_cast<TrapezoidElem*>(e), a, b);
+            visitTrapezoid(dynamic_cast<TrapezoidElem*>(e), a, b, c);
             break;
         case ElementType::Split:
-            visitSplit(dynamic_cast<Split*>(e), a, b);
+            visitSplit(dynamic_cast<Split*>(e), a, b, c);
         }
     }
 };

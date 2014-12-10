@@ -36,6 +36,9 @@ private slots:
     void on_saveAction_triggered();
     void saveAs();
     void on_saveAsAction_triggered();
+    // zoom
+    void on_upZoomAction_triggered();
+    void on_downZoomAction_triggered();
     // modifications
     void modify();
     // instructions
@@ -56,6 +59,8 @@ private:
                            NOTHING }; // useful with the save dialog and cancel options
     AfterSaveAction act;
     static Editor* editor_;
+
+    double zoom;
     void setInterface();
 
 public:

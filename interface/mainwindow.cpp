@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget* parent)
     connect(newDlg, SIGNAL(newKnit()), this, SLOT(newKnit()));
 
     // Variables
+    zoom = 2.0;
     isSaved = true;
     act = NOTHING;
     QDir dirPath = QDir(QCoreApplication::applicationDirPath()); // to get the path of application directory
@@ -146,14 +147,14 @@ void MainWindow::setInterface()
     ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));
     auto* v = ui->patternView;
     auto oldScene = v->scene();
-    if (oldScene) delete oldScene;
+    //if (oldScene) delete oldScene;
+        if (oldScene) oldScene->clear();
 
-    
     QGraphicsScene* scene = new QGraphicsScene();
     v->setScene(scene);
     Element* e1 = (knit_parsed.elements["my_piece"]).second;
     int start = (knit_parsed.elements["my_piece"]).first;
-    attachItems(e1, scene, this, &knit_parsed, start);
+    attachItems(e1, scene, this, &knit_parsed, start, zoom);
 
     v->setRenderHint(QPainter::HighQualityAntialiasing);
     v->scale(2, 2);
@@ -247,6 +248,19 @@ void MainWindow::saveAs()
     } else { // nothing to do
         act = NOTHING;
     }
+}
+
+// ZOOM
+
+void MainWindow::on_upZoomAction_triggered() {
+    zoom *= 2;
+    // setInterface();
+    // actually, this part doesn't work (setInterface() destruct the previous elements...
+}
+
+void MainWindow::on_downZoomAction_triggered() {
+    zoom /= 2;
+    // setInterface();
 }
 
 // RECEIVE MODIFICATION SIGNAL
