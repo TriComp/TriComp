@@ -22,7 +22,7 @@ QBrush setFirstBrush(string name)
     }
 }
 
-Pattern* constructMyBrush()
+Pattern* constructMyBrush() // some idea to construct a new brush
 {
     QPixmap pix(3,4);
     return new Pattern("my_stitch", QBrush(pix));

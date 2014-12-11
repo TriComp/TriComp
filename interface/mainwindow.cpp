@@ -14,6 +14,9 @@
 #define ZOOM_MAX 10
 #define ZOOM_MIN 0.5
 
+// test
+#define ZOOM 2.0
+
 extern FILE* yyin; // from Flex
 extern int yyparse(void); // from Bison
 extern void yyrestart(FILE *f); // To reset the buffer used by the parser
@@ -41,8 +44,6 @@ MainWindow::MainWindow(QWidget* parent)
     connect(newDlg, SIGNAL(newKnit()), this, SLOT(newKnit()));
 
     // Variables
-    zoom = 1.0;
-    isZoomed = false;
     isSaved = true;
     act = NOTHING;
     QDir dirPath = QDir(QCoreApplication::applicationDirPath()); // to get the path of application directory
@@ -118,37 +119,33 @@ void MainWindow::open()
     if (!isSaved) {
         saveDlg->show();
     } else {
-        if (!isZoomed) {
-            QString file = QFileDialog::getOpenFileName(this, "Load a knit", path, "knit (*.tricot)");
-            if (!file.endsWith(".tricot")) {
-                if (file != "") {
-                    QMessageBox::warning(this, "Wrong file format", "The selected file is not of format .tricot");
-                }
+        QString file = QFileDialog::getOpenFileName(this, "Load a knit", path, "knit (*.tricot)");
+        if (file.endsWith(".tricot")) {
+            fileName = file;
+            path = QFileInfo(fileName).path();
+            yyin = fopen((fileName.toStdString()).c_str(), "r");
+            yyrestart(yyin);
+            int bison_return_code = yyparse();
+            switch (bison_return_code) {
+            case 0: {
+                setInterface();
+                break;
             }
-            else {
-                fileName = file;
-                path = QFileInfo(fileName).path();
+            case 1: {
+                QMessageBox::warning(this, "Unable to open", "Parse error : "+QString::fromStdString(parseError));
+                break;
+            }
+            case 2: {
+                QMessageBox::warning(this, "Unable to open", "Unable to open the file. Memory exhaustion.");
+                break;
+            }
             }
         }
-        yyin = fopen((fileName.toStdString()).c_str(), "r");
-        yyrestart(yyin);
-        int bison_return_code = yyparse();
-        switch (bison_return_code) {
-        case 0: {
-            setInterface();
-            break;
+        else if (file != "") {
+            QMessageBox::warning(this, "Wrong file format", "The selected file is not of format .tricot");
         }
-        case 1: {
-            QMessageBox::warning(this, "Unable to open", "Parse error : "+QString::fromStdString(parseError));
-            break;
-        }
-        case 2: {
-            QMessageBox::warning(this, "Unable to open", "Unable to open the file. Memory exhaustion.");
-            break;
-        }
-        }
-    }
     act = NOTHING;
+    }
 }
 
 void MainWindow::setInterface()
@@ -162,7 +159,7 @@ void MainWindow::setInterface()
     v->setScene(scene);
     Element* e1 = (knit_parsed.elements["my_piece"]).second;
     int start = (knit_parsed.elements["my_piece"]).first;
-    attachItems(e1, scene, this, &knit_parsed, start, zoom);
+    attachItems(e1, scene, this, &knit_parsed, start);
 
     v->setRenderHint(QPainter::HighQualityAntialiasing);
     v->update();
@@ -260,27 +257,11 @@ void MainWindow::saveAs()
 // ZOOM
 
 void MainWindow::on_upZoomAction_triggered() {
-    zoom *= 1.5;
-    if (zoom < ZOOM_MAX) {
-        isZoomed = true;
-        if (fileName != "") {
-            open(); // stupid solution for now, we open each time we zoom...
-        }
-        isZoomed = false;
-    }
-    else zoom /= 1.5;
+    ui->patternView->scale(ZOOM,ZOOM);
 }
 
 void MainWindow::on_downZoomAction_triggered() {
-    zoom /= 1.5;
-    if (zoom > ZOOM_MIN) {
-        isZoomed = true;
-        if (fileName != "") {
-            open();
-        }
-        isZoomed = false;
-    }
-    else zoom *= 1.5;
+    ui->patternView->scale(1/ZOOM,1/ZOOM);
 }
 
 // RECEIVE MODIFICATION SIGNAL

@@ -59,9 +59,6 @@ private:
                            NOTHING }; // useful with the save dialog and cancel options
     AfterSaveAction act;
     static Editor* editor_;
-
-    double zoom;
-    bool isZoomed;
     void setInterface();
 
 public:
