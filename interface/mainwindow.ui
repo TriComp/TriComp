@@ -109,6 +109,8 @@
    <addaction name="separator"/>
    <addaction name="instructionsAction"/>
    <addaction name="separator"/>
+   <addaction name="upZoomAction"/>
+   <addaction name="downZoomAction"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="floating">
