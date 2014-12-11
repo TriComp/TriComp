@@ -11,10 +11,6 @@
 #include <fstream>
 #include "representation.h"
 
-#define ZOOM_MAX 10
-#define ZOOM_MIN 0.5
-
-// test
 #define ZOOM 2.0
 
 extern FILE* yyin; // from Flex
