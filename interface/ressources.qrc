@@ -5,5 +5,7 @@
         <file>images/quit.png</file>
         <file>images/save.png</file>
         <file>images/run.png</file>
+        <file>images/down_zoom.png</file>
+        <file>images/up_zoom.png</file>
     </qresource>
 </RCC>

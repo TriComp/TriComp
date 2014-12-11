@@ -1,7 +1,7 @@
 Name : salopette_test
 Description : "Essai de description de la salopette décrite en réunion : version avec splits et links n-aires"
 
-piece left_leg := start 50
+piece my_piece := start 50
 	       || trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : envers )
        	       || link front 0
 

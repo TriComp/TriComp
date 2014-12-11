@@ -61,6 +61,7 @@ private:
     static Editor* editor_;
 
     double zoom;
+    bool isZoomed;
     void setInterface();
 
 public:
