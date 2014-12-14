@@ -2,12 +2,12 @@ Name : poncho_test
 Description : "The poncho given in the midterm"
  
 piece my_piece := start 60 || trapezoid ( height : 100, shift : 0, upper_width : 60, pattern : garter)
- || split 30 30 {   trapezoid ( height : 30, shift : 15, upper_width : 15, pattern : envers)
- || trapezoid ( height : 30, shift : -15, upper_width : 30, pattern : envers)
- || link top 30 } 0 30 {   trapezoid ( height : 30, shift : 0, upper_width : 15, pattern : envers)
+ || split 0 30 {   trapezoid ( height : 30, shift : 0, upper_width : 15, pattern : envers)
  || trapezoid ( height : 30, shift : 0, upper_width : 30, pattern : my_stitch)
- || link top 0 } 
+ || link top 0 } 30 30 {   trapezoid ( height : 30, shift : 15, upper_width : 15, pattern : envers)
+ || trapezoid ( height : 30, shift : -15, upper_width : 30, pattern : envers)
+ || link top 30 } 
 
-piece top := start 60 || trapezoid ( height : 100, shift : 0, upper_width : 60, pattern : envers)
+piece top := start 60 || trapezoid ( height : 100, shift : 0, upper_width : 60, pattern : my_stitch)
  || stop
 
