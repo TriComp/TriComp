@@ -38,10 +38,32 @@ public:
     }
 };
 
-Pattern* constructMyBrush();
+// Some Knit patterns
+static int jersey_raye[4] = {0,
+                             1,
+                             0,
+                             0};
+static int cotes_plates[14] = {0,0,0,0,0,1,1,
+                               1,1,1,1,1,0,0,};
+static int cotes_piquees[40] = {0,0,0,1,0,0,0,1,1,1,
+                                1,1,1,0,1,1,1,0,0,0,
+                                0,0,0,1,0,0,0,1,1,1,
+                                1,1,1,1,1,1,1,1,1,1};
+static int point_de_riz[4] = {0,1,
+                              0,1};
+static int fausse_cotes_anglaises[3] = {0,0,1};
+static int losanges[49] = {0,0,0,1,0,0,0,
+                           1,1,0,0,0,1,1,
+                           0,1,1,1,1,1,0,
+                           0,0,0,0,0,0,0,
+                           0,1,1,1,1,1,0,
+                           1,1,0,0,0,1,1,
+                           0,0,0,1,0,0,0};
 
-// Graphical representation of different patterns
 
+Pattern* constructMyBrush(int width, int height, int stitch[]);
+
+// Graphical representation of different patterns  CURRENTLY USELESS
 static Pattern garter_stitch("garter", QBrush(QColor("blue")));
 static Pattern jersey_stitch("jersey", QBrush(QColor("blue"), Qt::Dense6Pattern));
 
