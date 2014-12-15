@@ -48,18 +48,18 @@ MainWindow::MainWindow(QWidget* parent)
     path = dirPath.absolutePath();
 
     // pattern buttons
-    patternMapper.setMapping(ui->pushButton, constructMyBrush(3,1,fausse_cotes_anglaises));
+    patternMapper.setMapping(ui->pushButton, constructMyPattern(3,1,fausses_cotes_anglaises,"fausses_cotes_anglaises"));
     connect(ui->pushButton, SIGNAL(clicked()), &patternMapper, SLOT(map()));
-    patternMapper.setMapping(ui->pushButton_2, constructMyBrush(2,2,point_de_riz));
+    patternMapper.setMapping(ui->pushButton_2, constructMyPattern(2,2,point_de_riz,"point_de_riz"));
     connect(ui->pushButton_2, SIGNAL(clicked()), &patternMapper, SLOT(map()));
     //Pattern* mine = constructMyBrush(1,4,jersey_raye);
-    patternMapper.setMapping(ui->pushButton_3, constructMyBrush(1,4,jersey_raye));
+    patternMapper.setMapping(ui->pushButton_3, constructMyPattern(1,4,jersey_raye,"jersey_raye"));
     connect(ui->pushButton_3, SIGNAL(clicked()), &patternMapper, SLOT(map()));
-    patternMapper.setMapping(ui->pushButton_4, constructMyBrush(7,2,cotes_plates));
+    patternMapper.setMapping(ui->pushButton_4, constructMyPattern(7,2,cotes_plates,"cotes_plates"));
     connect(ui->pushButton_4, SIGNAL(clicked()), &patternMapper, SLOT(map()));
-    patternMapper.setMapping(ui->pushButton_5, constructMyBrush(10,4,cotes_piquees));
+    patternMapper.setMapping(ui->pushButton_5, constructMyPattern(10,4,cotes_piquees,"cotes_piquees"));
     connect(ui->pushButton_5, SIGNAL(clicked()), &patternMapper, SLOT(map()));
-    patternMapper.setMapping(ui->pushButton_6, constructMyBrush(7,7,losanges));
+    patternMapper.setMapping(ui->pushButton_6, constructMyPattern(7,7,losanges,"losanges"));
     connect(ui->pushButton_6, SIGNAL(clicked()), &patternMapper, SLOT(map()));
 }
 

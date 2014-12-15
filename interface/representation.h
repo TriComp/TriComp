@@ -38,7 +38,7 @@ public:
     }
 };
 
-// Some Knit patterns
+// Some knit patterns
 static int jersey_raye[4] = {0,
                              1,
                              0,
@@ -51,7 +51,7 @@ static int cotes_piquees[40] = {0,0,0,1,0,0,0,1,1,1,
                                 1,1,1,1,1,1,1,1,1,1};
 static int point_de_riz[4] = {0,1,
                               0,1};
-static int fausse_cotes_anglaises[3] = {0,0,1};
+static int fausses_cotes_anglaises[3] = {0,0,1};
 static int losanges[49] = {0,0,0,1,0,0,0,
                            1,1,0,0,0,1,1,
                            0,1,1,1,1,1,0,
@@ -60,12 +60,12 @@ static int losanges[49] = {0,0,0,1,0,0,0,
                            1,1,0,0,0,1,1,
                            0,0,0,1,0,0,0};
 
-
-Pattern* constructMyBrush(int width, int height, int stitch[]);
+QBrush constructMyBrush(int width, int height, int stitch[]);
+Pattern* constructMyPattern(int width, int height, int stitch[], std::string stitch_name);
 
 // Graphical representation of different patterns  CURRENTLY USELESS
-static Pattern garter_stitch("garter", QBrush(QColor("blue")));
-static Pattern jersey_stitch("jersey", QBrush(QColor("blue"), Qt::Dense6Pattern));
+static Pattern garter_stitch("garter", QBrush(QColor("green")));
+static Pattern jersey_stitch("jersey", QBrush(QColor("green"), Qt::Dense6Pattern));
 
 
 class Trapezoid {

@@ -12,29 +12,34 @@ Knit knit_parsed;
 
 QBrush setFirstBrush(string name)
 {
-    if (name == "garter") {
-        return QBrush(garter_stitch.brush);
+    if (name == "jersey_raye") {
+        return constructMyBrush(1,4,jersey_raye);
     }
-    else if (name == "jersey") {
-        return QBrush(jersey_stitch.brush);
+    else if (name == "cotes_plates") {
+        return constructMyBrush(7,2,cotes_plates);
+    }
+    else if (name == "cotes_piquees") {
+        return constructMyBrush(10,4,cotes_piquees);
+    }
+    else if (name == "point_de_riz") {
+        return constructMyBrush(2,2,point_de_riz);
+    }
+    else if (name == "fausses_cotes_anglaises") {
+        return constructMyBrush(3,1,fausses_cotes_anglaises);
+    }
+    else if (name == "losanges") {
+        return constructMyBrush(7,7,losanges);
     }
     else {
-        return QBrush("#444"); // default
+        return QBrush(garter_stitch.brush); // default
     }
 }
 
-/*Pattern* constructMyBrush() // some idea to construct a new brush
+QBrush constructMyBrush(int width, int height, int stitch[])
 {
-    QPixmap pix(3,4);
-    return new Pattern("my_stitch", QBrush(pix));
-}*/
-
-Pattern* constructMyBrush(int width, int height, int stitch[])
-{
-    int p = 3; // basic unity for se size of a stitch, depend on user screen
+    int p = 3; // basic unity for the size of a stitch, depend on user screen
     QPixmap pix(width*p,height*p);
     QPainter paint(&pix);
-    //paint.setPen(*(new QColor(255,34,255,255)));
     pix.fill(Qt::darkRed);
     for(int i=0; i<height; i++)
         for(int j=0; j<width; j++)
@@ -42,7 +47,12 @@ Pattern* constructMyBrush(int width, int height, int stitch[])
             {
                 paint.fillRect(i*p,j*p,p,p, Qt::darkGreen);
             }
-    return new Pattern("my_stitch", QBrush(pix));
+    return QBrush(pix);
+}
+
+Pattern* constructMyPattern(int width, int height, int stitch[], string stitch_name)
+{
+    return new Pattern(stitch_name, constructMyBrush(width, height, stitch));
 }
 
 // Printers

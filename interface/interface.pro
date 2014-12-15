@@ -24,7 +24,7 @@ RESOURCES += ressources.qrc
 QT += widgets
 
 CONFIG += C++11
-QMAKE_CXXFLAGS += -std=c++11 -Wno-write-strings
+QMAKE_CXXFLAGS += -std=c++11 -Wno-write-strings -Wno-unused-variable
 
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
