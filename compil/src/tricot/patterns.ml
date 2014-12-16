@@ -45,7 +45,7 @@ let pat7 =
 	      [|true; true; true; false; true; true; true; false; false; false|];
 	      [|true; true; true;  true; true; true; true;  true;  true; true|]|]
   in
-  ("Cotes_piquees", res)
+  ("cotes_piquees", res)
 
 let pat8 =
   let res = [|[|false; false; false; true; false; false; false|];
@@ -74,6 +74,9 @@ let pat10 =
   in
   ("damier_3x3", res)
 
+let pat11 = ("point_mousse", [|[|false|];
+                               [|true |]|])
+
 let check_pattern ((_, pattern):pattern) =
   let open Array in
   assert (length pattern > 0);
@@ -83,7 +86,7 @@ let check_pattern ((_, pattern):pattern) =
 
 
 let default_patterns =
-  let pattern_list = [pat1; pat2; pat3; pat4; pat5; pat6; pat7; pat8; pat9; pat10] in
+  let pattern_list = [pat1; pat2; pat3; pat4; pat5; pat6; pat7; pat8; pat9; pat10; pat11] in
   List.iter pattern_list ~f:check_pattern;
   match String.Map.of_alist pattern_list with
   | `Duplicate_key s ->
