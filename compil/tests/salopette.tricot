@@ -1,26 +1,17 @@
 Name : salopette_test
 Description : "Essai de description de la salopette décrite en réunion : version avec splits et links n-aires"
+ 
+piece back := start 100 || trapezoid ( height : 100, shift : 0, upper_width : 100, pattern : mousse)
+ || split 50 50 {   trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : losanges)
+ || stop } 0 50 {   trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : losanges)
+ || stop } 
 
-piece my_piece := start 100
-				|| split 0 50 { trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : envers )
-       	       					|| link front 0 }
-						50 50 { trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : envers )
-								|| link front 50 }
+piece front := start 100 || trapezoid ( height : 100, shift : 0, upper_width : 100, pattern : mousse)
+ || split 75 10 {   trapezoid ( height : 30, shift : 0, upper_width : 10, pattern : losanges)
+ || link back 75 } 15 10 {   trapezoid ( height : 30, shift : 0, upper_width : 10, pattern : losanges)
+ || link back 15 } 
 
-piece front := start 100
-	    || trapezoid ( height : 100, shift : 0, upper_width : 100, pattern : envers )
-            || split 15 10 { trapezoid ( height : 30, shift : 0, upper_width : 10, pattern : envers )
-			  || link back 15
-                          }
-		     75 10 { trapezoid ( height : 30, shift : 0, upper_width : 10, pattern : envers )
-		          || link back 75
-	                  }
+piece my_piece := start 100 || split 50 50 {   trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : losanges)
+ || link front 50 } 0 50 {   trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : losanges)
+ || link front 0 } 
 
-piece back := start 100
-	   || trapezoid ( height : 100, shift : 0, upper_width : 100, pattern : envers )
-   	   || split 0 50 { trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : envers )
-			|| stop
-		        }
-		    50 50 { trapezoid ( height : 200, shift : 0, upper_width : 50, pattern : envers )
-		  	 || stop
-                         }

@@ -36,8 +36,11 @@ QBrush setFirstBrush(string name)
     else if (name == "cotes_2x2") {
         return constructMyBrush(4,2,cotes_2x2);
     }
+    else if (name == "mousse") {
+        return constructMyBrush(1,1,mousse);
+    }
     else {
-        return QBrush(garter_stitch.brush); // default
+        return constructMyBrush(1,1,mousse); // default = mousse
     }
 }
 
@@ -51,7 +54,7 @@ QBrush constructMyBrush(int width, int height, int stitch[])
         for(int j=0; j<width; j++)
             if(stitch[i*width+j]== i%2)
             {
-                paint.fillRect(i*p,j*p,p,p, Qt::darkGreen);
+                paint.fillRect(i*p, j*p, p, p, Qt::darkGreen);
             }
     return QBrush(pix);
 }

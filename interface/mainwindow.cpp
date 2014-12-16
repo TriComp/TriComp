@@ -64,7 +64,8 @@ MainWindow::MainWindow(QWidget* parent)
     connect(ui->pushButton_7, SIGNAL(clicked()), &patternMapper, SLOT(map()));
     patternMapper.setMapping(ui->pushButton_8, constructMyPattern(4,2,cotes_2x2,"cotes_2X2"));
     connect(ui->pushButton_8, SIGNAL(clicked()), &patternMapper, SLOT(map()));
-
+    patternMapper.setMapping(ui->pushButton_9, constructMyPattern(1,1,mousse,"mousse"));
+    connect(ui->pushButton_9, SIGNAL(clicked()), &patternMapper, SLOT(map()));
 }
 
 MainWindow::~MainWindow()

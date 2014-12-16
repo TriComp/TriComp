@@ -40,6 +40,8 @@ public:
 
 // Some knit patterns
 
+static int mousse[1] = {0};
+
 static int cotes_1x1[4] = {0,1,
                          1,0};
 
