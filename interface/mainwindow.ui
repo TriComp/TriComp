@@ -224,7 +224,7 @@
            </property>
           </widget>
          </item>
-         <item row="7" column="0">
+         <item row="9" column="0">
           <spacer name="verticalSpacer">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
@@ -236,6 +236,20 @@
             </size>
            </property>
           </spacer>
+         </item>
+         <item row="7" column="0">
+          <widget class="QPushButton" name="pushButton_7">
+           <property name="text">
+            <string>Côtes 1x1</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0">
+          <widget class="QPushButton" name="pushButton_8">
+           <property name="text">
+            <string>Côtes 2x2</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>

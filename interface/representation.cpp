@@ -30,6 +30,12 @@ QBrush setFirstBrush(string name)
     else if (name == "losanges") {
         return constructMyBrush(7,7,losanges);
     }
+    else if (name == "cotes_1x1") {
+        return constructMyBrush(2,2,cotes_1x1);
+    }
+    else if (name == "cotes_2x2") {
+        return constructMyBrush(4,2,cotes_2x2);
+    }
     else {
         return QBrush(garter_stitch.brush); // default
     }

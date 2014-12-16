@@ -39,12 +39,19 @@ public:
 };
 
 // Some knit patterns
+
+static int cotes_1x1[4] = {0,1,
+                         1,0};
+
+static int cotes_2x2[8] = {0,0,1,1,
+                         1,1,0,0};
+
 static int jersey_raye[4] = {0,
                              1,
                              0,
                              0};
 static int cotes_plates[14] = {0,0,0,0,0,1,1,
-                               1,1,1,1,1,0,0,};
+                               1,1,1,1,1,0,0};
 static int cotes_piquees[40] = {0,0,0,1,0,0,0,1,1,1,
                                 1,1,1,0,1,1,1,0,0,0,
                                 0,0,0,1,0,0,0,1,1,1,
