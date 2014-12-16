@@ -1,5 +1,14 @@
 open Core.Std
 
+(* Command line arguments:
+   ./tricomp COMMAND [ARGS]
+   COMMAND:
+    * format [-i] [-o <output>] <filename>
+        -i: in place
+    * check <filename>
+    * compil [-o <output>] <filename>
+ *)
+
 let print garment =
   printf "%s%!" (Descr.print_garment garment)
 
@@ -40,11 +49,45 @@ let input =
           exit 1
     )
 
-let command action = Command.basic
-    ~summary:"Generates a sequence of instructions from a .tricot file"
-    ~readme:(const "")
-    Command.Spec.(empty +> anon ("input" %: input))
-    (parse action)
 
-let _ =
-  Command.run (command compute_deps)
+let format =
+  Command.basic ~summary:"Format .tricot file"
+    Command.Spec.(
+      empty
+      +> anon (maybe_with_default `Stdin ("filename" %: input))
+      +> flag "-o" (optional string) ~doc:"output Write result to 'output'"
+      +> flag "-i" no_arg ~doc:" Modify input file in place"
+    )
+    (fun filename output inplace () ->
+       (*TODO: format file or stdin and write output to output or to input file*)
+       ()
+    )
+
+let check =
+  Command.basic ~summary:"Check .tricot file"
+    Command.Spec.(
+      empty
+      +> anon (maybe_with_default `Stdin ("filename" %: input))
+    )
+    (fun filename () ->
+       (*TODO: check file or stdin*)
+       ()
+    )
+
+let compil =
+  Command.basic ~summary:"Compil .tricot file"
+    Command.Spec.(
+      empty
+      +> anon (maybe_with_default `Stdin ("filename" %: input))
+      +> flag "-o" (optional string) ~doc:"output Write result to 'output'"
+    )
+    (fun filename output ->
+       (*TODO: compil file or stdin and write output to output*)
+       parse compute_deps filename
+    )
+
+let command =
+  Command.group ~summary:"Compil and manipulate .tricot files"
+    [ "format", format; "check", check; "compil", compil ]
+
+let () = Command.run command
