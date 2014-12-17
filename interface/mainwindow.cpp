@@ -6,6 +6,7 @@
 #include <QGraphicsTextItem>
 #include <QFileDialog>
 #include <QDebug>
+#include <QProcess>
 
 #include <iostream>
 #include <fstream>
@@ -286,7 +287,35 @@ void MainWindow::on_instructionsAction_triggered()
      *  The building instructions code  *
      * Interactions with the Ocaml part *
      *  Must be a simple system() call  *
-     * **********************************/
+     * **********************************
+    QProcess comp;
+    comp.start("pwd"); //, QStringList() << "-c");
+    if (!comp.waitForStarted())
+        return;
+
+    comp.write("");
+    comp.closeWriteChannel();
+
+    if (!comp.waitForFinished())
+        return;
+
+    QString instr = QString(comp.readAll());
+     ui->instrLabel->setHtml(instr);
+
+     */
+     QProcess comp;
+     QStringList args;
+     args << "compil" << "-o" << "--" << "<" << (fileName.toStdString()).c_str();
+     comp.start("tricomp", args);
+     if (!comp.waitForStarted())
+         return;
+
+     if (!comp.waitForFinished())
+         return;
+
+     QString instr = QString(comp.readAll());
+      ui->instrLabel->setHtml(instr);
+
 }
 
 // ABOUT
