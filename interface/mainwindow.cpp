@@ -292,46 +292,31 @@ void MainWindow::modify()
 
 void MainWindow::on_instructionsAction_triggered()
 {
-    /************************************
-     *  The building instructions code  *
-     * Interactions with the Ocaml part *
-     *  Must be a simple system() call  *
-     * **********************************
+    if (!isSaved)
+        save();
+    compileInstructions();
+}
+
+void MainWindow::compileInstructions()
+{
     QProcess comp;
-    comp.start("pwd"); //, QStringList() << "-c");
+    QStringList args;
+    args << "compil" << (fileName.toStdString()).c_str();
+    comp.start("tricomp", args);
     if (!comp.waitForStarted())
         return;
-
-    comp.write("");
-    comp.closeWriteChannel();
-
     if (!comp.waitForFinished())
         return;
-
-    QString instr = QString(comp.readAll());
-     ui->instrLabel->setHtml(instr);
-
-     */
-     QProcess comp;
-     QStringList args;
-     args << "compil" << (fileName.toStdString()).c_str();
-     comp.start("tricomp", args);
-     if (!comp.waitForStarted())
-         return;
-
-     if (!comp.waitForFinished())
-         return;
-
-     QString instr = QString(comp.readAllStandardOutput());
-     QString error = QString(comp.readAllStandardError());
-     if(!error.isEmpty()) {
-         if(!instr.isEmpty())
-             instr.append("\n\n");
-         instr.append("<b>Errors:</b>\n");
-         instr.append(error);
-     }
-     instr.replace('\n', "<br/>");
-     ui->instrLabel->setHtml(instr);
+    QString instr = QString(comp.readAllStandardOutput());
+    QString error = QString(comp.readAllStandardError());
+    if(!error.isEmpty()) {
+        if(!instr.isEmpty())
+            instr.append("\n\n");
+        instr.append("<b>Errors:</b>\n");
+        instr.append(error);
+    }
+    instr.replace('\n', "<br/>");
+    ui->instrLabel->setHtml(instr);
 }
 
 // ABOUT

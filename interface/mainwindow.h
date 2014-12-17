@@ -43,6 +43,7 @@ private slots:
     void modify();
     // instructions
     void on_instructionsAction_triggered();
+    void compileInstructions();
     // others
     void on_aboutTricompAction_triggered();
 
