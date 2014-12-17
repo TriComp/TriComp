@@ -1,8 +1,8 @@
 # OASIS_START
-# DO NOT EDIT (digest: 14592a711825c381dae8bf5e06b0a487)
+# DO NOT EDIT (digest: 2a3db927dd70aa6d5ec6eb63abe10c3f)
 version = "0"
 description = "Synopsis"
-requires = "utils tricot"
+requires = "threads tricot"
 archive(byte) = "compil.cma"
 archive(byte, plugin) = "compil.cma"
 archive(native) = "compil.cmxa"

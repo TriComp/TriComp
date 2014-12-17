@@ -101,15 +101,21 @@ void MainWindow::on_newAction_triggered()
 void MainWindow::newKnit()
 {
     QString choice = newDlg->getChoice();
-    yyin = fopen(("../compil/tests/" + choice.toStdString() + ".tricot").c_str(), "r");
-    yyrestart(yyin);
-    int bison_return_code = yyparse();
-    if (bison_return_code != 0) { // This case mustn't happen
-        QMessageBox::warning(this, "Warning", "Incorrect given file...");
-    } else {
-        fileName = "";
-        setInterface();
-        isSaved = false;
+    std::string filePath = "../compil/tests/" + choice.toStdString() + ".tricot";
+    yyin = fopen(filePath.c_str(), "r");
+    if (yyin == NULL) {
+        QMessageBox::warning(this, "Warning", "Incorrect path : "+QString::fromStdString(filePath));
+    }
+    else {
+        yyrestart(yyin);
+        int bison_return_code = yyparse();
+        if (bison_return_code != 0) { // This case mustn't happen
+            QMessageBox::warning(this, "Warning", "Incorrect given file...");
+        } else {
+            fileName = "";
+            setInterface();
+            isSaved = false;
+        }
     }
     act = NOTHING;
 }
@@ -132,6 +138,9 @@ void MainWindow::open()
             fileName = file;
             path = QFileInfo(fileName).path();
             yyin = fopen((fileName.toStdString()).c_str(), "r");
+            if (yyin == NULL) {
+                QMessageBox::warning(this, "Warning", "Incorrect path : "+ fileName);
+            }
             yyrestart(yyin);
             int bison_return_code = yyparse();
             switch (bison_return_code) {

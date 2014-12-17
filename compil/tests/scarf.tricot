@@ -1,8 +1,8 @@
 Name : scarf_test
 Description : "The easiest knit you can make"
  
-piece my_piece := start 40 || trapezoid ( height : 15, shift : 0, upper_width : 40, pattern : my_stitch)
- || trapezoid ( height : 120, shift : 0, upper_width : 40, pattern : my_stitch)
- || trapezoid ( height : 15, shift : 0, upper_width : 40, pattern : my_stitch)
+piece my_piece := start 40 || trapezoid ( height : 16, shift : 0, upper_width : 40, pattern : point_mousse)
+ || trapezoid ( height : 120, shift : 0, upper_width : 40, pattern : point_mousse)
+ || trapezoid ( height : 16, shift : 0, upper_width : 40, pattern : point_mousse)
  || stop
 

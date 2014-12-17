@@ -1,6 +1,14 @@
 open Core.Std
 open Descr
 
+type basic_block_graph =
+  { preds : (Interval.Int.t * string) list
+  ; base_width : int
+  ; body : trapezoid list
+  ; top_width : int
+  ; successors : (Interval.Int.t * basic_block_graph) list
+  }
+
 module Dep :
 sig
   type t = int*int*string (* pos, width, name *)
@@ -15,7 +23,6 @@ end =
     include Comparable.Make(T)
   end
 
-module SSet = String.Set
 module DSet = Dep.Set
 module SMap = String.Map
 
@@ -36,21 +43,34 @@ let make_dep_graph garment : dep_graph =
   let add_dep name pos w = function
     | None -> Some (DSet.singleton (pos, w, name))
     | Some deps -> Some (DSet.add deps (pos, w, name)) in
-  let rec depends curr_name curr_width acc = function
+  let do_if_unseen name f (seen, acc) e =
+    match SMap.find seen name with
+    | None -> f (SMap.add ~key:name ~data:false seen, acc) e
+    | Some false -> fail "Cycle involving piece \"%s\"." name
+    | Some true -> (seen, acc) in
+  let rec depends curr_name first curr_width (seen, acc) = function
     | Split l ->
-       List.fold ~init:acc
-		 ~f:(fun acc' (_, w, elt) -> depends curr_name w acc' elt) l
-    | Trapezoid (t, e) -> depends curr_name t.upper_width acc e
+      let (seen_res, acc_res) = List.fold ~init:(seen, acc)
+	  ~f:(fun acc' (_, w, elt) -> depends curr_name false w acc' elt) l in
+      if first then
+        let seen' = SMap.add ~key:curr_name ~data:true (SMap.remove seen curr_name) in
+        (seen', acc_res)
+      else
+        (seen_res, acc_res)
+    | Trapezoid (t, e) -> depends curr_name first t.upper_width (seen, acc) e
     | Link (target_name, pos) ->
-       let (free, deps) = acc in
-       (SMap.remove free target_name,
-	SMap.change deps target_name (add_dep curr_name pos curr_width))
+      let (free, deps) = acc in
+      match SMap.find garment.elements target_name with
+      | None -> assert false
+      | Some (w, e) -> do_if_unseen target_name (depends target_name true w) (seen,(SMap.remove free target_name,
+	SMap.change deps target_name (add_dep curr_name pos curr_width))) e
   in
   let all = garment.elements in
-  SMap.fold garment.elements
-    ~init:(all, SMap.empty)
-    ~f:(fun ~key:name ~data:(w,elt) acc -> depends name w acc elt)
-
+  let (_, res) =
+    SMap.fold garment.elements
+      ~init:(SMap.empty,(all, SMap.empty))
+      ~f:(fun ~key:name ~data:(w,elt) acc -> do_if_unseen name (depends name true w) acc elt) in
+  res
 
 let check_trapezoid curr_width (t :trapezoid) : unit =
   if t.shift <> 0 then
