@@ -1,5 +1,6 @@
 %{
 open Descr
+open Patterns
 
 let eprintf = Core.Std.eprintf (* It had to be done *)
 let sprintf = Core.Std.sprintf
@@ -35,13 +36,17 @@ let get_arg_name arg map =
     eprintf "Name missing : %s\n%!" arg;
     exit 3
 
+let make_pattern s =
+  match Core.Std.String.Map.find Patterns.default_patterns s with
+  | None -> eprintf "Undefined pattern : %s\n" s; exit 4
+  | Some pattern -> (s, pattern)
+
 let make_trapezoid args =
   { height = get_arg_int "height" args
   ; shift = get_arg_int "shift" args
   ; upper_width = get_arg_int "upper_width" args
-  ; pattern = (get_arg_name "pattern" args, Core.Std.Array.empty ())
+  ; pattern = make_pattern (get_arg_name "pattern" args)
   }
-
 %}
 
 %token <string> NAME DESCR
