@@ -12,7 +12,7 @@ open Core.Std
 let print garment =
   printf "%s%!" (Descr.print_garment garment)
 
-let compute_deps garment =
+let compute_deps garment : string =
   let (free, deps) = Compil.make_dep_graph garment in
   (try
     Compil.sanity_check Compil.({ min_width = 0; min_height = 0}) garment deps
@@ -22,9 +22,9 @@ let compute_deps garment =
   deps
   |> Compil.sexp_of_deps
   |> Sexp.to_string
-  |> printf "deps:%s\n%!"
+  |> sprintf "deps:%s\n%!"
 
-let parse action input () =
+let parse action input =
     ( match input with
         `Stdin -> stdin
       | `File f ->
@@ -35,6 +35,16 @@ let parse action input () =
     |> Lexing.from_channel
     |> Descr_parser.main Descr_lexer.token
     |> action
+
+let write output s : unit =
+  let chan =
+    match output with
+    | None -> stdout
+    | Some file ->
+      try Out_channel.create file with
+      | _ -> eprintf "Error while opening file %s\n%!" file; exit 6
+  in
+  fprintf chan "%s%!" s
 
 let input =
   Command.Spec.Arg_type.create
@@ -48,7 +58,6 @@ let input =
           exit 1
     )
 
-
 let format =
   Command.basic ~summary:"Format .tricot file"
     Command.Spec.(
@@ -57,8 +66,7 @@ let format =
       +> flag "-o" (optional string) ~doc:"output Write result to 'output'"
       +> flag "-i" no_arg ~doc:" Modify input file in place"
     )
-    (fun filename output inplace () ->
-       (*TODO: format file or stdin and write output to output or to input file*)
+    ( fun file_in file_out inplace () ->
        ()
     )
 
@@ -68,7 +76,7 @@ let check =
       empty
       +> anon (maybe_with_default `Stdin ("filename" %: input))
     )
-    (fun filename () ->
+    (fun file_in () ->
        (*TODO: check file or stdin*)
        ()
     )
@@ -80,9 +88,8 @@ let compil =
       +> anon (maybe_with_default `Stdin ("filename" %: input))
       +> flag "-o" (optional string) ~doc:"output Write result to 'output'"
     )
-    (fun filename output ->
-       (*TODO: compil file or stdin and write output to output*)
-       parse compute_deps filename
+    (fun file_in file_out () ->
+       parse compute_deps file_in |> write file_out
     )
 
 let command =
