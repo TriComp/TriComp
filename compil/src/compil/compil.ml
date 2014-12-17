@@ -29,7 +29,7 @@ module SMap = String.Map
 type free = Piece.t SMap.t with sexp
 type deps = DSet.t SMap.t with sexp
 
-type dep_graph = (Piece.t SMap.t * DSet.t SMap.t)  with sexp(* free (with base width), deps *)
+type dep_graph = (Piece.t SMap.t * DSet.t SMap.t)  with sexp (* free (with base width), deps *)
 
 type compil_settings = { min_width : int
 		       ; min_height : int (* May not be useful *)
@@ -112,7 +112,6 @@ let sanity_check settings garment (deps:deps) : unit =
 	 fail "Flat trapezoid in piece \"%s\"." curr_name;
        check_trapezoid curr_width t;
     (* <0 should be checked during parsing *)
-    (* Pattern constraints go here *)
        aux curr_name t.upper_width e
     | Link (n, _) ->
       if not (SMap.mem garment.elements n) then
@@ -140,3 +139,41 @@ let sanity_check settings garment (deps:deps) : unit =
       fail "Branch collision in split in piece \"%s\"." curr_name
   in
   SMap.iter deps ~f:dep_check
+
+
+let compile garment (free, deps) output : unit =
+  let remove_dep target_name key unsat_deps =
+    SMap.change unsat_deps target_name
+      (function None -> assert false
+              | Some deps ->
+                assert (DSet.mem deps key);
+                Some (DSet.remove deps key)) in
+  let rec explore curr_name curr_width (ws, unsat_deps) = function
+    | Split l ->
+      List.fold l
+        ~init:(ws, unsat_deps)
+        ~f:(fun (ws, unsat_deps) (pos, w, next) ->
+            (*Knit that shit up*)
+            explore curr_name w (ws, unsat_deps) next)
+    | Trapezoid (t, next) ->
+      (*Knit it*)
+      explore curr_name t.upper_width (ws, unsat_deps) next
+    | Link (target_name, pos) ->
+      let unsat_deps' = remove_dep target_name (pos, curr_width, curr_name) unsat_deps in
+      match SMap.find unsat_deps' target_name with
+      | None -> assert false
+      | Some deps ->
+        if DSet.is_empty deps then
+          (target_name::ws, unsat_deps')
+        else
+          (ws, unsat_deps')
+  in
+  let rec consume_ws (ws, unsat_deps) : unit =
+    match ws with
+    | [] -> ()
+    | name::rest ->
+      match SMap.find garment.elements name with
+      | None -> assert false
+      | Some (w, e) -> explore name w (rest, unsat_deps) e |> consume_ws
+  in
+  consume_ws (SMap.keys free, deps)
