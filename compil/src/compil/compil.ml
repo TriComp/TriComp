@@ -61,7 +61,7 @@ let make_dep_graph garment : dep_graph =
     | Link (target_name, pos) ->
       let (free, deps) = acc in
       match SMap.find garment.elements target_name with
-      | None -> assert false
+      | None -> fail "Undefined link : \"%s\" in piece \"%s\"." target_name curr_name
       | Some (w, e) -> do_if_unseen target_name (depends target_name true w) (seen,(SMap.remove free target_name,
 	SMap.change deps target_name (add_dep curr_name pos curr_width))) e
   in

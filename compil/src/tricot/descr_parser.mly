@@ -9,8 +9,6 @@ module Map = Core.Std.String.Map
 
 type param = Int of int | Name of string
 
-exception Parse_error of string
-
 let print_pos (pos : Lexing.position) = Lexing.(sprintf "Line %d, Symbol %d" pos.pos_lnum (pos.pos_cnum - pos.pos_bol))
 
 let sort_split = Core.Std.List.sort ~cmp:compare
@@ -68,15 +66,15 @@ main:
                                                   ; name = n
                                                   ; descr = d }
                                                 }
-| error                                         { raise (Parse_error "Invalid header") }
+| error                                         { raise (Failure "Invalid header") }
 ;
 
 body:
   (* Empty *)                                   { Map.empty }
 | b = body; PIECE; n = NAME; DEF; START; w = INT; SEQ; e = element
                                                 { Map.add b n (w,e) }
-| body; PIECE; n = NAME; error                  { raise (Parse_error (sprintf "Error while parsing piece %s" n)) }
-| body; error                                   { raise (Parse_error (sprintf "Syntax error at %s" (print_pos $startpos($1)))) }
+| body; PIECE; n = NAME; error                  { raise (Failure (sprintf "Error while parsing piece %s" n)) }
+| body; error                                   { raise (Failure (sprintf "Syntax error at %s" (print_pos $startpos($1)))) }
 ;
 
 element:

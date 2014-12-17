@@ -12,6 +12,14 @@ open Core.Std
 let print garment =
   printf "%s%!" (Descr.print_garment garment)
 
+let sanity_check garment =
+  let (free, deps) = Compil.make_dep_graph garment in
+  try
+    Compil.sanity_check Compil.({ min_width = 0; min_height = 0}) garment deps
+  with
+    Failure s -> eprintf "Error : %s\n%!" s;
+    exit 1
+
 let compute_deps garment : string =
   let (free, deps) = Compil.make_dep_graph garment in
   (try
@@ -25,16 +33,19 @@ let compute_deps garment : string =
   |> sprintf "deps:%s\n%!"
 
 let parse action input =
-    ( match input with
+  try ( match input with
         `Stdin -> stdin
       | `File f ->
         try In_channel.create f with
         | Sys_error s ->
           eprintf "Invalid source : %s\n%!" s;
           exit 1 )
-    |> Lexing.from_channel
-    |> Descr_parser.main Descr_lexer.token
-    |> action
+      |> Lexing.from_channel
+      |> Descr_parser.main Descr_lexer.token
+      |> action
+  with
+  | Failure s -> eprintf "%s\n%!" s; exit 1
+  | _ -> eprintf "Something went terribly wrong, oops\n%!"; exit 42
 
 let write output s : unit =
   let chan =
@@ -67,7 +78,15 @@ let format =
       +> flag "-i" no_arg ~doc:" Modify input file in place"
     )
     ( fun file_in file_out inplace () ->
-       ()
+       let file_out' =
+         if inplace then
+           match file_in with
+           | `File f -> Some f
+           | `Stdin -> None
+         else
+           file_out
+       in
+       parse Descr.print_garment file_in |> write file_out'
     )
 
 let check =
@@ -77,8 +96,7 @@ let check =
       +> anon (maybe_with_default `Stdin ("filename" %: input))
     )
     (fun file_in () ->
-       (*TODO: check file or stdin*)
-       ()
+       parse sanity_check file_in
     )
 
 let compil =
