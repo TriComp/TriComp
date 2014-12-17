@@ -70,6 +70,7 @@ QPen TrapezoidItem::pen_selected() const
 {
     auto p = pen_normal;
     p.setColor(QColor("red"));
+    p.setWidth(4);
     return p;
 }
 
