@@ -20,17 +20,14 @@ let sanity_check garment =
     Failure s -> eprintf "Error : %s\n%!" s;
     exit 1
 
-let compute_deps garment : string =
+let compile garment : string =
   let (free, deps) = Compil.make_dep_graph garment in
   (try
     Compil.sanity_check Compil.({ min_width = 0; min_height = 0}) garment deps
    with
      Failure s -> eprintf "Error : %s\n%!" s;
      exit 1);
-  deps
-  |> Compil.sexp_of_deps
-  |> Sexp.to_string
-  |> sprintf "deps:%s\n%!"
+  Compil.compile garment (free, deps)
 
 let parse action input =
   try ( match input with
@@ -107,7 +104,7 @@ let compil =
       +> flag "-o" (optional string) ~doc:"output Write result to 'output'"
     )
     (fun file_in file_out () ->
-       parse compute_deps file_in |> write file_out
+       parse compile file_in |> write file_out
     )
 
 let command =

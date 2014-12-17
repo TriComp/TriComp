@@ -141,39 +141,40 @@ let sanity_check settings garment (deps:deps) : unit =
   SMap.iter deps ~f:dep_check
 
 
-let compile garment (free, deps) output : unit =
+let compile garment (free, deps) : string =
   let remove_dep target_name key unsat_deps =
     SMap.change unsat_deps target_name
       (function None -> assert false
               | Some deps ->
                 assert (DSet.mem deps key);
                 Some (DSet.remove deps key)) in
-  let rec explore curr_name curr_width (ws, unsat_deps) = function
+  let rec explore curr_name curr_width (ws, unsat_deps, s) = function
     | Split l ->
       List.fold l
-        ~init:(ws, unsat_deps)
-        ~f:(fun (ws, unsat_deps) (pos, w, next) ->
+        ~init:(ws, unsat_deps, s)
+        ~f:(fun (ws, unsat_deps, s) (pos, w, next) ->
             (*Knit that shit up*)
-            explore curr_name w (ws, unsat_deps) next)
+            explore curr_name w (ws, unsat_deps, s) next)
     | Trapezoid (t, next) ->
       (*Knit it*)
-      explore curr_name t.upper_width (ws, unsat_deps) next
+      explore curr_name t.upper_width (ws, unsat_deps, s) next
     | Link (target_name, pos) ->
       let unsat_deps' = remove_dep target_name (pos, curr_width, curr_name) unsat_deps in
       match SMap.find unsat_deps' target_name with
       | None -> assert false
       | Some deps ->
         if DSet.is_empty deps then
-          (target_name::ws, unsat_deps')
+          (target_name::ws, unsat_deps', s)
         else
-          (ws, unsat_deps')
+          (ws, unsat_deps', s)
   in
-  let rec consume_ws (ws, unsat_deps) : unit =
+  let rec consume_ws (ws, unsat_deps, s) : string =
     match ws with
-    | [] -> ()
+    | [] -> s
     | name::rest ->
       match SMap.find garment.elements name with
       | None -> assert false
-      | Some (w, e) -> explore name w (rest, unsat_deps) e |> consume_ws
+      | Some (w, e) -> explore name w (rest, unsat_deps, s) e |> consume_ws
   in
-  consume_ws (SMap.keys free, deps)
+  let header = sprintf "Instructions for \"%s\":\n" garment.name in
+  consume_ws (SMap.keys free, deps, header)
