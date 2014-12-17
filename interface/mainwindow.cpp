@@ -314,7 +314,7 @@ void MainWindow::on_instructionsAction_triggered()
      */
      QProcess comp;
      QStringList args;
-     args << "compil" << "-o" << "--" << "<" << (fileName.toStdString()).c_str();
+     args << "compil" << (fileName.toStdString()).c_str();
      comp.start("tricomp", args);
      if (!comp.waitForStarted())
          return;
@@ -322,9 +322,16 @@ void MainWindow::on_instructionsAction_triggered()
      if (!comp.waitForFinished())
          return;
 
-     QString instr = QString(comp.readAll());
-      ui->instrLabel->setHtml(instr);
-
+     QString instr = QString(comp.readAllStandardOutput());
+     QString error = QString(comp.readAllStandardError());
+     if(!error.isEmpty()) {
+         if(!instr.isEmpty())
+             instr.append("\n\n");
+         instr.append("<b>Errors:</b>\n");
+         instr.append(error);
+     }
+     instr.replace('\n', "<br/>");
+     ui->instrLabel->setHtml(instr);
 }
 
 // ABOUT
