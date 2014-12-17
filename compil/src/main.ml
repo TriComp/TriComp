@@ -24,7 +24,6 @@ let compute_deps garment =
   |> Sexp.to_string
   |> printf "deps:%s\n%!"
 
-
 let parse action input () =
     ( match input with
         `Stdin -> stdin
