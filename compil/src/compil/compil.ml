@@ -140,7 +140,6 @@ let sanity_check settings garment (deps:deps) : unit =
   in
   SMap.iter deps ~f:dep_check
 
-
 let compile garment (free, deps) : string =
   let remove_dep target_name key unsat_deps =
     SMap.change unsat_deps target_name
@@ -170,11 +169,21 @@ let compile garment (free, deps) : string =
   in
   let rec consume_ws (ws, unsat_deps, s) : string =
     match ws with
-    | [] -> s
+    | [] -> sprintf "%s\nFélicitations, vous avez fini!\n" s
     | name::rest ->
       match SMap.find garment.elements name with
       | None -> assert false
-      | Some (w, e) -> explore name w (rest, unsat_deps, s) e |> consume_ws
+      | Some (w, e) ->
+        let preds = match SMap.find deps name with
+          | None -> DSet.empty
+          | Some preds -> preds in
+        let s' =
+          if DSet.is_empty preds then
+            sprintf "%s\nDébut de la pièce \"%s\":\nMontez %d mailles.\n" s name w
+          else
+            sprintf "%s\nDébut de la pièce \"%s\":\nAssemblez les dépendances.\n" s name
+        in
+        explore name w (rest, unsat_deps, s') e |> consume_ws
   in
-  let header = sprintf "Instructions for \"%s\":\n" garment.name in
+  let header = sprintf "Instructions pour \"%s\":\n" garment.name in
   consume_ws (SMap.keys free, deps, header)

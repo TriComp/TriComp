@@ -5,6 +5,6 @@ piece a := start 0 || stop
 
 piece b := start 0 || split 0 0 {stop}
 
-piece c := start 0 || trapezoid ( height : 0, shift : 0, upper_width : 0, pattern : foo ) || stop
+piece c := start 10 || trapezoid ( height : 10, shift : 0, upper_width : 10, pattern : cotes_1x1 ) || stop
 
-piece d := start 0 || link c
+piece d := start 0 || link c 10

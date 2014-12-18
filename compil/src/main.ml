@@ -42,7 +42,7 @@ let parse action input =
       |> action
   with
   | Failure s -> eprintf "%s\n%!" s; exit 1
-  | _ -> eprintf "Something went terribly wrong, oops\n%!"; exit 42
+(*  | _ -> eprintf "Something went terribly wrong, oops\n%!"; exit 42 *)
 
 let write output s : unit =
   let chan =
