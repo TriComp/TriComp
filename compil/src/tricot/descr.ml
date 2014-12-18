@@ -9,6 +9,9 @@ type name = string with sexp, compare
 (* Convention de représentation : True = endroit, False = envers, et on représente les points tels que vus sur le tricot final *)
 type pattern = string * bool Array.t Array.t with sexp (* Description of a minimal pattern *)
 
+let get_dims (_, pat) =
+  (Array.length pat.(0), Array.length pat)
+
 let compare_pattern = compare
 
 type trapezoid = { height : int

@@ -8,6 +8,8 @@ type name = string
 
 type pattern = string * bool Array.t Array.t with sexp, compare(* Description of a minimal pattern *)
 
+val get_dims : pattern -> int * int
+
 type trapezoid = { height : int
                  ; shift : int
                  ; upper_width : int

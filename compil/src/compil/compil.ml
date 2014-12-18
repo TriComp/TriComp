@@ -140,6 +140,45 @@ let sanity_check settings garment (deps:deps) : unit =
   in
   SMap.iter deps ~f:dep_check
 
+let compile_trapezoid width trapezoid : string =
+  let rev array = array |> Array.to_list |> List.rev |> Array.of_list in
+  let stitch flip value = if flip = value then "endroit" else "envers" in
+  (*let duplicate array n =
+    let l = (Array.length array) in
+    Array.create (l*n) array.(0) |> Array.mapi ~f:(fun i _ -> array.(i mod l)) in *)
+  let rle flip line mult array =
+    let f (s, prec) value =
+      match prec with
+      | None -> (s, Some (value, 1))
+      | Some (value', n) ->
+        if value = value' then
+          (s, Some (value', n + 1))
+        else
+          let plur = if n > 1 then "s" else "" in
+          let s' = sprintf "%s %d maille%s %s," s n plur (stitch flip value) in
+          (s', Some (value, 1))
+    in
+    match Array.fold array ~init:(sprintf "\tLigne %d : %d fois " line mult, None) ~f:f with
+    | (_, None) -> assert false
+    | (s, Some (value, n)) ->
+      let plur = if n > 1 then "s" else "" in
+      sprintf "%s %d maille%s %s\n" s n plur (stitch (not flip) value)
+  in
+  let (pat_w, pat_h) = get_dims trapezoid.pattern in
+  let x_count = width / pat_w in
+  let y_count = trapezoid.height / pat_h in
+  let (_, pattern) = trapezoid.pattern in
+  let (s_res, _) =
+    Array.foldi pattern
+      ~init:(sprintf "Répetez %d fois le motif suivant :\n" y_count, false)
+      ~f:(fun line (s, flip) row ->
+          let directed_row = if flip then rev row else row in
+          (*let full_row = duplicate directed_row x_count in*)
+          (sprintf "%s%s" s (rle flip (line+1) x_count directed_row), not flip)
+      )
+  in
+  s_res
+
 let compile garment (free, deps) : string =
   let remove_dep target_name key unsat_deps =
     SMap.change unsat_deps target_name
@@ -149,14 +188,36 @@ let compile garment (free, deps) : string =
                 Some (DSet.remove deps key)) in
   let rec explore curr_name curr_width (ws, unsat_deps, s) = function
     | Split l ->
-      List.fold l
-        ~init:(ws, unsat_deps, s)
-        ~f:(fun (ws, unsat_deps, s) (pos, w, next) ->
-            (*Knit that shit up*)
-            explore curr_name w (ws, unsat_deps, s) next)
+      let (ws_res, unsat_deps_res, s_res, _) =
+        List.fold l
+          ~init:(ws, unsat_deps, s, None)
+          ~f:(fun (ws, unsat_deps, s, last) (pos, w, next) ->
+              let s_pref =
+                if pos < 0 then
+                  sprintf "Montez %d mailles à droite\n" (-pos)
+                else
+                  "" in
+              let s_suff =
+                if pos + w > curr_width then
+                  sprintf "Montez %d mailles à gauche\n" (pos + w - curr_width)
+                else
+                  "" in
+              let skip = match last with
+                | None -> ""
+                | Some pos' ->
+                  if pos = pos'
+                  then ""
+                  else sprintf "Fermez %d mailles\n" (pos - pos')
+              in
+              let s' = sprintf "%s%s%s%s" s s_pref skip s_suff in
+              let (ws_res, unsat_deps_res, s_res) =
+                explore curr_name w (ws, unsat_deps, s') next in
+              (ws_res, unsat_deps_res, s_res, Some (pos + w))
+            )
+      in (ws_res, unsat_deps_res, s_res)
     | Trapezoid (t, next) ->
-      (*Knit it*)
-      explore curr_name t.upper_width (ws, unsat_deps, s) next
+      let s' = sprintf "%s\n%s\n" s (compile_trapezoid curr_width t) in
+      explore curr_name t.upper_width (ws, unsat_deps, s') next
     | Link (target_name, pos) ->
       let unsat_deps' = remove_dep target_name (pos, curr_width, curr_name) unsat_deps in
       match SMap.find unsat_deps' target_name with
@@ -165,7 +226,8 @@ let compile garment (free, deps) : string =
         if DSet.is_empty deps then
           (target_name::ws, unsat_deps', s)
         else
-          (ws, unsat_deps', s)
+          let s' = sprintf "%sLaissez l'aiguille de côté pour le moment.\n" s in
+          (ws, unsat_deps', s')
   in
   let rec consume_ws (ws, unsat_deps, s) : string =
     match ws with
