@@ -158,11 +158,11 @@ let compile_trapezoid width trapezoid : string =
           let s' = sprintf "%s %d maille%s %s," s n plur (stitch flip value) in
           (s', Some (value, 1))
     in
-    match Array.fold array ~init:(sprintf "\tLigne %d : %d fois " line mult, None) ~f:f with
+    match Array.fold array ~init:(sprintf "\tLigne %d : *" line, None) ~f:f with
     | (_, None) -> assert false
     | (s, Some (value, n)) ->
       let plur = if n > 1 then "s" else "" in
-      sprintf "%s %d maille%s %s\n" s n plur (stitch (not flip) value)
+      sprintf "%s %d maille%s %s * %d fois\n" s n plur (stitch (not flip) value) mult
   in
   let (pat_w, pat_h) = get_dims trapezoid.pattern in
   let x_count = width / pat_w in
