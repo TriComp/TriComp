@@ -203,12 +203,6 @@ public:
 
     ~Split()
     {
-        /* Q_ASSERT(left && right);
-        qDebug() << "Delete left...\n";
-        //delete left;
-        qDebug() << "Delete right...\n";
-        //delete right;
-        qDebug() << "Deleted both...\n"; */
     }
 
     void print(std::ostream& os) const override

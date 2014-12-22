@@ -14,8 +14,8 @@
 
 #define ZOOM 2.0
 
-extern FILE* yyin; // from Flex
-extern int yyparse(void); // from Bison
+extern FILE* yyin;              // from Flex
+extern int yyparse(void);       // from Bison
 extern void yyrestart(FILE *f); // To reset the buffer used by the parser
 extern Knit knit_parsed;
 extern std::string parseError;

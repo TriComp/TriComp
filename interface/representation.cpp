@@ -50,12 +50,13 @@ QBrush constructMyBrush(int width, int height, int stitch[])
     QPixmap pix(width*p,height*p);
     QPainter paint(&pix);
     pix.fill(Qt::darkRed);
-    for(int i=0; i<height; i++)
-        for(int j=0; j<width; j++)
-            if(stitch[i*width+j]== i%2)
-            {
+    for(int i=0; i<height; i++) {
+        for(int j=0; j<width; j++) {
+            if(stitch[i*width+j]== i%2) {
                 paint.fillRect(i*p, j*p, p, p, Qt::darkGreen);
             }
+        }
+    }
     return QBrush(pix);
 }
 

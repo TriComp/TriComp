@@ -1,13 +1,13 @@
 %{
 
-#include "representation.h" /* used in parser.ypp */
-#include <string.h>	/* for strcmp, strdup & friends */
-#include <stdio.h>	/* for strcmp, strdup & friends */
-#include <stdlib.h>	/* for atoi() */
+#include "representation.h" // used in parser.ypp
+#include <string.h>         // for strcmp, strdup & friends
+#include <stdio.h>          // for strcmp, strdup & friends
+#include <stdlib.h>         // for atoi()
 
-#include "parser.h"	/* (TK_) symbols from parser.y */
+#include "parser.h"         // (TK_) symbols from parser.y
 
-extern int line_number;	/* defined in parser.ypp */
+extern int line_number;     // defined in parser.ypp
 
 %}
 
