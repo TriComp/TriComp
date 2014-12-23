@@ -8,7 +8,7 @@
 #include <QDebug>
 #include <QProcess>
 #include <QPrinter>
-
+#include <QDesktopServices>
 
 #include <iostream>
 #include <fstream>
@@ -371,5 +371,17 @@ void MainWindow::compilePdfInstructions()
 void MainWindow::on_aboutTricompAction_triggered()
 {
     QMessageBox::information(this, "A propos de TriComp",
-                             "TriComp est un assistant pour tricoteur. \n Plus d'informations sur \n https://github.com/TriComp");
+                             "TriComp is a knitter assistant. \n More piece of information on \n https://github.com/TriComp");
 }
+
+void MainWindow::on_documentationAction_triggered()
+{
+    /* if (!(QDesktopServices::openUrl(QUrl("../../Documents/doc/Documentation.pdf")))) {
+        QMessageBox::warning(this, "error when opening documentation",
+                             "An error occurs when we open the Trilang's documentation. \n Maybe because of the absolute path given by default");
+    }
+    else { */
+        QDesktopServices::openUrl(QUrl("../../Documents/doc/Documentation.pdf"));
+    //}
+}
+

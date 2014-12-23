@@ -48,6 +48,7 @@ private slots:
     void compilePdfInstructions();
     // others
     void on_aboutTricompAction_triggered();
+    void on_documentationAction_triggered();
 
 private:
     Ui::MainWindow* ui;

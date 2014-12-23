@@ -80,6 +80,7 @@
     </property>
     <addaction name="separator"/>
     <addaction name="aboutTricompAction"/>
+    <addaction name="documentationAction"/>
    </widget>
    <addaction name="fileMenu"/>
    <addaction name="editMenu"/>
@@ -433,6 +434,11 @@ p, li { white-space: pre-wrap; }
   <action name="instructionsPdfAction">
    <property name="text">
     <string>Générer un pdf</string>
+   </property>
+  </action>
+  <action name="documentationAction">
+   <property name="text">
+    <string>Documentation</string>
    </property>
   </action>
  </widget>
