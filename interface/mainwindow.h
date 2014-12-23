@@ -43,7 +43,9 @@ private slots:
     void modify();
     // instructions
     void on_instructionsAction_triggered();
+    void on_instructionsPdfAction_triggered();
     void compileInstructions();
+    void compilePdfInstructions();
     // others
     void on_aboutTricompAction_triggered();
 

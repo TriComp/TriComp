@@ -7,6 +7,8 @@
 #include <QFileDialog>
 #include <QDebug>
 #include <QProcess>
+#include <QPrinter>
+
 
 #include <iostream>
 #include <fstream>
@@ -297,6 +299,13 @@ void MainWindow::on_instructionsAction_triggered()
     compileInstructions();
 }
 
+void MainWindow::on_instructionsPdfAction_triggered()
+{
+    if (!isSaved)
+        save();
+    compilePdfInstructions();
+}
+
 void MainWindow::compileInstructions()
 {
     QProcess comp;
@@ -317,6 +326,42 @@ void MainWindow::compileInstructions()
     }
     instr.replace('\n', "<br/>");
     ui->instrLabel->setHtml(instr);
+}
+
+void MainWindow::compilePdfInstructions()
+{
+    QProcess comp;
+    QStringList args;
+    args << "compil" << (fileName.toStdString()).c_str();
+    comp.start("tricomp", args);
+    if (!comp.waitForStarted())
+        return;
+    if (!comp.waitForFinished())
+        return;
+    QString instr = QString(comp.readAllStandardOutput());
+    QString error = QString(comp.readAllStandardError());
+    if (!error.isEmpty()) { // Print errors on the screen, no pdf generated
+        if(!instr.isEmpty())
+            instr.append("\n\n");
+        instr.append("<b>Errors:</b>\n");
+        instr.append(error);
+        instr.replace('\n', "<br/>");
+        ui->instrLabel->setHtml(instr);
+        QMessageBox::warning(this, "Compiler errors", "There is some compiler error. Check them on the screen.");
+    } else {
+        QString instructionsFileName = QFileDialog::getSaveFileName(this, "Save your instructions", path, "PDF (*.pdf)");
+        if (instructionsFileName != "") {
+            if (instructionsFileName.endsWith(".pdf")) {
+                QPrinter* printer = new QPrinter(QPrinter::HighResolution);
+                printer->setOutputFormat(QPrinter::PdfFormat);
+                printer->setOutputFileName(instructionsFileName);
+                QTextDocument document(instr);
+                document.print(printer);
+            } else {
+                QMessageBox::warning(this, "Wrong file format", "You don't save your tricot to the good format (.tricot)");
+            }
+        }
+    }
 }
 
 // ABOUT

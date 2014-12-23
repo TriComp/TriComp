@@ -62,8 +62,17 @@
     <property name="title">
      <string>&amp;Editer</string>
     </property>
+    <widget class="QMenu" name="menuCompiler">
+     <property name="title">
+      <string>Compiler</string>
+     </property>
+     <addaction name="instructionsAction"/>
+     <addaction name="instructionsPdfAction"/>
+    </widget>
     <addaction name="upZoomAction"/>
     <addaction name="downZoomAction"/>
+    <addaction name="separator"/>
+    <addaction name="menuCompiler"/>
    </widget>
    <widget class="QMenu" name="aboutMenu">
     <property name="title">
@@ -387,7 +396,7 @@ p, li { white-space: pre-wrap; }
      <normaloff>:/pictures/images/run.png</normaloff>:/pictures/images/run.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Générer</string>
+    <string>Afficher à l'écran</string>
    </property>
    <property name="toolTip">
     <string>Générer les instructions</string>
@@ -409,6 +418,21 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Zoom -</string>
+   </property>
+  </action>
+  <action name="actionG_n_rer_les_instructions">
+   <property name="text">
+    <string>Générer les instructions</string>
+   </property>
+  </action>
+  <action name="actionAfficher_les_instructions">
+   <property name="text">
+    <string>Afficher les instructions</string>
+   </property>
+  </action>
+  <action name="instructionsPdfAction">
+   <property name="text">
+    <string>Générer un pdf</string>
    </property>
   </action>
  </widget>
