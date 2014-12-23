@@ -276,11 +276,13 @@ void MainWindow::saveAs()
 // ZOOM
 
 void MainWindow::on_upZoomAction_triggered() {
-    ui->patternView->scale(ZOOM,ZOOM);
+    if (ui->patternView->scene())
+        ui->patternView->scale(ZOOM,ZOOM);
 }
 
 void MainWindow::on_downZoomAction_triggered() {
-    ui->patternView->scale(1/ZOOM,1/ZOOM);
+    if (ui->patternView->scene())
+        ui->patternView->scale(1/ZOOM,1/ZOOM);
 }
 
 // RECEIVE MODIFICATION SIGNAL
