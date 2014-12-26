@@ -244,15 +244,17 @@ void MainWindow::save()
 
 void MainWindow::on_saveAction_triggered()
 {
-    if (!isSaved) {
-        save();
-        isSaved = true;
-    }
+    if (ui->patternView->scene())
+        if (!isSaved) {
+            save();
+            isSaved = true;
+        }
 }
 
 void MainWindow::on_saveAsAction_triggered()
 {
-    saveAs();
+    if (ui->patternView->scene())
+        saveAs();
 }
 
 void MainWindow::saveAs()
@@ -296,16 +298,20 @@ void MainWindow::modify()
 
 void MainWindow::on_instructionsAction_triggered()
 {
-    if (!isSaved)
-        save();
-    compileInstructions();
+    if (ui->patternView->scene()) {
+        if (!isSaved)
+            save();
+        compileInstructions();
+    }
 }
 
 void MainWindow::on_instructionsPdfAction_triggered()
 {
-    if (!isSaved)
-        save();
-    compilePdfInstructions();
+    if (ui->patternView->scene()) {
+        if (!isSaved)
+            save();
+        compilePdfInstructions();
+    }
 }
 
 void MainWindow::compileInstructions()
@@ -371,17 +377,18 @@ void MainWindow::compilePdfInstructions()
 void MainWindow::on_aboutTricompAction_triggered()
 {
     QMessageBox::information(this, "A propos de TriComp",
-                             "TriComp is a knitter assistant. \n More piece of information on \n https://github.com/TriComp");
+                             "TriComp est un assistant pour tricoteur. \n Plus d'informations sur' \n https://github.com/TriComp");
 }
 
 void MainWindow::on_documentationAction_triggered()
 {
-    /* if (!(QDesktopServices::openUrl(QUrl("../../Documents/doc/Documentation.pdf")))) {
+    QString str = "../../Documents/doc/Documentation.pdf";
+    if (!(QDesktopServices::openUrl(QUrl(str)))) {
         QMessageBox::warning(this, "error when opening documentation",
                              "An error occurs when we open the Trilang's documentation. \n Maybe because of the absolute path given by default");
     }
-    else { */
-        QDesktopServices::openUrl(QUrl("../../Documents/doc/Documentation.pdf"));
-    //}
+    else {
+        QDesktopServices::openUrl(QUrl(str));
+    }
 }
 
