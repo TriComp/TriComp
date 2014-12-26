@@ -3,11 +3,11 @@ Description : "Un magnifique exemple de pull sans manche, autrement appelé ponc
  
 piece my_piece := start 840 || trapezoid ( height : 200, shift : 0, upper_width : 840, pattern : cotes_plates)
  || trapezoid ( height : 840, shift : 0, upper_width : 840, pattern : cotes_1x1)
- || split 0 280 {   trapezoid ( height : 490, shift : 0, upper_width : 280, pattern : cotes_1x1)
- || link top 0 } 560 280 {   trapezoid ( height : 490, shift : 0, upper_width : 280, pattern : cotes_plates)
- || link top 560 } 
+ || split 560 280 {   trapezoid ( height : 490, shift : 0, upper_width : 280, pattern : cotes_plates)
+ || link top 560 } 0 280 {   trapezoid ( height : 490, shift : 0, upper_width : 280, pattern : cotes_1x1)
+ || link top 0 } 
 
-piece top := start 840 || trapezoid ( height : 840, shift : 0, upper_width : 840, pattern : cotes_1x1)
+piece top := start 840 || trapezoid ( height : 840, shift : 0, upper_width : 840, pattern : losanges)
  || trapezoid ( height : 210, shift : 0, upper_width : 840, pattern : cotes_plates)
  || stop
 
