@@ -1,4 +1,3 @@
-
 #include "representation.h"
 #include <map>
 #include <iostream>
@@ -36,9 +35,6 @@ QBrush setFirstBrush(string name)
     else if (name == "cotes_2x2") {
         return constructMyBrush(4,2,cotes_2x2);
     }
-    else if (name == "mousse") {
-        return constructMyBrush(1,1,mousse);
-    }
     else {
         return constructMyBrush(1,1,mousse); // default = mousse
     }
@@ -46,13 +42,13 @@ QBrush setFirstBrush(string name)
 
 QBrush constructMyBrush(int width, int height, int stitch[])
 {
-    int p = 3; // basic unity for the size of a stitch, depend on user screen
+    int p = 3; // basic unity for the size of a stitch, depend on user screen...
     QPixmap pix(width*p,height*p);
     QPainter paint(&pix);
     pix.fill(Qt::darkRed);
-    for(int i=0; i<height; i++) {
-        for(int j=0; j<width; j++) {
-            if(stitch[i*width+j]== i%2) {
+    for (int i=0; i<height; i++) {
+        for (int j=0; j<width; j++) {
+            if (stitch[i*width+j] == i%2) {
                 paint.fillRect(i*p, j*p, p, p, Qt::darkGreen);
             }
         }

@@ -43,24 +43,29 @@ public:
 static int mousse[1] = {0};
 
 static int cotes_1x1[4] = {0,1,
-                         1,0};
+                           1,0};
 
 static int cotes_2x2[8] = {0,0,1,1,
-                         1,1,0,0};
+                           1,1,0,0};
 
 static int jersey_raye[4] = {0,
                              1,
                              0,
                              0};
+
 static int cotes_plates[14] = {0,0,0,0,0,1,1,
                                1,1,1,1,1,0,0};
+
 static int cotes_piquees[40] = {0,0,0,1,0,0,0,1,1,1,
                                 1,1,1,0,1,1,1,0,0,0,
                                 0,0,0,1,0,0,0,1,1,1,
                                 1,1,1,1,1,1,1,1,1,1};
+
 static int point_de_riz[4] = {0,1,
                               0,1};
+
 static int fausses_cotes_anglaises[3] = {0,0,1};
+
 static int losanges[49] = {0,0,0,1,0,0,0,
                            1,1,0,0,0,1,1,
                            0,1,1,1,1,1,0,
@@ -107,11 +112,7 @@ class Element {
 public:
     const ElementType kind;
     bool visited;
-    Element(ElementType k)
-        : kind(k)
-        , visited(false)
-    {
-    }
+    Element(ElementType k): kind(k), visited(false) {}
     // In subclasses, delegate to QGraphicsPolygonItem
     EditorItem* gfx;
     virtual ~Element() {}
@@ -127,20 +128,15 @@ public:
     Trapezoid geom;
     Element* next;
 
-    TrapezoidElem(Trapezoid t, Element* next)
-        : Element(ElementType::Trapezoid)
-        , geom(t)
-        , next(next)
-    {
-    }
+    TrapezoidElem(Trapezoid t, Element* next): Element(ElementType::Trapezoid), geom(t), next(next) {}
 
     ~TrapezoidElem()
     {
-        qDebug() << "Delete next...\n";
+        //qDebug() << "Delete next...\n";
         Q_ASSERT(next);
         //       if (next)
         //    delete next;
-        qDebug() << "Deleted next...\n";
+        //qDebug() << "Deleted next...\n";
     }
 
     void print(std::ostream& os) const override
@@ -171,23 +167,10 @@ public:
     int width;
     Element* next;
 
-    splitData()
-        : position(0),
-          width(0),
-          next(0)
-    {
-    }
+    splitData(): position(0), width(0), next(nullptr) {}
+    splitData(int position, int width, Element* next): position(position), width(width), next(next) {}
 
-    splitData(int position, int width, Element* next)
-        : position(position),
-          width(width),
-          next(next)
-        {
-        }
-
-    ~splitData()
-    {
-    }
+    ~splitData() {}
 };
 
 class Split : public Element {
@@ -195,15 +178,9 @@ public:
     // Invariant: left != nullprt & right != nullptr
     std::list<splitData>* elements;
 
-    Split(std::list<splitData>* elements)
-        : Element(ElementType::Split)
-        , elements(elements)
-    {
-    }
+    Split(std::list<splitData>* elements): Element(ElementType::Split), elements(elements) {}
 
-    ~Split()
-    {
-    }
+    ~Split() {}
 
     void print(std::ostream& os) const override
     {
@@ -223,7 +200,7 @@ public:
         }
     }
 
-    int width() const override { return 0 ; } /* TODO */
+    int width() const override { return 0; } /* TODO */
 
     std::vector<Element*> children() const override {
         std::vector<Element*> v;
@@ -245,16 +222,9 @@ class Link : public Element {
 public:
     std::string name;
     int position;
-    Link(std::string name, int position)
-        : Element(ElementType::Link)
-        , name(name)
-        , position(position)
-    {
-    }
+    Link(std::string name, int position): Element(ElementType::Link), name(name), position(position) {}
 
-    ~Link()
-    {
-    }
+    ~Link() {}
 
     void print(std::ostream& os) const override
     {
@@ -281,11 +251,7 @@ public:
     std::string description;
     std::map<std::string, std::pair< int, Element* > > elements;
     Knit(std::string name, std::string description, std::map<std::string, std::pair< int, Element*> > elements)
-        : name(name)
-        , description(description)
-        , elements(elements)
-    {
-    }
+        : name(name), description(description), elements(elements) {}
     Knit() {}
 
     void destruct()

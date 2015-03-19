@@ -11,19 +11,17 @@
 #include <stdio.h>
 #include <iostream>
 #include <cstring>
-
 #include <map>
 #include <list>
 #include <vector>
 
-
 using namespace std;
 
-int line_number	= 1;                         /* number of current source line */
-map<string,pair< int,Element*> > piece_map;  /* map of the pieces */
-extern int yylex();                          /* lexical analyzer generated from lex.l */
-extern char *yytext;                         /* last token, defined in lex.l  */
-string parseError;
+int line_number	= 1;                         // number of current source line
+map<string,pair< int,Element*> > piece_map;  // map of the pieces
+extern int yylex();                          // lexical analyzer generated from lex.l
+extern char *yytext;                         // last token, defined in lex.l
+string parseError;                           // string describing the error
 
 void yyerror(char *s){
     string resume;
@@ -59,30 +57,30 @@ void error(char *s){
 /*                       TOKENS DECLARATION
 /* ============================================================== */
 
-/* Types */
+// Types
 %token INT
 %token NAME
 %token DESCR
 
-/* Délimiteurs */
+// Delimiters
 %token LPAREN RPAREN
 %token LBRACE RBRACE
 
-/* Pieces */
+// Pieces
 %token  PIECE DEF SEQ SEP COL
 
-/* Entete */
+// Header
 %token H_NAME H_DESCR
 
-/* Vocabulary */
+// Vocabulary of knits
 %token START STOP TRAPEZOID LINK SPLIT
 
-/* others */
+// Others
 
 %token END_OF_FILE
 %right SEQ
 
-/* associate the types */
+// Associate the types
 
 %type<integer> INT
 %type<integer> main body // Just a return value
@@ -131,7 +129,7 @@ trapezoid_params:
   LPAREN params RPAREN                    				{ $$ = $2;}
 ;
 
-/* sorry for this ugly rule... */
+// Trapezoid shape
 
 params:
 NAME COL INT SEP NAME COL INT SEP NAME COL INT SEP NAME COL NAME { $$ = new Trapezoid($3,$7,$11,$15);}

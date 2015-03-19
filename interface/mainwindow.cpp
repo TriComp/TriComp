@@ -22,10 +22,7 @@ extern void yyrestart(FILE *f); // To reset the buffer used by the parser
 extern Knit knit_parsed;
 extern std::string parseError;
 
-MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-    , patternMapper(this)
+MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::MainWindow), patternMapper(this)
 {
     ui->setupUi(this);
     newDlg = new newKnitDialog(this);
@@ -171,8 +168,8 @@ void MainWindow::setInterface()
 {
     ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));
     QGraphicsView* v = ui->patternView;
-    //QGraphicsScene oldScene = v->scene();
-    if (v->scene()) v->scene()->clear();
+    if (v->scene()) // delete old scene if there is one
+        v->scene()->clear();
 
     QGraphicsScene* scene = new QGraphicsScene();
     v->setScene(scene);
@@ -221,7 +218,6 @@ void MainWindow::doSaveDlgAction()
         break;
     }
     case NOTHING: {
-        // do nothing
         break;
     }
     }
