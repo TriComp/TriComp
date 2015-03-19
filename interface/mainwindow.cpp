@@ -170,9 +170,9 @@ void MainWindow::open()
 void MainWindow::setInterface()
 {
     ui->instrLabel->setHtml(QString::fromStdString(knit_parsed.description));
-    auto* v = ui->patternView;
-    auto oldScene = v->scene();
-    if (oldScene) oldScene->clear();
+    QGraphicsView* v = ui->patternView;
+    //QGraphicsScene oldScene = v->scene();
+    if (v->scene()) v->scene()->clear();
 
     QGraphicsScene* scene = new QGraphicsScene();
     v->setScene(scene);

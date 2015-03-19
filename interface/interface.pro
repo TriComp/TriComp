@@ -10,19 +10,19 @@ HEADERS += editor.h \
            newknitdialog.h \
            representation.h \
            ui_mainwindow.h \
-           ui_newknitdialog.h 
+           ui_newknitdialog.h  
 FORMS += mainwindow.ui newknitdialog.ui
 SOURCES += editor.cpp \
            main.cpp \
            mainwindow.cpp \
            newknitdialog.cpp \
-           representation.cpp 
+           representation.cpp
 RESOURCES += ressources.qrc
 
 # Some configurations 
 
 QT += widgets \
-      printsupport
+      printsupport # pdf printer
 
 CONFIG += C++11
 QMAKE_CXXFLAGS += -std=c++11 -Wno-write-strings -Wno-unused-variable

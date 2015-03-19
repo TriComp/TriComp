@@ -213,7 +213,6 @@ public:
         else {
             os << "split ";
             for (std::list<splitData>::const_iterator it = elements->begin(); it != elements->end(); ++it) {
-                qDebug() << "Print Split";
                 os << it->position;
                 os << " ";
                 os << it->width;
@@ -292,7 +291,6 @@ public:
     void destruct()
     {
         for (std::map< std::string, std::pair<int, Element*> >::const_iterator it = elements.begin(); it != elements.end(); ++it) {
-            qDebug() << "Delete ...\n";
             if ((it->second).second) {
                 delete (it->second).second;
             }
@@ -310,6 +308,8 @@ extern Knit knit_parsed;
 std::ostream& operator<<(std::ostream& os, Element const& element);
 std::ostream& operator<<(std::ostream& os, std::map<std::string, std::pair <int, Element*> > const& elements);
 std::ostream& operator<<(std::ostream& os, Knit knit);
+
+// "Visitors"
 
 template <typename T, typename A, typename B>
 class ElementVisitor {
